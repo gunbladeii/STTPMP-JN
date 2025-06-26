@@ -1,4 +1,4 @@
-<script>
+
   //untuk fungsi select dropdown
   $('#laporanBaru').select2({
   width: '100%',
@@ -201,10 +201,10 @@ function renderPieChart(data) {
 
 
 
-</script>
 
 
-  <script>
+
+  
   let dataTab1 = [];
   let dataTab2 = [];
 
@@ -503,8 +503,8 @@ function renderPieChart(data) {
 
       document.getElementById("liveDate").innerText = `${hari}, ${tarikh} ${bulan} ${tahun}`;
   };
-</script>
-<script>
+
+
   const quillSyorBaru = new Quill('#editorSyorBaru', {
     theme: 'snow',
     placeholder: 'Masukkan kandungan syor di sini...',
@@ -556,4 +556,4 @@ function renderPieChart(data) {
   document.getElementById("kemaskiniForm2").addEventListener("submit", function (e) {
     document.getElementById("syorInfo").value = quillSyorInfo.root.innerHTML;
   });
-</script>
+
