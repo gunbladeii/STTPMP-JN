@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html>
+<head>
+  
+  <base target="_top">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Tambah di bahagian <head> untuk DataTables -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <!-- Select2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  
+  <!-- Select2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- Quill CSS & JS -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link href="https://enazir.moe.gov.my/sttpmp.css" rel="stylesheet">  
+
+</head>
+<body class="container py-4">
+  <div class="custom-header"></div>
+
+      <div class="navbar bg-light px-4 py-3 shadow-sm rounded">
+        <div class="d-flex align-items-center">
+          <div class="me-3">
+            <i class="bi bi-person-circle fs-2 text-primary"></i>
+          </div>
+          <div>
+            <h6 class="text-primary fw-bold"><em>Info Pengguna</em></h6>
+            <h6 class="mb-0 fw-bold text-dark" id="welcomeText"><span id="Info"></span></h6>
+            <small>
+              <span id="liveDate" class="badge bg-warning text-dark">Isnin, 26 Mei 2025</span>
+            </small>
+          </div>
+        </div>
+      </div>
+      
+  <div id="loadingSpinner" style="text-align:center; margin-top: 20px;">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <ul class="nav nav-tabs custom-nav-tab mt-4" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab">
+      Akses Bahagian/JPN
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab">
+      Akses Admin
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab">
+      Dashboard
+    </button>
+  </li>
+</ul>
+
+
+  <div class="tab-content mt-4" id="myTabContent">
+    <div class="tab-pane fade" id="tab1" role="tabpanel">  
+      <h5 class="text-primary fw-bold">Akses Bahagian/JPN</h5>
+      <input type="text" id="searchInput1" class="form-control mb-3" placeholder="Hanya perlu taip keyword bagi carian semua column...">
+      <table class="table table-bordered table-hover w-100" id="dataTableDesign1">
+        <thead>
+          <tr>
+            <th>Bil</th>
+            <th>Laporan</th>
+            <th>Perakuan Menteri (Syor)</th>
+            <th>Bahagian</th>
+            <th>JPN</th>
+            <th>Respon</th>
+            <th>Tempoh Masa</th>
+            <th>Dokumen Sokongan</th>
+            <th>Tarikh Kemaskini</th>
+            <th>Status</th>
+            <th>Tindakan</th>
+          </tr>
+        </thead>
+        <tbody id="dataBody1">
+          <tr><td colspan="11" class="text-center fst-italic">Sedang dimuatkan...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tab-pane fade" id="tab2" role="tabpanel">
+        <h5 class="text-primary fw-bold">Akses Admin</h5>
+      <input type="text" id="searchInput2" class="form-control mb-3" placeholder="Hanya perlu taip keyword bagi carian semua column...">
+      <!-- Tambah butang di atas table admin -->
+      <button id="tambahSyorBtn" class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#tambahModal">
+        <i class="bi bi-plus-circle"></i> Tambah Syor
+      </button>
+      <table class="table table-bordered table-hover w-100" id="dataTableDesign2">
+        <thead>
+          <tr>
+            <th>Bil</th>
+            <th>Laporan</th>
+            <th>Perakuan Menteri (Syor)</th>
+            <th>Bahagian</th>
+            <th>JPN</th>
+            <th>Status</th>
+            <th>Tarikh Kemaskini</th>
+            <th>Catatan</th>
+            <th>Tindakan</th>
+          </tr>
+        </thead>
+        <tbody id="dataBody2">
+          <tr><td colspan="9" class="text-center fst-italic">Sedang dimuatkan paparan...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tab-pane fade" id="tab3" role="tabpanel">
+      <div class="row">
+        <div class="col-md-6">
+          <h5 class="text-primary fw-bold"><em>Traffic Light</em> Maklum balas Syor Perakuan Menteri</h5>
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Bil</th><th>Laporan</th><th>Skor</th><th><div class="text-center"><em>Traffic light</em></div></th></tr>
+            </thead>
+            <tbody id="skorTableBody"></tbody>
+          </table>
+        </div>
+        <div class="col-md-6">
+          <h5 class="text-primary fw-bold">Status Tindakan</h5>
+          <canvas id="pieChartStatus" height="250"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal Tambah Syor -->
+    <div class="modal fade" id="tambahModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Tambah Syor Baharu (Perakuan Menteri)</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="formTambahSyor">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Laporan</label>              
+                  <select id="laporanBaru" class="form-control select2">
+                    <option value="">Memuatkan...</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Bahagian</label>
+                  <select id="bahagianBaru" class="form-control">
+                    <option value="">Memuatkan...</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Negeri</label>
+                  <select class="form-select" id="negeriBaru">
+                    <option value="">Memuatkan...</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Status</label>
+                  <select class="form-select" id="indicatorBaru">
+                    <option value="Hijau">Hijau</option>
+                    <option value="Kuning">Kuning</option>
+                    <option value="Merah">Merah</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Tarikh Kemaskini</label>
+                  <input type="date" class="form-control" id="tarikhBaru">
+                </div>
+                
+                <div class="col-12 mb-3">
+                  <label class="form-label">Syor</label>
+                  <div id="editorSyorBaru" style="height: 150px;"></div>
+                  <input type="hidden" id="syorBaru">
+                </div>             
+
+                <div class="col-12 mb-3">
+                  <label class="form-label">Catatan</label>
+                  <textarea class="form-control" id="catatanBaru" rows="2"></textarea>
+                </div>
+              </div>
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            <button type="button" class="btn btn-primary" onclick="simpanSyorBaru()">Simpan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <!-- Modal Tab 1 -->
+  <div class="modal fade" id="kemaskiniModal1" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Kemaskini Respon</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="kemaskiniForm1">
+            <div class="row">
+                <input type="hidden" id="rowNum1">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Nama Pemeriksaan</label>
+                  <input type="text" class="form-control" id="PemeriksaanInfo2" readonly>
+                </div>
+                <div class="col-md-12 mb-3">
+                  <label class="form-label">Perakuan Menteri (Syor)</label>
+                  <textarea class="form-control" id="SyorInfo2" readonly></textarea>
+                </div>
+                <div class="col-md-12 mb-3">
+                  <label class="form-label">Respon</label>
+                  <div id="editorResponInput" style="height: 150px;"></div>
+                  <input type="hidden" id="responInput">
+                </div>
+                <div class="col-md-12 mb-3">
+                  <label class="form-label">Tempoh Masa</label>
+                  <textarea class="form-control" id="tempohMasaInput"></textarea>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Muat Naik Bahan (PDF)</label>
+                  <input type="file" id="pdfUpload" accept="application/pdf" class="form-control">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Tarikh Kemaskini</label>
+                  <input type="date" class="form-control" id="tarikhInput1">
+                </div>
+              </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+          <button type="button" class="btn btn-primary" onclick="simpanKemaskiniTab1()">Simpan</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Tab 2 -->
+  <div class="modal fade" id="kemaskiniModal2" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Kemaskini Maklumat</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="kemaskiniForm2">
+            <input type="hidden" id="rowNum2">
+            <div class="mb-2">
+              <label class="form-label">Nama Pemeriksaan</label>
+              <input type="text" class="form-control" id="PemeriksaanInfo" readonly>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Perakuan Menteri (Syor)</label>
+              <div id="editorSyorInfo" style="height: 150px;"></div>
+              <input type="hidden" id="SyorInfo">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Respon</label>
+              <textarea class="form-control" id="ResponInfo" readonly></textarea>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Status</label>
+              <select class="form-select" id="statusInput">
+                <option value="Hijau">Hijau</option>
+                <option value="Kuning">Kuning</option>
+                <option value="Merah">Merah</option>
+              </select>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Tempoh Masa</label>
+              <textarea class="form-control" id="tempohMasaInput2" readonly></textarea>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Tarikh Kemaskini</label>
+              <input type="date" class="form-control" id="tarikhInput2">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Catatan</label>
+              <textarea class="form-control" id="catatanInput"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+          <button type="button" class="btn btn-primary" onclick="simpanKemaskiniTab2()">Simpan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Penambahan selepas tab-content -->
+
+<script>
+  //untuk fungsi select dropdown
+  $('#laporanBaru').select2({
+  width: '100%',
+  placeholder: "Pilih Laporan",
+  dropdownAutoWidth: true,
+  dropdownParent: $('#tambahModal') // 👈 Ini penting supaya dropdown z-index ikut modal
+  });
+
+
+  //untuk batch indicator status
+  function badgeClass(status) {
+  if (!status) return 'bg-secondary';
+  status = status.toLowerCase();
+  if (status === 'hijau') return 'badge-success';
+  if (status === 'kuning') return 'badge-warning';
+  if (status === 'merah') return 'badge-danger';
+  return 'bg-secondary';
+}
+
+//dropdown laporanBaru
+function populateLaporanDropdown() {
+  const tahunSemasa = new Date().getFullYear();
+
+  fetch("https://enazir.moe.gov.my/APIcall.php/tknamapemeriksaan")
+    .then(response => response.json())
+    .then(data => {
+      const laporanInput = document.getElementById("laporanBaru");
+      laporanInput.innerHTML = `<option value="">Pilih Laporan</option>`;
+      const filtered = data.filter(item => {
+        const tahun = parseInt(item.Tahun);
+        return tahun >= 2024 && tahun <= tahunSemasa;
+      });
+
+      const namaSet = new Set();
+
+      const sortedList = filtered
+        .map(item => item.NamaPemeriksaan)
+        .filter(nama => {
+          if (!namaSet.has(nama)) {
+            namaSet.add(nama);
+            return true;
+          }
+          return false;
+        })
+        .sort((a, b) => a.localeCompare(b));
+
+      sortedList.forEach(nama => {
+        laporanInput.innerHTML += `<option value="${nama}">${nama}</option>`;
+      });
+    })
+    .catch(err => console.error("Gagal fetch laporan:", err));
+}
+
+
+//dropdown Bahagian
+function populateBahagianDropdown() {
+  google.script.run.withSuccessHandler(function(data) {
+    const bahagianInput = document.getElementById("bahagianBaru");
+    bahagianInput.innerHTML = `<option value="">Pilih Bahagian</option>`;
+    data.forEach(function(item) {
+      bahagianInput.innerHTML += `<option value="${item}">${item}</option>`;
+    });
+  }).getSenaraiBahagian();
+}
+
+//dropdown Bahagian
+function populateNegeriDropdown() {
+  google.script.run.withSuccessHandler(function(data) {
+    const bahagianInput = document.getElementById("negeriBaru");
+    bahagianInput.innerHTML = `<option value="">Pilih Negeri</option>`;
+    data.forEach(function(item) {
+      bahagianInput.innerHTML += `<option value="${item}">${item}</option>`;
+    });
+  }).getSenaraiNegeri();
+}
+
+function simpanSyorBaru() {
+  // Sync Quill value
+  document.getElementById("syorBaru").value = quillSyorBaru.root.innerHTML;
+  
+  const btn = document.querySelector('#tambahModal .btn-primary');
+  btn.disabled = true;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Simpan...`;
+
+  const data = {
+    Laporan: document.getElementById("laporanBaru").value,
+    Syor: document.getElementById("syorBaru").value,
+    BahagianJpn: document.getElementById("bahagianBaru").value,
+    Negeri: document.getElementById("negeriBaru").value,
+    Indicator: document.getElementById("indicatorBaru").value,
+    TarikhKemaskini: document.getElementById("tarikhBaru").value,
+    Catatan: document.getElementById("catatanBaru").value,
+  };
+
+  google.script.run.withSuccessHandler(() => {
+    bootstrap.Modal.getInstance(document.getElementById("tambahModal")).hide();
+    loadDataTab2();
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  }).withFailureHandler((err) => {
+    alert(err.message);
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  }).insertNewSyor(data);
+}
+
+
+// Inisialisasi DataTable selepas table dimuat
+function initDataTableDesign(tableId) {
+  const table = document.getElementById(tableId);
+  if (!$.fn.DataTable.isDataTable(table)) {
+    $(table).DataTable({
+      responsive: true,
+      language: {
+        search: "Carian:",
+        lengthMenu: "Papar _MENU_ rekod",
+        info: "Menunjukkan _START_ hingga _END_ dari _TOTAL_ rekod",
+        paginate: {
+          first: "Pertama",
+          last: "Terakhir",
+          next: ">",
+          previous: "<"
+        }
+      }
+    });
+  }
+}
+
+
+  let skorData = [];
+
+  function loadTab3Skor() {
+  google.script.run.withSuccessHandler(renderSkorTable).getSkorWajaranByUser();
+  google.script.run.withSuccessHandler(renderPieChart).getPieChartDataByUser();
+}
+
+function renderSkorTable(data) {
+  const body = document.getElementById("skorTableBody");
+  body.innerHTML = "";
+  data.forEach((item, i) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${i + 1}</td>
+      <td>${item.Laporan}</td>
+      <td><span class="fw-bold">${item.SkorWajaran}</span></td>
+      <td><div class="text-center"><span class="status-circle ${circleClass(item.DominantStatus)}" title="${item.DominantStatus}"></span></div></td>
+    `;
+    body.appendChild(row);
+  });
+}
+
+
+function renderPieChart(data) {
+  const ctx = document.getElementById("pieChartStatus").getContext("2d");
+
+  const statusLabelMap = {
+    "Merah": "Belum Selesai",
+    "Kuning": "Dalam Tindakan",
+    "Hijau": "Selesai"
+  };
+
+  const colorMap = {
+    "Hijau": "#28a745",
+    "Kuning": "#ffc107",
+    "Merah": "#dc3545"
+  };
+
+  const labels = Object.keys(data).map(status => statusLabelMap[status] || status);
+  const values = Object.values(data);
+  const colors = Object.keys(data).map(status => colorMap[status] || "#6c757d");
+
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Jumlah Syor",
+        data: values,
+        backgroundColor: colors
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: { display: false }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            precision: 0 // Integer only
+          }
+        }
+      }
+    }
+  });
+}
+
+
+
+</script>
+
+
+  <script>
+  let dataTab1 = [];
+  let dataTab2 = [];
+
+  function circleClass(status) {
+  if (status === "Hijau") return "bg-hijau";
+  if (status === "Kuning") return "bg-kuning";
+  if (status === "Merah") return "bg-merah";
+  return "bg-secondary";
+  }
+
+  function checkUserRoleAndInit() {
+    
+    google.script.run.withSuccessHandler(function(isAdmin) {
+      if (isAdmin) {
+        
+        document.getElementById("tab1-tab").style.display = "none";
+        document.getElementById("tab1").style.display = "none";
+        document.getElementById("tab2-tab").click();
+        document.getElementById("loadingSpinner").style.display = "none";
+        loadDataTab2();
+        
+      } else {
+        
+        document.getElementById("tab2-tab").style.display = "none";
+        document.getElementById("tab2").style.display = "none";
+        document.getElementById("tab1-tab").click();
+        document.getElementById("loadingSpinner").style.display = "none";
+        loadDataTab1();
+        document.getElementById("tambahSyorBtn").style.display = "none"; // ❌ Hide for non-admin
+      }
+    }).isUserAdmin();
+  }
+
+
+  function showUserDetails() {
+    google.script.run.withSuccessHandler(function(user) {
+      document.getElementById("Info").textContent = `${user.nama} (${user.peranan}) - ${user.email}`;
+    }).getUsers();
+  }
+
+
+
+  document.getElementById("tab1-tab").addEventListener("click", loadDataTab1);
+  document.getElementById("tab2-tab").addEventListener("click", loadDataTab2);
+  document.getElementById("tab3-tab").addEventListener("click", loadTab3Skor);
+
+
+  function loadDataTab1() {
+    google.script.run.withSuccessHandler(function(data) {
+      // google.script.run.withSuccessHandler(function(email) {
+      //   document.getElementById("email1").textContent = email;
+      // }).getCurrentEmail();
+
+      if (!data || data.length === 0) {
+        document.getElementById("dataBody1").innerHTML = `<tr><td colspan='11' class='text-center text-danger fw-bold'>Akses tidak dibenarkan</td></tr>`;
+        return;
+      }
+      dataTab1 = JSON.parse(JSON.stringify(data));
+      renderTableTab1(dataTab1);
+      initDataTableDesign("dataTableDesign1");
+    }).getAssignedSyorLimited();
+  }
+
+  function loadDataTab2() {
+    google.script.run.withSuccessHandler(function(data) {
+      
+      if (!data || data.length === 0) {
+        document.getElementById("dataBody2").innerHTML = `<tr><td colspan='9' class='text-center text-danger fw-bold'>Akses tidak dibenarkan</td></tr>`;
+        return;
+      }
+      dataTab2 = JSON.parse(JSON.stringify(data));
+      renderTableTab2(dataTab2);
+      initDataTableDesign("dataTableDesign2");
+    }).getAssignedSyor();
+  }
+
+  function renderTableTab1(data) {
+    const body = document.getElementById("dataBody1");
+    body.innerHTML = "";
+    data.forEach((item, idx) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${item.Laporan}</td>
+        <td>${item.Syor || ""}</td>
+        <td>${item.BahagianJpn || ""}</td>
+        <td>${item.Negeri || ""}</td>
+        <td>${item.Respon || ""}</td>
+        <td>${item.TempohMasa || ""}</td>
+        <td>${
+          item.FileLink 
+            ? `<a href="${item.FileLink}" target="_blank">Klik Sini</a>` 
+            : `<span class="text-muted fst-italic">Tiada</span>`
+        }</td>
+
+        <td>${formatDate(item.TarikhKemaskini)}</td>
+        <td><div class="text-center"><span class="status-circle ${circleClass(item.Indicator)}" title="${item.Indicator}"></span></div></td>
+        <td><button class="btn btn-primary btn-sm" onclick='bukaModalTab1(${JSON.stringify(item)})'>Respon</button></td>
+      `;
+      body.appendChild(row);
+    });
+  }
+
+  function bukaModalTab1(item) {
+    document.getElementById("rowNum1").value = item.RowNum;
+    document.getElementById("PemeriksaanInfo2").value = item.Laporan || "";
+    document.getElementById("SyorInfo2").value = item.Syor || "";
+    document.getElementById("responInput").value = item.Respon || "";
+
+    quillResponInput.root.innerHTML = item.Respon || "";
+
+    const tarikh = item.TarikhKemaskini 
+      ? new Date(item.TarikhKemaskini).toISOString().split("T")[0] 
+      : "";
+    document.getElementById("tarikhInput1").value = tarikh;
+    document.getElementById("tempohMasaInput").value = item.TempohMasa || "";
+    const modal = new bootstrap.Modal(document.getElementById("kemaskiniModal1"));
+    modal.show();
+  }
+
+  function simpanKemaskiniTab1() {
+
+  document.getElementById("responInput").value = quillResponInput.root.innerHTML;
+
+  const row = document.getElementById("rowNum1").value;
+  const respon = document.getElementById("responInput").value;
+  const tarikh = document.getElementById("tarikhInput1").value;
+  const tempohMasa = document.getElementById("tempohMasaInput").value;
+  const laporan = document.getElementById("PemeriksaanInfo2").value;
+  const syor = document.getElementById("SyorInfo2").value;
+
+  const data = { row, respon, tarikh, tempohMasa, Laporan: laporan, Syor: syor };
+
+  const fileInput = document.getElementById("pdfUpload");
+  const file = fileInput.files[0];
+
+  if (file) {
+    const fr = new FileReader();
+    fr.onload = function (e) {
+      const base64 = e.target.result.split(",")[1];
+      const namaFail = `${laporan}_${syor}_${tarikh}.pdf`;
+
+      google.script.run
+        .withSuccessHandler((link) => {
+          alert("Fail PDF berjaya dimuat naik.");
+          console.log("Link PDF:", link);
+          // Baru update respon selepas upload selesai
+          google.script.run.withSuccessHandler(() => {
+            bootstrap.Modal.getInstance(document.getElementById("kemaskiniModal1")).hide();
+            loadDataTab1();
+          }).updateRespon(row, respon, tarikh, tempohMasa);
+        })
+        .withFailureHandler(err => {
+          alert("Ralat upload PDF: " + err.message);
+        })
+        .uploadPDFtoDrive(base64, namaFail, data.Laporan, data.Syor, data.TarikhKemaskini);
+    };
+    fr.readAsDataURL(file);
+  } else {
+    // No PDF uploaded, just update the form data
+    google.script.run.withSuccessHandler(() => {
+      bootstrap.Modal.getInstance(document.getElementById("kemaskiniModal1")).hide();
+      loadDataTab1();
+    }).updateRespon(row, respon, tarikh, tempohMasa);
+  }
+}
+
+  function renderTableTab2(data) {
+    const body = document.getElementById("dataBody2");
+    body.innerHTML = "";
+    data.forEach((item, idx) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${item.Laporan}</td>
+        <td>${item.Syor || ""}</td>
+        <td>${item.BahagianJpn || ""}</td>
+        <td>${item.Negeri || ""}</td>
+        <td><div class="text-center"><span class="status-circle ${circleClass(item.Indicator)}" title="${item.Indicator}"></span></div></td>
+        <td>${formatDate(item.TarikhKemaskini)}</td>
+        <td>${item.Catatan || ""}</td>
+        <td><button class="btn btn-primary btn-sm" onclick='bukaModalTab2(${JSON.stringify(item)})'>Kemaskini</button></td>
+      `;
+      body.appendChild(row);
+    });
+  }
+
+  function bukaModalTab2(item) {
+    document.getElementById("rowNum2").value = item.RowNum;
+    document.getElementById("PemeriksaanInfo").value = item.Laporan || "";
+    document.getElementById("SyorInfo").value = item.Syor || "";
+    document.getElementById("ResponInfo").value = item.Respon || "";
+    document.getElementById("statusInput").value = item.Indicator || "";
+
+    quillSyorInfo.root.innerHTML = item.Syor || "";
+
+    const tarikh = item.TarikhKemaskini 
+      ? new Date(item.TarikhKemaskini).toISOString().split("T")[0] 
+      : "";
+    document.getElementById("tarikhInput2").value = tarikh;
+
+    document.getElementById("tempohMasaInput2").value = item.TempohMasa || "";
+    document.getElementById("catatanInput").value = item.Catatan || "";
+    const modal = new bootstrap.Modal(document.getElementById("kemaskiniModal2"));
+    modal.show();
+  }
+
+  function simpanKemaskiniTab2() {
+    document.getElementById("SyorInfo").value = quillSyorInfo.root.innerHTML;
+
+    const row = document.getElementById("rowNum2").value;
+    const syor = document.getElementById("SyorInfo").value;
+    const status = document.getElementById("statusInput").value;
+    const tarikh = document.getElementById("tarikhInput2").value;
+    const catatan = document.getElementById("catatanInput").value;
+    google.script.run
+    .withSuccessHandler(() => {
+      bootstrap.Modal.getInstance(document.getElementById("kemaskiniModal2")).hide();
+      loadDataTab2();
+    })
+    .withFailureHandler(err => {
+      alert("Ralat semasa menghantar data atau emel: " + err.message);
+    })
+    .updateSyor(row, syor, status, tarikh, catatan);
+  }
+
+  function badgeClass(status) {
+    if (status === "Hijau") return "badge-success";
+    if (status === "Kuning") return "badge-warning";
+    if (status === "Merah") return "badge-danger";
+    return "bg-secondary";
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
+  function formatDateForInput(dateStr) {
+    if (!dateStr) return "";
+    const parts = dateStr.split(/[-\/]/);
+    if (parts.length === 3) {
+      const [d, m, y] = parts;
+      if (y.length === 4) return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`; // dd/mm/yyyy
+      if (d.length === 4) return `${d}-${m.padStart(2, '0')}-${y.padStart(2, '0')}`; // yyyy-mm-dd
+    }
+    return "";
+  }
+
+  document.getElementById("searchInput1").addEventListener("input", function() {
+    const val = this.value.toLowerCase();
+    const filtered = dataTab1.filter(item =>
+      (item.Laporan || '').toLowerCase().includes(val) ||
+      (item.Syor || '').toLowerCase().includes(val) ||
+      (item.Indicator || '').toLowerCase().includes(val) ||
+      (item.TempohMasa || '').toLowerCase().includes(val) ||
+      (item.Respon || '').toLowerCase().includes(val)
+    );
+    renderTableTab1(filtered);
+  });
+
+  document.getElementById("searchInput2").addEventListener("input", function() {
+    const val = this.value.toLowerCase();
+    const filtered = dataTab2.filter(item =>
+      (item.Laporan || '').toLowerCase().includes(val) ||
+      (item.Syor || '').toLowerCase().includes(val) ||
+      (item.Indicator || '').toLowerCase().includes(val) ||
+      (item.BahagianJpn || '').toLowerCase().includes(val) ||
+      (item.Negeri || '').toLowerCase().includes(val) ||
+      (item.TarikhKemaskini || '').toLowerCase().includes(val) ||
+      (item.Catatan || '').toLowerCase().includes(val)
+    );
+    renderTableTab2(filtered);
+  });
+
+  // Auto-run ikut peranan
+  window.onload = function () {
+    checkUserRoleAndInit();
+    showUserDetails();
+    loadTab3Skor();
+    populateLaporanDropdown();
+    populateBahagianDropdown();
+    populateNegeriDropdown() 
+
+    const hariList = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
+      const bulanList = ["Januari", "Februari", "Mac", "April", "Mei", "Jun", "Julai", "Ogos", "September", "Oktober", "November", "Disember"];
+      const today = new Date();
+      const hari = hariList[today.getDay()];
+      const tarikh = today.getDate();
+      const bulan = bulanList[today.getMonth()];
+      const tahun = today.getFullYear();
+
+      document.getElementById("liveDate").innerText = `${hari}, ${tarikh} ${bulan} ${tahun}`;
+  };
+</script>
+<script>
+  const quillSyorBaru = new Quill('#editorSyorBaru', {
+    theme: 'snow',
+    placeholder: 'Masukkan kandungan syor di sini...',
+    modules: {
+      toolbar: [
+        [{ header: [1, 2, false] }],
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['clean']
+      ]
+    }
+  });
+
+  const quillResponInput = new Quill('#editorResponInput', {
+    theme: 'snow',
+    placeholder: 'Masukkan respon di sini...',
+    modules: {
+      toolbar: [
+        [{ header: [1, 2, false] }],
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['clean']
+      ]
+    }
+  });
+
+  const quillSyorInfo = new Quill('#editorSyorInfo', {
+    theme: 'snow',
+    placeholder: 'Masukkan kandungan syor di sini...',
+    modules: {
+      toolbar: [
+        [{ header: [1, 2, false] }],
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['clean']
+      ]
+    }
+  });
+
+  // Sync hidden input sebelum submit
+  document.getElementById("formTambahSyor").addEventListener("submit", function (e) {
+    document.getElementById("syorBaru").value = quillSyorBaru.root.innerHTML;
+  });
+
+  document.getElementById("kemaskiniForm1").addEventListener("submit", function (e) {
+    document.getElementById("responInput").value = quillResponInput.root.innerHTML;
+  });
+
+  document.getElementById("kemaskiniForm2").addEventListener("submit", function (e) {
+    document.getElementById("syorInfo").value = quillSyorInfo.root.innerHTML;
+  });
+</script>
+
+</body>
+</html>
