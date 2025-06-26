@@ -1,0 +1,90 @@
+
+    .custom-nav-tab .nav-link {
+      color: #6c757d;
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      margin-right: 4px;
+      border-radius: 0.5rem 0.5rem 0 0;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .custom-nav-tab .nav-link:hover {
+      background-color: #e2e6ea;
+      color: #000;
+    }
+
+    .custom-nav-tab .nav-link.active {
+      background-color: #007bff;
+      color: #fff;
+      font-weight: 600;
+      border-color: #007bff #007bff #fff;
+    }
+
+
+    #dataTableDesign1 td,
+    #dataTableDesign2 td {
+      vertical-align: top;
+      white-space: normal;
+      word-wrap: break-word;
+    }
+
+     label.form-label {
+      font-weight: 600;
+    }
+
+    .form-text {
+      font-size: 0.85rem;
+      margin-top: -6px;
+      margin-bottom: 6px;
+    }
+    .status-circle {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+    }
+
+    /* Header styling */
+    #dataTableDesign1 thead th, 
+    #dataTableDesign2 thead th{
+      background-color: #212529;
+      color: #ffffff;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    /* Hover strip */
+    #dataTableDesign1 tbody tr:hover,
+    #dataTableDesign2 tbody tr:hover {
+      background-color: #f5f5f5;
+    }
+
+    /* Full cell border */
+    #dataTableDesign1 th,
+    #dataTableDesign1 td,
+    #dataTableDesign2 th,
+    #dataTableDesign2 td {
+      border: 1px solid #dee2e6 !important;
+    }
+
+    /* Text align justify untuk 'Perakuan Menteri (Syor)' */
+    #dataTableDesign1 td:nth-child(3),
+    #dataTableDesign2 td:nth-child(3) {
+      text-align: justify;
+    }
+
+
+    .bg-merah { background-color: #dc3545; }
+    .bg-kuning { background-color: #ffc107; }
+    .bg-hijau { background-color: #28a745; }
+
+    .badge-success { background-color: #28a745; }
+    .badge-warning { background-color: #ffc107; }
+    .badge-danger { background-color: #dc3545; }
+    .custom-header {
+      background: url('https://i.imgur.com/Re8fdpv.png') center center no-repeat;
+      background-size: contain;
+      width: 100%;
+      aspect-ratio: 4 / 1;      
+    }
