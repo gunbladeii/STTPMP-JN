@@ -129,82 +129,7 @@ function initDataTableDesign(tableId) {
 }
 
 
-  let skorData = [];
-
-  function loadTab3Skor() {
-  google.script.run.withSuccessHandler(renderSkorTable).getSkorWajaranByUser();
-  google.script.run.withSuccessHandler(renderPieChart).getPieChartDataByUser();
-}
-
-function renderSkorTable(data) {
-  const body = document.getElementById("skorTableBody");
-  body.innerHTML = "";
-  data.forEach((item, i) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${i + 1}</td>
-      <td>${item.Laporan}</td>
-      <td><span class="fw-bold">${item.SkorWajaran}</span></td>
-      <td><div class="text-center"><span class="status-circle ${circleClass(item.DominantStatus)}" title="${item.DominantStatus}"></span></div></td>
-    `;
-    body.appendChild(row);
-  });
-}
-
-
-function renderPieChart(data) {
-  const ctx = document.getElementById("pieChartStatus").getContext("2d");
-
-  const statusLabelMap = {
-    "Merah": "Belum Selesai",
-    "Kuning": "Dalam Tindakan",
-    "Hijau": "Selesai"
-  };
-
-  const colorMap = {
-    "Hijau": "#28a745",
-    "Kuning": "#ffc107",
-    "Merah": "#dc3545"
-  };
-
-  const labels = Object.keys(data).map(status => statusLabelMap[status] || status);
-  const values = Object.values(data);
-  const colors = Object.keys(data).map(status => colorMap[status] || "#6c757d");
-
-  new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: labels,
-      datasets: [{
-        label: "Jumlah Syor",
-        data: values,
-        backgroundColor: colors
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-        title: { display: false }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            precision: 0 // Integer only
-          }
-        }
-      }
-    }
-  });
-}
-
-
-
-
-
-
-  
+  let skorData = [];  
   let dataTab1 = [];
   let dataTab2 = [];
 
@@ -249,7 +174,8 @@ function renderPieChart(data) {
 
   document.getElementById("tab1-tab").addEventListener("click", loadDataTab1);
   document.getElementById("tab2-tab").addEventListener("click", loadDataTab2);
-  document.getElementById("tab3-tab").addEventListener("click", loadTab3Skor);
+  document.getElementById("tab3-tab").addEventListener("click", () => {loadTab3Dashboard();});
+
 
 
   function loadDataTab1() {
@@ -431,6 +357,105 @@ function renderPieChart(data) {
     .updateSyor(row, syor, status, tarikh, catatan);
   }
 
+  function loadTab3Dashboard() {
+      google.script.run.withSuccessHandler(function (data) {
+        const statusCount = { Selesai: 0, "Dalam Tindakan": 0, "Belum Selesai": 0 };
+
+        // Count total
+        document.getElementById("totalSyor").textContent = data.length;
+
+        data.forEach(item => {
+          const status = item.Indicator?.toLowerCase();
+          if (status === "hijau") statusCount.Selesai++;
+          else if (status === "kuning") statusCount["Dalam Tindakan"]++;
+          else if (status === "merah") statusCount["Belum Selesai"]++;
+        });
+
+        document.getElementById("totalSelesai").textContent = statusCount.Selesai;
+        document.getElementById("totalTindakan").textContent = statusCount["Dalam Tindakan"];
+        document.getElementById("totalBelum").textContent = statusCount["Belum Selesai"];
+
+        renderStatusBarChart(statusCount);
+      }).getAssignedSyor();
+
+      // Pie Chart ikut Bahagian
+      google.script.run.withSuccessHandler(function (data) {
+        const countByBahagian = {};
+        data.forEach(item => {
+          const bahagian = item.BahagianJpn || "Lain-lain";
+          countByBahagian[bahagian] = (countByBahagian[bahagian] || 0) + 1;
+        });
+        renderBahagianPieChart(countByBahagian);
+      }).getAssignedSyor();
+
+      // Top 5 syor skor terendah
+      google.script.run.withSuccessHandler(function (data) {
+        const sorted = data.sort((a, b) => a.SkorWajaran - b.SkorWajaran).slice(0, 5);
+        const body = document.getElementById("top5SyorBody");
+        body.innerHTML = "";
+        sorted.forEach((item, idx) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${idx + 1}</td>
+            <td>${item.Laporan}</td>
+            <td>${item.Syor}</td>
+            <td>${item.BahagianJpn}</td>
+            <td><span class="fw-bold">${item.SkorWajaran}</span></td>
+          `;
+          body.appendChild(row);
+        });
+      }).getSkorWajaranByUser();
+   }
+
+   function renderStatusBarChart(data) {
+      const ctx = document.getElementById("statusBarChart").getContext("2d");
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(data),
+          datasets: [{
+            label: 'Jumlah Syor',
+            data: Object.values(data),
+            backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    function renderBahagianPieChart(data) {
+      const ctx = document.getElementById("bahagianPieChart").getContext("2d");
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(data),
+          datasets: [{
+            data: Object.values(data),
+            backgroundColor: Object.keys(data).map(() =>
+              `hsl(${Math.random() * 360}, 60%, 60%)`)
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'bottom' }
+          }
+        }
+      });
+    }
+
+
+
   function badgeClass(status) {
     if (status === "Hijau") return "badge-success";
     if (status === "Kuning") return "badge-warning";
@@ -488,7 +513,7 @@ function renderPieChart(data) {
   window.onload = function () {
     checkUserRoleAndInit();
     showUserDetails();
-    loadTab3Skor();
+    loadTab3Dashboard();
     populateLaporanDropdown();
     populateBahagianDropdown();
     populateNegeriDropdown() 
