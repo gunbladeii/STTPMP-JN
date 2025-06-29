@@ -47,9 +47,11 @@ function getUsers() {
     const userEmail = data[i][0]?.toLowerCase();
     const nama = data[i][1];
     const peranan = data[i][2];
+    const bahagian = data[i][3];
+    const negeri = data[i][4];
 
     if (email === userEmail) {
-      return { nama, peranan, email };
+      return { nama, peranan, bahagian, negeri, email };
     }
   }
   return { nama: "Tidak dikenalpasti", peranan: "Tiada", email };
@@ -428,4 +430,40 @@ function getSenaraiNegeri() {
   return data.filter(n => n).sort();
 }
 
+// ✅ Logging aktiviti pengguna ke sheet Log_Aktiviti
+function logAktiviti(email, laporan, indicator, catatan) {
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Log_Aktiviti");
+  sheet.appendRow([
+    new Date(),
+    email,
+    getUserBahagian(email),
+    getLastBilFromSTTMP_DB(laporan),
+    laporan,
+    indicator,
+    catatan
+  ]);
+}
 
+function getUserBahagian(email) {
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Users");
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === email) {
+      return data[i][4]; // Bahagian
+    }
+  }
+  return "";
+}
+
+function getLastBilFromSTTMP_DB(laporan) {
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("STTMP_DB");
+  const data = sheet.getDataRange().getValues();
+  let bil = "";
+  for (let i = data.length - 1; i > 0; i--) {
+    if (data[i][1] === laporan) {
+      bil = data[i][0];
+      break;
+    }
+  }
+  return bil;
+}
