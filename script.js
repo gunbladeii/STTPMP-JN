@@ -167,10 +167,10 @@ function initDataTableDesign(tableId) {
   function showUserDetails() {
     google.script.run.withSuccessHandler(function(user) {
       document.getElementById("Info").innerHTML = `
-        <strong>${user.nama}</strong><br>
-        <span class="text-primary">${user.peranan}</span><br>
-        ${user.lokasi ? "" + user.lokasi : ""}<br>
-        <small class="text-muted">${user.email}</small>
+        Nama Pengguna: <strong>${user.nama}</strong><br>
+        Agensi: <span class="text-primary">${user.peranan}</span><br>
+        Lokasi: ${user.lokasi ? "" + user.lokasi : ""}<br>
+        E-mel: <small class="text-muted">${user.email}</small>
       `;
     }).getUsers();
   }
