@@ -51,11 +51,20 @@ function getUsers() {
     const negeri = data[i][4];
 
     if (email === userEmail) {
-      return { nama, peranan, bahagian, negeri, email };
+      let lokasi = "";
+      if (peranan === "JPN") {
+        lokasi = negeri || "-";
+      } else if (peranan === "Bahagian") {
+        lokasi = bahagian || "-";
+      } // Admin = kekal ""
+
+      return { nama, peranan, lokasi, email };
     }
   }
-  return { nama: "Tidak dikenalpasti", peranan: "Tiada", email };
+
+  return { nama: "Tidak dikenalpasti", peranan: "Tiada", lokasi: "", email };
 }
+
 
 function getUserDetails() {
   const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
