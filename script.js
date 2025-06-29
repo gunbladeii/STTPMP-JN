@@ -309,6 +309,11 @@ function initDataTableDesign(tableId) {
         <td>${item.Syor || ""}</td>
         <td>${item.BahagianJpn || ""}</td>
         <td>${item.Negeri || ""}</td>
+        <td>${
+          item.FileLink 
+            ? `<a href="${item.FileLink}" target="_blank">Klik Sini</a>` 
+            : `<span class="text-muted fst-italic">Tiada</span>`
+        }</td>
         <td><div class="text-center"><span class="status-circle ${circleClass(item.Indicator)}" title="${item.Indicator}"></span></div></td>
         <td>${formatDate(item.TarikhKemaskini)}</td>
         <td>${item.Catatan || ""}</td>
