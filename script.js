@@ -357,55 +357,61 @@ function initDataTableDesign(tableId) {
     .updateSyor(row, syor, status, tarikh, catatan);
   }
 
-  function loadTab3Dashboard() {
-      google.script.run.withSuccessHandler(function (data) {
-        const statusCount = { Selesai: 0, "Dalam Tindakan": 0, "Belum Selesai": 0 };
+ function loadTab3Dashboard() {
+  google.script.run.withSuccessHandler(function (user) {
+    const isAdmin = user.peranan === "Admin";
+    const getDataFn = isAdmin ? "getAssignedSyor" : "getAssignedSyorLimited";
 
-        // Count total
-        document.getElementById("totalSyor").textContent = data.length;
+    // KPI Card (Hijau/Kuning/Merah)
+    google.script.run.withSuccessHandler(function (data) {
+      const statusCount = { Selesai: 0, "Dalam Tindakan": 0, "Belum Selesai": 0 };
 
-        data.forEach(item => {
-          const status = item.Indicator?.toLowerCase();
-          if (status === "hijau") statusCount.Selesai++;
-          else if (status === "kuning") statusCount["Dalam Tindakan"]++;
-          else if (status === "merah") statusCount["Belum Selesai"]++;
-        });
+      document.getElementById("totalSyor").textContent = data.length;
 
-        document.getElementById("totalSelesai").textContent = statusCount.Selesai;
-        document.getElementById("totalTindakan").textContent = statusCount["Dalam Tindakan"];
-        document.getElementById("totalBelum").textContent = statusCount["Belum Selesai"];
+      data.forEach(item => {
+        const status = item.Indicator?.toLowerCase();
+        if (status === "hijau") statusCount.Selesai++;
+        else if (status === "kuning") statusCount["Dalam Tindakan"]++;
+        else if (status === "merah") statusCount["Belum Selesai"]++;
+      });
 
-        renderStatusBarChart(statusCount);
-      }).getAssignedSyor();
+      document.getElementById("totalSelesai").textContent = statusCount.Selesai;
+      document.getElementById("totalTindakan").textContent = statusCount["Dalam Tindakan"];
+      document.getElementById("totalBelum").textContent = statusCount["Belum Selesai"];
+      renderStatusBarChart(statusCount);
+    })[getDataFn]();
 
-      // Pie Chart ikut Bahagian
-      google.script.run.withSuccessHandler(function (data) {
-        const countByBahagian = {};
-        data.forEach(item => {
-          const bahagian = item.BahagianJpn || "Lain-lain";
-          countByBahagian[bahagian] = (countByBahagian[bahagian] || 0) + 1;
-        });
-        renderBahagianPieChart(countByBahagian);
-      }).getAssignedSyor();
+    // Pie chart
+    google.script.run.withSuccessHandler(function (data) {
+      const countByBahagian = {};
+      data.forEach(item => {
+        const bahagian = item.BahagianJpn || "Lain-lain";
+        countByBahagian[bahagian] = (countByBahagian[bahagian] || 0) + 1;
+      });
+      renderBahagianPieChart(countByBahagian);
+    })[getDataFn]();
 
-      // Top 5 syor skor terendah
-      google.script.run.withSuccessHandler(function (data) {
-        const sorted = data.sort((a, b) => a.SkorWajaran - b.SkorWajaran).slice(0, 5);
-        const body = document.getElementById("top5SyorBody");
-        body.innerHTML = "";
-        sorted.forEach((item, idx) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${idx + 1}</td>
-            <td>${item.Laporan}</td>
-            <td>${item.Syor}</td>
-            <td>${item.BahagianJpn}</td>
-            <td><span class="fw-bold">${item.SkorWajaran}</span></td>
-          `;
-          body.appendChild(row);
-        });
-      }).getSkorWajaranByUser();
-   }
+    // Top 5 syor
+    google.script.run.withSuccessHandler(function (data) {
+      const sorted = data.sort((a, b) => a.SkorWajaran - b.SkorWajaran).slice(0, 5);
+      const body = document.getElementById("top5SyorBody");
+      body.innerHTML = "";
+      sorted.forEach((item, idx) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${idx + 1}</td>
+          <td>${item.Laporan}</td>
+          <td>${item.Syor}</td>
+          <td>${item.BahagianJpn}</td>
+          <td><span class="fw-bold">${item.SkorWajaran}</span></td>
+        `;
+        body.appendChild(row);
+      });
+    }).getSkorWajaranByUser();
+
+  }).getUsers(); // Get role first
+}
+
 
    function renderStatusBarChart(data) {
       const ctx = document.getElementById("statusBarChart").getContext("2d");

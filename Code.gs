@@ -194,35 +194,44 @@ function getSkorWajaranByUser() {
   const headers = data[0];
 
   const laporanIdx = headers.indexOf("Laporan");
-  const statusIdx = headers.indexOf("Indicator");
+  const syorIdx = headers.indexOf("Syor");
   const bahagianIdx = headers.indexOf("BahagianJpn");
   const negeriIdx = headers.indexOf("Negeri");
+  const indicatorIdx = headers.indexOf("Indicator");
 
   const skorMap = { "Hijau": 1, "Kuning": 0.5, "Merah": 0 };
   const laporanMap = {};
 
   for (let i = 1; i < data.length; i++) {
     const laporan = data[i][laporanIdx];
-    const status = data[i][statusIdx];
+    const syor = data[i][syorIdx];
     const bahagian = data[i][bahagianIdx]?.toLowerCase() || "";
     const negeri = data[i][negeriIdx]?.toLowerCase() || "";
+    const status = data[i][indicatorIdx];
+
+    const skor = skorMap[status] ?? 0;
 
     if (
       user.peranan === "Admin" ||
       (user.peranan === "Bahagian" && bahagian.includes(user.bahagian.toLowerCase())) ||
       (user.peranan === "JPN" && negeri.includes(user.negeri.toLowerCase()))
     ) {
-      const skor = skorMap[status] ?? 0;
       if (!laporanMap[laporan]) laporanMap[laporan] = [];
-      laporanMap[laporan].push(skor);
+
+      laporanMap[laporan].push({
+        Laporan: laporan,
+        Syor: syor,
+        BahagianJpn: data[i][bahagianIdx],
+        Skor: skor
+      });
     }
   }
 
   const result = [];
   for (const laporan in laporanMap) {
-    const skorList = laporanMap[laporan];
-    const total = skorList.reduce((a, b) => a + b, 0);
-    const avg = skorList.length ? total / skorList.length : 0;
+    const items = laporanMap[laporan];
+    const total = items.reduce((sum, item) => sum + item.Skor, 0);
+    const avg = items.length ? total / items.length : 0;
 
     let status = "Merah";
     if (avg === 1) status = "Hijau";
@@ -230,6 +239,8 @@ function getSkorWajaranByUser() {
 
     result.push({
       Laporan: laporan,
+      Syor: items[0].Syor || "-",
+      BahagianJpn: items[0].BahagianJpn || "-",
       SkorWajaran: avg.toFixed(2),
       DominantStatus: status
     });
@@ -237,6 +248,7 @@ function getSkorWajaranByUser() {
 
   return result;
 }
+
 
 function getPieChartDataByUser() {
   const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
@@ -415,6 +427,5 @@ function getSenaraiNegeri() {
   const data = sheet.getRange('B2:B' + sheet.getLastRow()).getValues().flat();
   return data.filter(n => n).sort();
 }
-
 
 
