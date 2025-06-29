@@ -169,7 +169,7 @@ function initDataTableDesign(tableId) {
       document.getElementById("Info").innerHTML = `
         <strong>${user.nama}</strong><br>
         <span class="text-primary">${user.peranan}</span><br>
-        ${user.lokasi ? "- " + user.lokasi : ""}<br>
+        ${user.lokasi ? "" + user.lokasi : ""}<br>
         <small class="text-muted">${user.email}</small>
       `;
     }).getUsers();
