@@ -57,9 +57,9 @@ function populateBahagianDropdown(...ids) {
     .withSuccessHandler(function (data) {
       ids.forEach((id) => {
         const dropdown = document.getElementById(id);
-        dropdown.innerHTML = <option value="">Pilih Bahagian</option>;
+        dropdown.innerHTML = `<option value="">Pilih Bahagian</option>`;
         data.forEach((item) => {
-          dropdown.innerHTML += <option value="${item}">${item}</option>;
+          dropdown.innerHTML += `<option value="${item}">${item}</option>`;
         });
       });
     })
@@ -71,9 +71,9 @@ function populateNegeriDropdown(...ids) {
     .withSuccessHandler(function (data) {
       ids.forEach((id) => {
         const dropdown = document.getElementById(id);
-        dropdown.innerHTML = <option value="">Pilih Negeri</option>;
+        dropdown.innerHTML = `<option value="">Pilih Negeri</option>`;
         data.forEach((item) => {
-          dropdown.innerHTML += <option value="${item}">${item}</option>;
+          dropdown.innerHTML += `<option value="${item}">${item}</option>`;
         });
       });
     })
