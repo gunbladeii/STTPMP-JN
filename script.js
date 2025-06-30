@@ -560,6 +560,20 @@ function initDataTableDesign(tableId) {
         body.appendChild(row);
       });
       initDataTableDesign("dataTableUsers");
+      // ✅ Bind button click listener baru lepas render
+      document.querySelectorAll('.btn-kemaskini').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const item = {
+            nama: btn.getAttribute('data-nama'),
+            email: btn.getAttribute('data-email'),
+            peranan: btn.getAttribute('data-peranan'),
+            bahagian: btn.getAttribute('data-bahagian'),
+            negeri: btn.getAttribute('data-negeri')
+          };
+          const index = parseInt(btn.getAttribute('data-index'));
+          bukaModalKemaskiniPengguna(item, index);
+        });
+      });
     }).getAllUsers();
   }
 
@@ -704,20 +718,5 @@ function initDataTableDesign(tableId) {
     document.getElementById("syorInfo").value = quillSyorInfo.root.innerHTML;
   });
 
-  document.addEventListener('DOMContentLoaded', function () {
-  document.querySelectorAll('.btn-kemaskini').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      const item = {
-        nama: btn.getAttribute('data-nama'),
-        email: btn.getAttribute('data-email'),
-        peranan: btn.getAttribute('data-peranan'),
-        bahagian: btn.getAttribute('data-bahagian'),
-        negeri: btn.getAttribute('data-negeri')
-      };
-      const index = parseInt(btn.getAttribute('data-index'));
-      bukaModalKemaskiniPengguna(item, index);
-    });
-  });
-});
 
 
