@@ -593,7 +593,7 @@ function initDataTableDesign(tableId) {
     loadTab3Dashboard();
     populateLaporanDropdown();
     populateBahagianDropdown("bahagianBaru", "bahagianUserBaru");
-    populateNegeriDropdown("negeriBaru", "negeriUserBaru");
+    populateNegeriDropdown("negeriBaru", "negeriUserBaru")
  
 
     const hariList = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
