@@ -558,6 +558,18 @@ function initDataTableDesign(tableId) {
     modal.show();
   }
 
+  function bukaModalKemaskiniPengguna(item, rowIndex) {
+  document.getElementById("rowNumKemaskini").value = rowIndex + 2;
+  document.getElementById("namaKemaskini").value = item.nama;
+  document.getElementById("emelKemaskini").value = item.email;
+  document.getElementById("perananKemaskini").value = item.peranan;
+  document.getElementById("bahagianUserKemaskini").value = item.bahagian || "";
+  document.getElementById("negeriUserKemaskini").value = item.negeri || "";
+
+  const modal = new bootstrap.Modal(document.getElementById("kemaskiniPenggunaModal"));
+  modal.show();
+}
+
 
   // Auto-run ikut peranan
   window.onload = function () {
@@ -565,8 +577,8 @@ function initDataTableDesign(tableId) {
     showUserDetails();
     loadTab3Dashboard();
     populateLaporanDropdown();
-    populateBahagianDropdown("bahagianBaru", "bahagianUserBaru");
-    populateNegeriDropdown("negeriBaru", "negeriUserBaru")
+    populateBahagianDropdown("bahagianBaru", "bahagianUserBaru","bahagianUserKemaskini");
+    populateNegeriDropdown("negeriBaru", "negeriUserBaru","negeriUserKemaskini")
  
 
     const hariList = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
@@ -579,6 +591,31 @@ function initDataTableDesign(tableId) {
 
       document.getElementById("liveDate").innerText = `${hari}, ${tarikh} ${bulan} ${tahun}`;
       document.getElementById("tab4-tab").addEventListener("click", loadDataUsers);
+    
+    document.getElementById("formKemaskiniPengguna").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const emailInput = document.getElementById("emelKemaskini").value.trim();
+    const regex = /^[a-zA-Z0-9._%+-]+@moe\.gov\.my$/;
+    if (!regex.test(emailInput)) {
+      alert("Sila masukkan e-mel sah seperti: nama@moe.gov.my");
+      return;
+    }
+
+    const data = {
+      row: document.getElementById("rowNumKemaskini").value,
+      nama: document.getElementById("namaKemaskini").value,
+      email: document.getElementById("emelKemaskini").value,
+      peranan: document.getElementById("perananKemaskini").value,
+      bahagian: document.getElementById("bahagianUserKemaskini").value,
+      negeri: document.getElementById("negeriUserKemaskini").value,
+    };
+
+    google.script.run.withSuccessHandler(() => {
+      bootstrap.Modal.getInstance(document.getElementById("kemaskiniPenggunaModal")).hide();
+      loadDataUsers();
+    }).updateUser(data);
+  });
 
     document.getElementById("formDaftarPengguna").addEventListener("submit", function(e) {
       e.preventDefault();
