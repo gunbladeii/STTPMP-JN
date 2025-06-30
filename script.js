@@ -525,6 +525,33 @@ function initDataTableDesign(tableId) {
     renderTableTab2(filtered);
   });
 
+  function loadDataUsers() {
+    google.script.run.withSuccessHandler(function(data) {
+      const body = document.getElementById("dataBodyUsers");
+      body.innerHTML = "";
+      data.forEach((item, i) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${item.nama}</td>
+          <td>${item.email}</td>
+          <td>${item.peranan}</td>
+          <td>${item.bahagian || "-"}</td>
+          <td>${item.negeri || "-"}</td>
+        `;
+        body.appendChild(row);
+      });
+      initDataTableDesign("dataTableUsers");
+    }).getAllUsers();
+  }
+
+  function bukaModalDaftarPengguna() {
+    document.getElementById("formDaftarPengguna").reset();
+    const modal = new bootstrap.Modal(document.getElementById("daftarPenggunaModal"));
+    modal.show();
+  }
+
+
   // Auto-run ikut peranan
   window.onload = function () {
     checkUserRoleAndInit();
@@ -543,6 +570,22 @@ function initDataTableDesign(tableId) {
       const tahun = today.getFullYear();
 
       document.getElementById("liveDate").innerText = `${hari}, ${tarikh} ${bulan} ${tahun}`;
+      document.getElementById("tab4-tab").addEventListener("click", loadDataUsers);
+
+    document.getElementById("formDaftarPengguna").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const data = {
+        nama: document.getElementById("namaBaru").value,
+        email: document.getElementById("emelBaru").value,
+        peranan: document.getElementById("perananBaru").value,
+        bahagian: document.getElementById("bahagianUserBaru").value,
+        negeri: document.getElementById("negeriUserBaru").value,
+      };
+      google.script.run.withSuccessHandler(() => {
+        bootstrap.Modal.getInstance(document.getElementById("daftarPenggunaModal")).hide();
+        loadDataUsers();
+      }).insertUser(data);
+    });
   };
 
 
