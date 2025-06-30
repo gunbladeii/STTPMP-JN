@@ -545,10 +545,16 @@ function initDataTableDesign(tableId) {
           <td>${item.peranan}</td>
           <td>${item.bahagian || "-"}</td>
           <td>${item.negeri || "-"}</td>
-          <td><button class="btn btn-warning btn-sm"
-                onclick='bukaModalKemaskiniPengguna(${JSON.stringify(user)}, ${index})'>
-                Kemaskini
-              </button>
+          <td>
+            <button class="btn btn-warning btn-sm btn-kemaskini"
+              data-index="${i}"
+              data-nama="${item.nama}"
+              data-email="${item.email}"
+              data-peranan="${item.peranan}"
+              data-bahagian="${item.bahagian || ''}"
+              data-negeri="${item.negeri || ''}">
+              Kemaskini
+            </button>
           </td>
         `;
         body.appendChild(row);
@@ -697,4 +703,21 @@ function initDataTableDesign(tableId) {
   document.getElementById("kemaskiniForm2").addEventListener("submit", function (e) {
     document.getElementById("syorInfo").value = quillSyorInfo.root.innerHTML;
   });
+
+  document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.btn-kemaskini').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const item = {
+        nama: btn.getAttribute('data-nama'),
+        email: btn.getAttribute('data-email'),
+        peranan: btn.getAttribute('data-peranan'),
+        bahagian: btn.getAttribute('data-bahagian'),
+        negeri: btn.getAttribute('data-negeri')
+      };
+      const index = parseInt(btn.getAttribute('data-index'));
+      bukaModalKemaskiniPengguna(item, index);
+    });
+  });
+});
+
 
