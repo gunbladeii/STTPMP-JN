@@ -52,28 +52,62 @@ function populateLaporanDropdown() {
     .catch(err => console.error("Gagal fetch laporan:", err));
 }
 
+function populateBahagianDropdown(...ids) {
+  google.script.run
+    .withSuccessHandler(function (data) {
+      ids.forEach((id) => {
+        const dropdown = document.getElementById(id);
+        dropdown.innerHTML = <option value="">Pilih Bahagian</option>;
+        data.forEach((item) => {
+          dropdown.innerHTML += <option value="${item}">${item}</option>;
+        });
+      });
+    })
+    .getSenaraiBahagian();
+}
 
-//dropdown Bahagian
-function populateBahagianDropdown() {
-  google.script.run.withSuccessHandler(function(data) {
-    const bahagianInput = document.getElementById("bahagianBaru");
-    bahagianInput.innerHTML = `<option value="">Pilih Bahagian</option>`;
-    data.forEach(function(item) {
-      bahagianInput.innerHTML += `<option value="${item}">${item}</option>`;
-    });
-  }).getSenaraiBahagian();
+function populateNegeriDropdown(...ids) {
+  google.script.run
+    .withSuccessHandler(function (data) {
+      ids.forEach((id) => {
+        const dropdown = document.getElementById(id);
+        dropdown.innerHTML = <option value="">Pilih Negeri</option>;
+        data.forEach((item) => {
+          dropdown.innerHTML += <option value="${item}">${item}</option>;
+        });
+      });
+    })
+    .getSenaraiNegeri();
 }
 
 //dropdown Bahagian
-function populateNegeriDropdown() {
-  google.script.run.withSuccessHandler(function(data) {
-    const bahagianInput = document.getElementById("negeriBaru");
-    bahagianInput.innerHTML = `<option value="">Pilih Negeri</option>`;
-    data.forEach(function(item) {
-      bahagianInput.innerHTML += `<option value="${item}">${item}</option>`;
-    });
-  }).getSenaraiNegeri();
-}
+// function populateBahagianDropdown() {
+//   google.script.run.withSuccessHandler(function(data) {
+//     const bahagianInput = document.getElementById("bahagianBaru");
+//     const bahagianUserInput = document.getElementById("bahagianUserBaru");
+
+//     bahagianInput.innerHTML = `<option value="">Pilih Bahagian</option>`;
+//     data.forEach(function(item) {
+//       bahagianInput.innerHTML += `<option value="${item}">${item}</option>`;
+//     });
+
+//     bahagianUserInput.innerHTML = `<option value="">Pilih Bahagian</option>`;
+//     data.forEach(function(item) {
+//       bahagianUserInput.innerHTML += `<option value="${item}">${item}</option>`;
+//     });
+//   }).getSenaraiBahagian();
+// }
+
+//dropdown Bahagian
+// function populateNegeriDropdown() {
+//   google.script.run.withSuccessHandler(function(data) {
+//     const bahagianInput = document.getElementById("negeriBaru");
+//     bahagianInput.innerHTML = `<option value="">Pilih Negeri</option>`;
+//     data.forEach(function(item) {
+//       bahagianInput.innerHTML += `<option value="${item}">${item}</option>`;
+//     });
+//   }).getSenaraiNegeri();
+// }
 
 function simpanSyorBaru() {
   // Sync Quill value
@@ -558,8 +592,9 @@ function initDataTableDesign(tableId) {
     showUserDetails();
     loadTab3Dashboard();
     populateLaporanDropdown();
-    populateBahagianDropdown();
-    populateNegeriDropdown() 
+    populateBahagianDropdown("bahagianBaru", "bahagianUserBaru");
+    populateNegeriDropdown("negeriBaru", "negeriUserBaru");
+ 
 
     const hariList = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
       const bulanList = ["Januari", "Februari", "Mac", "April", "Mei", "Jun", "Julai", "Ogos", "September", "Oktober", "November", "Disember"];
