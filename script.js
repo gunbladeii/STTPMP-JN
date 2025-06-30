@@ -582,6 +582,13 @@ function initDataTableDesign(tableId) {
 
     document.getElementById("formDaftarPengguna").addEventListener("submit", function(e) {
       e.preventDefault();
+      const emailInput = document.getElementById("emelBaru").value.trim();
+      const regex = /^[a-zA-Z0-9._%+-]+@moe\.gov\.my$/;
+
+      if (!regex.test(emailInput)) {
+        alert("Sila masukkan e-mel sah seperti: nama@moe.gov.my");
+        return;
+      }
       const data = {
         nama: document.getElementById("namaBaru").value,
         email: document.getElementById("emelBaru").value,
