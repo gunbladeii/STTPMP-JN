@@ -80,35 +80,6 @@ function populateNegeriDropdown(...ids) {
     .getSenaraiNegeri();
 }
 
-//dropdown Bahagian
-// function populateBahagianDropdown() {
-//   google.script.run.withSuccessHandler(function(data) {
-//     const bahagianInput = document.getElementById("bahagianBaru");
-//     const bahagianUserInput = document.getElementById("bahagianUserBaru");
-
-//     bahagianInput.innerHTML = `<option value="">Pilih Bahagian</option>`;
-//     data.forEach(function(item) {
-//       bahagianInput.innerHTML += `<option value="${item}">${item}</option>`;
-//     });
-
-//     bahagianUserInput.innerHTML = `<option value="">Pilih Bahagian</option>`;
-//     data.forEach(function(item) {
-//       bahagianUserInput.innerHTML += `<option value="${item}">${item}</option>`;
-//     });
-//   }).getSenaraiBahagian();
-// }
-
-//dropdown Bahagian
-// function populateNegeriDropdown() {
-//   google.script.run.withSuccessHandler(function(data) {
-//     const bahagianInput = document.getElementById("negeriBaru");
-//     bahagianInput.innerHTML = `<option value="">Pilih Negeri</option>`;
-//     data.forEach(function(item) {
-//       bahagianInput.innerHTML += `<option value="${item}">${item}</option>`;
-//     });
-//   }).getSenaraiNegeri();
-// }
-
 function simpanSyorBaru() {
   // Sync Quill value
   document.getElementById("syorBaru").value = quillSyorBaru.root.innerHTML;
@@ -189,6 +160,7 @@ function initDataTableDesign(tableId) {
         
         document.getElementById("tab2-tab").style.display = "none";
         document.getElementById("tab2").style.display = "none";
+        document.getElementById("tab4").style.display = "none";
         document.getElementById("tab1-tab").click();
         document.getElementById("loadingSpinner").style.display = "none";
         loadDataTab1();
