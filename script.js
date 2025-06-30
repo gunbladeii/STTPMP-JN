@@ -545,7 +545,11 @@ function initDataTableDesign(tableId) {
           <td>${item.peranan}</td>
           <td>${item.bahagian || "-"}</td>
           <td>${item.negeri || "-"}</td>
-          <td><button class="btn btn-success btn-sm" onclick="bukaModalKemaskiniPengguna()">+ Daftar Pengguna</button></td>
+          <td><button class="btn btn-warning btn-sm"
+                onclick='bukaModalKemaskiniPengguna(${JSON.stringify(user)}, ${index})'>
+                Kemaskini
+              </button>
+          </td>
         `;
         body.appendChild(row);
       });
