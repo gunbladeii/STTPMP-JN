@@ -545,16 +545,18 @@ function initDataTableDesign(tableId) {
           <td>${item.peranan}</td>
           <td>${item.bahagian || "-"}</td>
           <td>${item.negeri || "-"}</td>
-          <td>
-            <button class="btn btn-warning btn-sm btn-kemaskini"
-              data-index="${i}"
-              data-nama="${item.nama}"
-              data-email="${item.email}"
-              data-peranan="${item.peranan}"
-              data-bahagian="${item.bahagian || ''}"
-              data-negeri="${item.negeri || ''}">
-              Kemaskini
-            </button>
+          <td class="text-center">
+            <div class="d-flex justify-content-center">
+              <button class="btn btn-warning btn-sm btn-kemaskini"
+                data-index="${i}"
+                data-nama="${item.nama}"
+                data-email="${item.email}"
+                data-peranan="${item.peranan}"
+                data-bahagian="${item.bahagian || ''}"
+                data-negeri="${item.negeri || ''}">
+                Kemaskini
+              </button>
+            </div>
           </td>
         `;
         body.appendChild(row);

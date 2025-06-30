@@ -496,24 +496,10 @@ function insertUser(data) {
   sheet.appendRow([data.email, data.nama, data.peranan, data.bahagian, data.negeri]);
 }
 
-function updateUser(index, updatedUser) {
-  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-  const sheet = ss.getSheetByName("Users");
-
-  if (!sheet) throw new Error("Sheet 'Users' not found");
-
-  const row = parseInt(index) + 2; // +2 sebab header di row 1 dan index mula dari 0
-
-  const values = [
-    updatedUser.nama || "",
-    updatedUser.emel || "",
-    updatedUser.peranan || "",
-    updatedUser.bahagian || "",
-    updatedUser.negeri || "",
-    updatedUser.akses || ""
-  ];
-
-  sheet.getRange(row, 2, 1, values.length).setValues([values]);
-  return true;
+function updateUser(data) {
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
+  const row = Number(data.row);
+  sheet.getRange(row, 1, 1, 5).setValues([[data.nama, data.email, data.peranan, data.bahagian, data.negeri]]);
 }
+
 
