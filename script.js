@@ -160,6 +160,7 @@ function initDataTableDesign(tableId) {
         
         document.getElementById("tab2-tab").style.display = "none";
         document.getElementById("tab2").style.display = "none";
+        document.getElementById("tab4-tab").style.display = "none";
         document.getElementById("tab4").style.display = "none";
         document.getElementById("tab1-tab").click();
         document.getElementById("loadingSpinner").style.display = "none";
