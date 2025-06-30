@@ -23,7 +23,8 @@
 
 
     #dataTableDesign1 td,
-    #dataTableDesign2 td {
+    #dataTableDesign2 td,
+    #dataTableUsers {
       vertical-align: top;
       white-space: normal;
       word-wrap: break-word;
@@ -47,7 +48,8 @@
 
     /* Header styling */
     #dataTableDesign1 thead th, 
-    #dataTableDesign2 thead th{
+    #dataTableDesign2 thead th,
+    #dataTableUsers thead th{
       background-color: #212529;
       color: #ffffff;
       text-align: center;
@@ -56,7 +58,8 @@
 
     /* Hover strip */
     #dataTableDesign1 tbody tr:hover,
-    #dataTableDesign2 tbody tr:hover {
+    #dataTableDesign2 tbody tr:hover,
+    #dataTableUsers tbody tr:hover{
       background-color: #f5f5f5;
     }
 
@@ -64,13 +67,16 @@
     #dataTableDesign1 th,
     #dataTableDesign1 td,
     #dataTableDesign2 th,
-    #dataTableDesign2 td {
+    #dataTableDesign2 td,
+    #dataTableUsers th,
+    #dataTableUsers td{
       border: 1px solid #dee2e6 !important;
     }
 
     /* Text align justify untuk 'Perakuan Menteri (Syor)' */
     #dataTableDesign1 td:nth-child(3),
-    #dataTableDesign2 td:nth-child(3) {
+    #dataTableDesign2 td:nth-child(3),
+    #dataTableUsers td:nth-child(3) {
       text-align: justify;
     }
 
