@@ -545,6 +545,7 @@ function initDataTableDesign(tableId) {
           <td>${item.peranan}</td>
           <td>${item.bahagian || "-"}</td>
           <td>${item.negeri || "-"}</td>
+          <td><button class="btn btn-success btn-sm" onclick="bukaModalKemaskiniPengguna()">+ Daftar Pengguna</button></td>
         `;
         body.appendChild(row);
       });
