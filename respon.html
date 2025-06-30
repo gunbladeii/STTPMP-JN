@@ -230,6 +230,7 @@
               <th>Peranan</th>
               <th>Bahagian</th>
               <th>Negeri</th>
+              <th>Kemaskini</th>
             </tr>
           </thead>
           <tbody id="dataBodyUsers"></tbody>
@@ -287,7 +288,54 @@
     </div>
   <!-- End Modal Tab 4 --> 
 
-  </div>
+  <!-- MODAL: KEMASKINI PENGGUNA -->
+    <div class="modal fade" id="kemaskiniPenggunaModal" tabindex="-1" aria-labelledby="kemaskiniPenggunaModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <form id="formKemaskiniPengguna">
+            <div class="modal-header">
+              <h5 class="modal-title" id="kemaskiniPenggunaModalLabel">Kemaskini Maklumat Pengguna</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <input type="hidden" id="rowNumKemaskini">
+              <div class="mb-3">
+                <label class="form-label">Nama Penuh</label>
+                <input type="text" class="form-control" id="namaKemaskini" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">E-mel MOE</label>
+                <input type="email" class="form-control" id="emelKemaskini" required>
+                <div class="form-text">Contoh: nama@moe.gov.my</div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Peranan</label>
+                <select class="form-select" id="perananKemaskini" required>
+                  <option value="">Pilih Peranan</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Bahagian">Bahagian</option>
+                  <option value="JPN">JPN</option>
+                </select>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Bahagian</label>
+                  <select class="form-select" id="bahagianUserKemaskini"></select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Negeri</label>
+                  <select class="form-select" id="negeriUserKemaskini"></select>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-success">Kemaskini</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
   <!-- Modal Tambah Syor -->
     <div class="modal fade" id="tambahModal" tabindex="-1">
