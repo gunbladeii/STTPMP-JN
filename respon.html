@@ -63,6 +63,11 @@
     </button>
   </li>
   <li class="nav-item" role="presentation">
+    <button class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" type="button" role="tab">
+      Daftar Pengguna
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
     <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab">
       Dashboard
     </button>
@@ -209,7 +214,78 @@
     </div>
     <!-- Dashboard Tab End -->
 
- 
+    <!-- Begin Tab 4 -->
+    <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Senarai Pengguna</h5>
+        <button class="btn btn-success btn-sm" onclick="bukaModalDaftarPengguna()">+ Daftar Pengguna</button>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover w-100" id="dataTableUsers">
+          <thead>
+            <tr>
+              <th>Bil</th>
+              <th>Nama</th>
+              <th>E-mel</th>
+              <th>Peranan</th>
+              <th>Bahagian</th>
+              <th>Negeri</th>
+            </tr>
+          </thead>
+          <tbody id="dataBodyUsers"></tbody>
+        </table>
+      </div>
+    </div>
+    <!-- End Tab 4 -->
+
+    <!-- Begin Modal Tab 4 -->
+    <div class="modal fade" id="daftarPenggunaModal" tabindex="-1" aria-labelledby="daftarPenggunaLabel" aria-hidden="true">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Daftar Pengguna Baru</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+          </div>
+          <div class="modal-body">
+            <form id="formDaftarPengguna">
+              <div class="mb-2">
+                <label class="form-label">Nama</label>
+                <input type="text" class="form-control" id="namaBaru" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">E-mel</label>
+                <input type="email" class="form-control" id="emelBaru" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Peranan</label>
+                <select class="form-select" id="perananBaru" required>
+                  <option value="">Pilih</option>
+                  <option>Admin</option>
+                  <option>Bahagian</option>
+                  <option>JPN</option>
+                </select>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Bahagian</label>
+                  <select id="bahagianUserBaru" class="form-control">
+                    <option value="">Memuatkan...</option>
+                  </select>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Negeri</label>
+                <select class="form-select" id="negeriUserBaru">
+                    <option value="">Memuatkan...</option>
+                </select>
+              </div>
+              <div class="text-end">
+                <button type="submit" class="btn btn-primary">Simpan</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  <!-- End Modal Tab 4 --> 
 
   </div>
 

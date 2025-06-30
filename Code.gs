@@ -476,3 +476,22 @@ function getLastBilFromSTTMP_DB(laporan) {
   }
   return bil;
 }
+
+function getAllUsers() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(USER_SHEET_NAME);
+  const data = sheet.getDataRange().getValues();
+  return data.slice(1).map(row => ({
+    email: row[0],
+    nama: row[1],
+    peranan: row[2],
+    bahagian: row[3],
+    negeri: row[4]
+  }));
+}
+
+function insertUser(data) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(USER_SHEET_NAME);
+  sheet.appendRow([data.email, data.nama, data.peranan, data.bahagian, data.negeri]);
+}
