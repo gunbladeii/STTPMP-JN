@@ -533,54 +533,73 @@ function initDataTableDesign(tableId) {
   });
 
   function loadDataUsers() {
-    google.script.run.withSuccessHandler(function(data) {
-      const body = document.getElementById("dataBodyUsers");
-      body.innerHTML = "";
-      data.forEach((item, i) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${i + 1}</td>
-          <td>${item.nama}</td>
-          <td>${item.email}</td>
-          <td>${item.peranan}</td>
-          <td>${item.bahagian || "-"}</td>
-          <td>${item.negeri || "-"}</td>
-          <td class="text-center">
-            <div class="d-flex justify-content-center gap-1">
-              <button class="btn btn-warning btn-sm btn-kemaskini"
-                data-index="${i}"
-                data-nama="${item.nama}"
-                data-email="${item.email}"
-                data-peranan="${item.peranan}"
-                data-bahagian="${item.bahagian || ''}"
-                data-negeri="${item.negeri || ''}">
-                Kemaskini
-              </button>
-              <button class="btn btn-danger btn-sm btn-delete" data-index="${i}" data-email="${item.email}">
-                <i class="bi bi-trash"></i>
-              </button>
-            </div>
-          </td>
-        `;
-        body.appendChild(row);
+  google.script.run.withSuccessHandler(function(data) {
+    const body = document.getElementById("dataBodyUsers");
+    body.innerHTML = "";
+    data.forEach((item, i) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${item.nama}</td>
+        <td>${item.email}</td>
+        <td>${item.peranan}</td>
+        <td>${item.bahagian || "-"}</td>
+        <td>${item.negeri || "-"}</td>
+        <td class="text-center">
+          <div class="d-flex justify-content-center gap-1">
+            <button class="btn btn-warning btn-sm btn-kemaskini"
+              data-index="${i}"
+              data-nama="${item.nama}"
+              data-email="${item.email}"
+              data-peranan="${item.peranan}"
+              data-bahagian="${item.bahagian || ''}"
+              data-negeri="${item.negeri || ''}">
+              Kemaskini
+            </button>
+            <button class="btn btn-danger btn-sm btn-delete"
+              data-index="${i}"
+              data-email="${item.email}">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </td>
+      `;
+      body.appendChild(row);
+    });
+
+    initDataTableDesign("dataTableUsers");
+
+    // 🎯 Bind semua listener selepas render
+    document.querySelectorAll('.btn-kemaskini').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const item = {
+          nama: btn.getAttribute('data-nama'),
+          email: btn.getAttribute('data-email'),
+          peranan: btn.getAttribute('data-peranan'),
+          bahagian: btn.getAttribute('data-bahagian'),
+          negeri: btn.getAttribute('data-negeri')
+        };
+        const index = parseInt(btn.getAttribute('data-index'));
+        bukaModalKemaskiniPengguna(item, index);
       });
-      initDataTableDesign("dataTableUsers");
-      // ✅ Bind button click listener baru lepas render
-      document.querySelectorAll('.btn-kemaskini').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          const item = {
-            nama: btn.getAttribute('data-nama'),
-            email: btn.getAttribute('data-email'),
-            peranan: btn.getAttribute('data-peranan'),
-            bahagian: btn.getAttribute('data-bahagian'),
-            negeri: btn.getAttribute('data-negeri')
-          };
-          const index = parseInt(btn.getAttribute('data-index'));
-          bukaModalKemaskiniPengguna(item, index);
-        });
+    });
+
+    // ✅ Tambah ni dalam loadDataUsers()
+    document.querySelectorAll('.btn-delete').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const index = parseInt(btn.getAttribute('data-index')) + 2;
+        const email = btn.getAttribute('data-email');
+        if (confirm(`Padam pengguna ini?\n\nE-mel: ${email}`)) {
+          google.script.run.withSuccessHandler(() => {
+            loadDataUsers();
+          }).deleteUser(index);
+        }
       });
-    }).getAllUsers();
-  }
+    });
+
+  }).getAllUsers();
+}
+
 
   function bukaModalDaftarPengguna() {
     document.getElementById("formDaftarPengguna").reset();
@@ -642,21 +661,9 @@ function initDataTableDesign(tableId) {
     };
 
     google.script.run.withSuccessHandler(() => {
-      bootstrap.Modal.getInstance(document.getElementById("kemaskiniPenggunaModal")).hide();
-      loadDataUsers();
-    }).updateUser(data);
-  });
-
-      document.querySelectorAll('.btn-delete').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        const index = parseInt(btn.getAttribute('data-index')) + 2;
-        const email = btn.getAttribute('data-email');
-        if (confirm(`Padam pengguna ini?\n\nE-mel: ${email}`)) {
-          google.script.run.withSuccessHandler(() => {
-            loadDataUsers();
-          }).deleteUser(index);
-        }
-      });
+        bootstrap.Modal.getInstance(document.getElementById("kemaskiniPenggunaModal")).hide();
+        loadDataUsers();
+      }).updateUser(data);
     });
 
     document.getElementById("formDaftarPengguna").addEventListener("submit", function(e) {
