@@ -587,12 +587,12 @@ function initDataTableDesign(tableId) {
     // ✅ Tambah ni dalam loadDataUsers()
     document.querySelectorAll('.btn-delete').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        const index = parseInt(btn.getAttribute('data-index')) + 2;
+        const row = parseInt(btn.getAttribute('data-index')) + 2;
         const email = btn.getAttribute('data-email');
         if (confirm(`Padam pengguna ini?\n\nE-mel: ${email}`)) {
           google.script.run.withSuccessHandler(() => {
             loadDataUsers();
-          }).deleteUser(index);
+          }).deleteUser(row);
         }
       });
     });
