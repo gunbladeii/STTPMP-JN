@@ -1007,4 +1007,9 @@ function updateUser(data) {
   sheet.getRange(row, 1, 1, 5).setValues([[data.nama, data.email, data.peranan, data.bahagian, data.negeri]]);
 }
 
+function deleteUser(row) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Users");
+  sheet.deleteRow(parseInt(row));
+}
+
 

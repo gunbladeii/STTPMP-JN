@@ -546,7 +546,7 @@ function initDataTableDesign(tableId) {
           <td>${item.bahagian || "-"}</td>
           <td>${item.negeri || "-"}</td>
           <td class="text-center">
-            <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center gap-1">
               <button class="btn btn-warning btn-sm btn-kemaskini"
                 data-index="${i}"
                 data-nama="${item.nama}"
@@ -555,6 +555,9 @@ function initDataTableDesign(tableId) {
                 data-bahagian="${item.bahagian || ''}"
                 data-negeri="${item.negeri || ''}">
                 Kemaskini
+              </button>
+              <button class="btn btn-danger btn-sm btn-delete" data-index="${i}" data-email="${item.email}">
+                <i class="bi bi-trash"></i>
               </button>
             </div>
           </td>
@@ -643,6 +646,18 @@ function initDataTableDesign(tableId) {
       loadDataUsers();
     }).updateUser(data);
   });
+
+      document.querySelectorAll('.btn-delete').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const index = parseInt(btn.getAttribute('data-index')) + 2;
+        const email = btn.getAttribute('data-email');
+        if (confirm(`Padam pengguna ini?\n\nE-mel: ${email}`)) {
+          google.script.run.withSuccessHandler(() => {
+            loadDataUsers();
+          }).deleteUser(index);
+        }
+      });
+    });
 
     document.getElementById("formDaftarPengguna").addEventListener("submit", function(e) {
       e.preventDefault();
