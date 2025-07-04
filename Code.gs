@@ -376,18 +376,28 @@ function sendNotificationEmail(bahagian, negeri, laporan, syor, catatan) {
   if (recipients.length === 0) return;
 
   const subject = `📬 Notifikasi STTMP: Syor Menteri bagi ${laporan}`;
-  const body = `Assalamualaikum dan salam sejahtera,\n\n` +
-               `Satu kemaskini telah dibuat oleh Admin bagi syor berikut:\n\n` +
-               `📌 Laporan: ${laporan}\n` +
-               `📌 Syor: ${syor}\n` +
-               `📌 Catatan Terkini: ${catatan}\n\n` +
-               `Sila semak sistem STTMP untuk tindakan selanjutnya.\n\n` +
-               `--\nSTTMP Notification`;
+  const htmlBody = `
+      <div style="font-family:Arial,sans-serif;border:1px solid #0d6efd;border-radius:8px;padding:16px;background:#f8f9fa;">
+        <h3 style="color:#0d6efd;margin-top:0;">📢 Notifikasi STTMP</h3>
+        <p>Assalamualaikum dan salam sejahtera,</p>
+        <p>Satu kemaskini telah dibuat oleh <strong>Admin</strong> bagi syor berikut:</p>
+
+        <div style="border-left:4px solid #dc3545;padding-left:10px;margin:10px 0;">
+          <p><strong>📌 Laporan:</strong> ${laporan}</p>
+          <p><strong>📌 Syor:</strong> ${syor}</p>
+          <hr>
+          <p><strong>📌 Maklum balas Jemaah Nazir (Urus setia):</strong> ${catatan}</p>
+        </div>
+
+        <p>Sila semak sistem STTMP untuk tindakan selanjutnya.</p>
+        <p style="font-size:12px;color:#888;">--<br>STTMP Notification</p>
+      </div>
+    `;
 
   MailApp.sendEmail({
     to: recipients.join(","),
     subject: subject,
-    body: body
+    htmlBody: htmlBody // ✅ HTML!
   });
 }
 
