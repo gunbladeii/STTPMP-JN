@@ -539,7 +539,6 @@ function loadDataUsers() {
     const body = document.getElementById("dataBodyUsers");
     body.innerHTML = "";
     data.forEach((item, i) => {
-      const rowNum = i + 2;
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${i + 1}</td>
@@ -551,7 +550,7 @@ function loadDataUsers() {
         <td class="text-center">
           <div class="d-flex justify-content-center gap-1">
             <button class="btn btn-warning btn-sm btn-kemaskini"
-              data-index="${rowNum}"
+              data-index="${i}"
               data-nama="${item.nama}"
               data-email="${item.email}"
               data-peranan="${item.peranan}"
@@ -560,7 +559,7 @@ function loadDataUsers() {
               <i class="bi bi-pencil-square"></i>
             </button>
             <button class="btn btn-danger btn-sm btn-delete"
-              data-index2="${rowNum}"
+              data-index2="${i}"
               data-email="${item.email}">
               <i class="bi bi-trash"></i>
             </button>
@@ -572,36 +571,38 @@ function loadDataUsers() {
 
     initDataTableDesign("dataTableUsers");
 
-    document.querySelectorAll('.btn-kemaskini').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        document.getElementById("rowNumKemaskini").value = btn.getAttribute('data-index');
-        document.getElementById("namaKemaskini").value = btn.getAttribute('data-nama');
-        document.getElementById("emelKemaskini").value = btn.getAttribute('data-email');
-        document.getElementById("perananKemaskini").value = btn.getAttribute('data-peranan');
-        document.getElementById("bahagianUserKemaskini").value = btn.getAttribute('data-bahagian');
-        document.getElementById("negeriUserKemaskini").value = btn.getAttribute('data-negeri');
-
-        const modal = new bootstrap.Modal(document.getElementById("kemaskiniPenggunaModal"));
-        modal.show();
-      });
-    });
-
-    document.querySelectorAll('.btn-delete').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        const row = parseInt(btn.getAttribute('data-index2'));
-        const email = btn.getAttribute('data-email');
-        if (confirm(`Padam pengguna ini?\n\nE-mel: ${email}`)) {
-          google.script.run.withSuccessHandler(() => {
-            loadDataUsers();
-          }).deleteUser(row);
-        }
-      });
-    });
-
   }).getAllUsers();
 }
 
+// Event delegation utk butang Kemaskini
+document.addEventListener("click", function (e) {
+  if (e.target.closest(".btn-kemaskini")) {
+    const btn = e.target.closest(".btn-kemaskini");
+    const item = {
+      nama: btn.getAttribute('data-nama'),
+      email: btn.getAttribute('data-email'),
+      peranan: btn.getAttribute('data-peranan'),
+      bahagian: btn.getAttribute('data-bahagian'),
+      negeri: btn.getAttribute('data-negeri')
+    };
+    const index = parseInt(btn.getAttribute('data-index'));
+    bukaModalKemaskiniPengguna(item, index);
+  }
+});
 
+// Event delegation utk butang Delete
+document.addEventListener("click", function (e) {
+  if (e.target.closest(".btn-delete")) {
+    const btn = e.target.closest(".btn-delete");
+    const row = parseInt(btn.getAttribute('data-index2')) + 2;
+    const email = btn.getAttribute('data-email');
+    if (confirm(`Padam pengguna ini?\n\nE-mel: ${email}`)) {
+      google.script.run.withSuccessHandler(() => {
+        loadDataUsers();
+      }).deleteUser(row);
+    }
+  }
+});
 
 
   function bukaModalDaftarPengguna() {
