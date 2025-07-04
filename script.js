@@ -536,11 +536,10 @@ function initDataTableDesign(tableId) {
 
 function loadDataUsers() {
   google.script.run.withSuccessHandler(function(data) {
-    users = data;
     const body = document.getElementById("dataBodyUsers");
     body.innerHTML = "";
-
-    users.forEach((item, i) => {
+    data.forEach((item, i) => {
+      const rowNum = i + 2;
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${i + 1}</td>
@@ -552,11 +551,16 @@ function loadDataUsers() {
         <td class="text-center">
           <div class="d-flex justify-content-center gap-1">
             <button class="btn btn-warning btn-sm btn-kemaskini"
-              data-index="${i}">
+              data-index="${rowNum}"
+              data-nama="${item.nama}"
+              data-email="${item.email}"
+              data-peranan="${item.peranan}"
+              data-bahagian="${item.bahagian || ''}"
+              data-negeri="${item.negeri || ''}">
               <i class="bi bi-pencil-square"></i>
             </button>
             <button class="btn btn-danger btn-sm btn-delete"
-              data-index="${i}"
+              data-index2="${rowNum}"
               data-email="${item.email}">
               <i class="bi bi-trash"></i>
             </button>
@@ -568,41 +572,35 @@ function loadDataUsers() {
 
     initDataTableDesign("dataTableUsers");
 
+    document.querySelectorAll('.btn-kemaskini').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.getElementById("rowNumKemaskini").value = btn.getAttribute('data-index');
+        document.getElementById("namaKemaskini").value = btn.getAttribute('data-nama');
+        document.getElementById("emelKemaskini").value = btn.getAttribute('data-email');
+        document.getElementById("perananKemaskini").value = btn.getAttribute('data-peranan');
+        document.getElementById("bahagianUserKemaskini").value = btn.getAttribute('data-bahagian');
+        document.getElementById("negeriUserKemaskini").value = btn.getAttribute('data-negeri');
+
+        const modal = new bootstrap.Modal(document.getElementById("kemaskiniPenggunaModal"));
+        modal.show();
+      });
+    });
+
+    document.querySelectorAll('.btn-delete').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const row = parseInt(btn.getAttribute('data-index2'));
+        const email = btn.getAttribute('data-email');
+        if (confirm(`Padam pengguna ini?\n\nE-mel: ${email}`)) {
+          google.script.run.withSuccessHandler(() => {
+            loadDataUsers();
+          }).deleteUser(row);
+        }
+      });
+    });
+
   }).getAllUsers();
 }
 
-// ✅ Event Delegation for buttons (handle pagination)
-document.addEventListener('click', function (e) {
-  const btnEdit = e.target.closest('.btn-kemaskini');
-  if (btnEdit) {
-    const index = parseInt(btnEdit.getAttribute('data-index'));
-    const item = users[index];
-    if (!item) return;
-
-    document.getElementById('rowNumKemaskini').value = index;
-    document.getElementById('namaKemaskini').value = item.nama;
-    document.getElementById('emelKemaskini').value = item.email;
-    document.getElementById('perananKemaskini').value = item.peranan;
-    document.getElementById('bahagianUserKemaskini').value = item.bahagian || "";
-    document.getElementById('negeriUserKemaskini').value = item.negeri || "";
-
-    const modal = new bootstrap.Modal(document.getElementById('kemaskiniPenggunaModal'));
-    modal.show();
-  }
-
-  const btnDelete = e.target.closest('.btn-delete');
-  if (btnDelete) {
-    const index = parseInt(btnDelete.getAttribute('data-index'));
-    const email = btnDelete.getAttribute('data-email');
-    const row = index + 2;
-
-    if (confirm(`Padam pengguna ini?\n\nE-mel: ${email}`)) {
-      google.script.run.withSuccessHandler(() => {
-        loadDataUsers();
-      }).deleteUser(row);
-    }
-  }
-});
 
 
 
