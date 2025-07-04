@@ -569,38 +569,33 @@ function initDataTableDesign(tableId) {
 
     initDataTableDesign("dataTableUsers");
 
-    // Panggil event dari parent (document) – event delegation
-      document.addEventListener('click', function (e) {
-        const target = e.target.closest('.btn-kemaskini');
-        if (target) {
-          const rowIndex = parseInt(target.getAttribute('data-index'));
-          const user = users[rowIndex];
-          if (!user) return;
+    // 🎯 Bind semua listener selepas render
+    document.querySelectorAll('.btn-kemaskini').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const item = {
+          nama: btn.getAttribute('data-nama'),
+          email: btn.getAttribute('data-email'),
+          peranan: btn.getAttribute('data-peranan'),
+          bahagian: btn.getAttribute('data-bahagian'),
+          negeri: btn.getAttribute('data-negeri')
+        };
+        const index = parseInt(btn.getAttribute('data-index'));
+        bukaModalKemaskiniPengguna(item, index);
+      });
+    });
 
-          document.getElementById('rowNumKemaskini').value = rowIndex;
-          document.getElementById('namaKemaskini').value = user.nama;
-          document.getElementById('emelKemaskini').value = user.email;
-          document.getElementById('perananKemaskini').value = user.peranan;
-          document.getElementById('bahagianUserKemaskini').value = user.bahagian;
-          document.getElementById('negeriUserKemaskini').value = user.negeri;
-          const modal = new bootstrap.Modal(document.getElementById('kemaskiniPenggunaModal'));
-          modal.show();
+    // ✅ Tambah ni dalam loadDataUsers()
+    document.querySelectorAll('.btn-delete').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const row = parseInt(btn.getAttribute('data-index2')) + 2;
+        const email = btn.getAttribute('data-email');
+        if (confirm(`Padam pengguna ini?\n\nE-mel: ${email}`)) {
+          google.script.run.withSuccessHandler(() => {
+            loadDataUsers();
+          }).deleteUser(row);
         }
       });
-
-      document.addEventListener('click', function (e) {
-        const target = e.target.closest('.btn-delete');
-        if (target) {
-          const rowIndex = parseInt(target.getAttribute('data-index2')) + 2;
-          const email = target.getAttribute('data-email');
-
-          if (confirm(`Padam pengguna ini?\n\nE-mel: ${email}`)) {
-            google.script.run.withSuccessHandler(() => {
-              loadDataUsers(); // Refresh table
-            }).deleteUser(rowIndex);
-          }
-        }
-      });
+    });
 
   }).getAllUsers();
 }
