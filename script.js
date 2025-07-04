@@ -591,7 +591,7 @@ function initDataTableDesign(tableId) {
       document.addEventListener('click', function (e) {
         const target = e.target.closest('.btn-delete');
         if (target) {
-          const rowIndex = parseInt(target.getAttribute('data-index')) + 2;
+          const rowIndex = parseInt(target.getAttribute('data-index2')) + 2;
           const email = target.getAttribute('data-email');
 
           if (confirm(`Padam pengguna ini?\n\nE-mel: ${email}`)) {
@@ -601,6 +601,7 @@ function initDataTableDesign(tableId) {
           }
         }
       });
+
   }).getAllUsers();
 }
 
