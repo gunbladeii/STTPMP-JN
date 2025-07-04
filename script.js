@@ -553,7 +553,7 @@ function loadDataUsers() {
           <div class="d-flex justify-content-center gap-1">
             <button class="btn btn-warning btn-sm btn-kemaskini"
               data-index="${i}">
-              Kemaskini
+              <i class="bi bi-pencil-square"></i>
             </button>
             <button class="btn btn-danger btn-sm btn-delete"
               data-index="${i}"
