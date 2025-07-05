@@ -64,6 +64,11 @@
     </button>
   </li>
   <li class="nav-item" role="presentation">
+    <button class="nav-link" id="tab5-tab" data-bs-toggle="tab" data-bs-target="#tab5" type="button" role="tab">
+      Akses Peneraju
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
     <button class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" type="button" role="tab">
       Daftar Pengguna
     </button>
@@ -128,6 +133,37 @@
             </tr>
           </thead>
           <tbody id="dataBody2">
+            <tr><td colspan="9" class="text-center fst-italic">Sedang dimuatkan paparan...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="tab5" role="tabpanel">
+        <h5 class="text-primary fw-bold">Akses Peneraju</h5>
+      <input type="text" id="searchInput2" class="form-control mb-3" placeholder="Hanya perlu taip keyword bagi carian semua column...">
+      <!-- Tambah butang di atas table admin -->
+      <button id="tambahSyorBtn" class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#tambahModal">
+        <i class="bi bi-plus-circle"></i> Tambah Syor
+      </button>
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover w-100" id="dataTableDesign3">
+          <thead>
+            <tr>
+              <th>Bil</th>
+              <th>Laporan</th>
+              <th>Perakuan Menteri (Syor)</th>
+              <th>Peneraju</th>
+              <th>Bahagian</th>
+              <th>JPN</th>
+              <th>Pautan (Pengesahan Ketua Jabatan)</th>
+              <th>Status</th>
+              <th>Tarikh Kemaskini</th>            
+              <th>Catatan</th>
+              <th>Tindakan</th>
+            </tr>
+          </thead>
+          <tbody id="dataBody3">
             <tr><td colspan="9" class="text-center fst-italic">Sedang dimuatkan paparan...</td></tr>
           </tbody>
         </table>
@@ -337,7 +373,7 @@
                   <select class="form-select" id="bahagianUserKemaskini"></select>
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label class="form-label">Negeri (Jika Peranan Negeri)</label>
+                  <label class="form-label">Negeri (Jika Peranan JPN)</label>
                   <select class="form-select" id="negeriUserKemaskini"></select>
                 </div>
               </div>
@@ -365,6 +401,13 @@
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Laporan</label>              
                   <select id="laporanBaru" class="form-control select2">
+                    <option value="">Memuatkan...</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Sektor</label>
+                  <select id="sektorBaru" class="form-control" required>
                     <option value="">Memuatkan...</option>
                   </select>
                 </div>
@@ -517,6 +560,60 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
           <button type="button" class="btn btn-primary" onclick="simpanKemaskiniTab2()">Simpan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Tab Akses Peneraju -->
+  <div class="modal fade" id="kemaskiniModal3" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Kemaskini Maklumat</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="kemaskiniForm3">
+            <input type="hidden" id="rowNum2">
+            <div class="mb-2">
+              <label class="form-label">Nama Pemeriksaan</label>
+              <input type="text" class="form-control" id="PemeriksaanInfo" readonly>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Perakuan Menteri (Syor)</label>
+              <div id="editorSyorInfo" style="height: 150px;"></div>
+              <input type="hidden" id="SyorInfo">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Respon</label>
+              <textarea class="form-control" id="ResponInfo" readonly></textarea>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Status</label>
+              <select class="form-select" id="statusInput">
+                <option value="Hijau">Hijau</option>
+                <option value="Kuning">Kuning</option>
+                <option value="Merah">Merah</option>
+              </select>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Tempoh Masa</label>
+              <textarea class="form-control" id="tempohMasaInput2" readonly></textarea>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Tarikh Kemaskini</label>
+              <input type="date" class="form-control" id="tarikhInput2">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Catatan</label>
+              <textarea class="form-control" id="catatanInput"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+          <button type="button" class="btn btn-primary" onclick="simpanKemaskiniTab3()">Simpan</button>
         </div>
       </div>
     </div>
