@@ -204,9 +204,9 @@ function initDataTableDesign(tableId) {
     const isPeneraju = roleData.isPeneraju;
 
     if (isAdmin) {
-      const body = document.getElementById("PaparanTab");
+      const body = document.getElementById("myTab");
       body.innerHTML = `
-      <ul class="nav nav-tabs custom-nav-tab mt-4" id="myTab" role="tablist">        
+          
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab">
             Akses Admin
@@ -222,14 +222,14 @@ function initDataTableDesign(tableId) {
             Dashboard
           </button>
         </li>
-      </ul>
+      
       `;      
       document.getElementById("tab2-tab").click();
       loadDataTab2();
     } else if (isPeneraju) {
-      const body = document.getElementById("PaparanTab");
+      const body = document.getElementById("myTab");
       body.innerHTML = `
-      <ul class="nav nav-tabs custom-nav-tab mt-4" id="myTab" role="tablist"> 
+      
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="tab5-tab" data-bs-toggle="tab" data-bs-target="#tab5" type="button" role="tab">
             Akses Peneraju
@@ -240,14 +240,14 @@ function initDataTableDesign(tableId) {
             Dashboard
           </button>
         </li>
-      </ul>
+      
       `;      
       document.getElementById("tab5-tab").click();
       loadDataTab3();
     } else {
-      const body = document.getElementById("PaparanTab");
+      const body = document.getElementById("myTab");
       body.innerHTML = `
-      <ul class="nav nav-tabs custom-nav-tab mt-4" id="myTab" role="tablist">
+      
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab">
             Akses Bahagian/JPN
@@ -258,7 +258,7 @@ function initDataTableDesign(tableId) {
             Dashboard
           </button>
         </li>
-      </ul>
+      
       `;
       document.getElementById("tab1-tab").click();
       loadDataTab1();
