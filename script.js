@@ -186,11 +186,11 @@ function initDataTableDesign(tableId) {
       document.getElementById("tab2-tab").click();
       loadDataTab2();
     } else if (isPeneraju) {
-      hideTabsExcept(["tab5", "tab4"]);
+      hideTabsExcept(["tab5", "tab3"]);
       document.getElementById("tab5-tab").click();
       loadDataTab3();
     } else {
-      hideTabsExcept(["tab1", "tab4"]);
+      hideTabsExcept(["tab1", "tab3"]);
       document.getElementById("tab1-tab").click();
       loadDataTab1();
     }
