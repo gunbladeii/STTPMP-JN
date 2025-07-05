@@ -570,7 +570,7 @@ function loadDataUsers() {
               data-email="${item.email}"
               data-peranan="${item.peranan}"
               data-bahagian="${item.bahagian || ''}"
-              data-negeri="${item.negeri || ''}">
+              data-negeri="${item.negeri || ''}"
               data-sektor="${item.sektor || ''}">
               <i class="bi bi-pencil-square"></i>
             </button>
