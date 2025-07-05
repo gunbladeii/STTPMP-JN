@@ -91,7 +91,7 @@ function populateSektorDropdown(...ids) {
         });
       });
     })
-    .getSektorNegeri();
+    .getSenaraiSektor();
 }
 
 function simpanSyorBaru() {
