@@ -204,62 +204,15 @@ function initDataTableDesign(tableId) {
     const isPeneraju = roleData.isPeneraju;
 
     if (isAdmin) {
-      const body = document.getElementById("myTab");
-      body.innerHTML = `
-          
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab">
-            Akses Admin
-          </button>
-        </li>        
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" type="button" role="tab">
-            Daftar Pengguna
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab">
-            Dashboard
-          </button>
-        </li>
-      
-      `;      
+      hideTabsExcept(["tab2", "tab3", "tab4","tab2-tab", "tab3-tab", "tab4-tab"]);
       document.getElementById("tab2-tab").click();
       loadDataTab2();
     } else if (isPeneraju) {
-      const body = document.getElementById("myTab");
-      body.innerHTML = `
-      
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="tab5-tab" data-bs-toggle="tab" data-bs-target="#tab5" type="button" role="tab">
-            Akses Peneraju
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab">
-            Dashboard
-          </button>
-        </li>
-      
-      `;      
+      hideTabsExcept(["tab5", "tab3","tab5-tab", "tab3-tab"]);
       document.getElementById("tab5-tab").click();
       loadDataTab3();
     } else {
-      const body = document.getElementById("myTab");
-      body.innerHTML = `
-      
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab">
-            Akses Bahagian/JPN
-          </button>
-        </li>       
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab">
-            Dashboard
-          </button>
-        </li>
-      
-      `;
+      hideTabsExcept(["tab1", "tab3","tab1-tab", "tab3-tab"]);
       document.getElementById("tab1-tab").click();
       loadDataTab1();
     }
@@ -267,7 +220,6 @@ function initDataTableDesign(tableId) {
     document.getElementById("loadingSpinner").style.display = "none";
   }).getUserCheck(); // pastikan function ni memang wujud dan return objek
 }
-
 
   function showUserDetails() {
     google.script.run.withSuccessHandler(function(user) {
@@ -824,7 +776,7 @@ document.addEventListener("click", function (e) {
       const tahun = today.getFullYear();
 
       document.getElementById("liveDate").innerText = `${hari}, ${tarikh} ${bulan} ${tahun}`;
-      // document.getElementById("tab4-tab").addEventListener("click", loadDataUsers);
+      document.getElementById("tab4-tab").addEventListener("click", loadDataUsers);
     
     document.getElementById("formKemaskiniPengguna").addEventListener("submit", function(e) {
     e.preventDefault();
