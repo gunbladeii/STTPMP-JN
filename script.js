@@ -182,6 +182,8 @@ function checkUserRoleAndInit() {
       document.getElementById("tab1").style.display = "none";
       document.getElementById("tab2-tab").style.display = "none";
       document.getElementById("tab2").style.display = "none";
+      document.getElementById("tab4-tab").style.display = "none";
+      document.getElementById("tab4").style.display = "none";
       document.getElementById("tab5-tab").click();
       document.getElementById("loadingSpinner").style.display = "none";
       loadDataTab3();
@@ -259,7 +261,7 @@ function checkUserRoleAndInit() {
     }
 
     // ✅ Parse sini sebab backend return string
-    dataTab3 = JSON.parse(data); 
+    dataTab3 = JSON.parse(JSON.stringify(data)); 
     renderTableTab3(dataTab3);
     initDataTableDesign("dataTableDesign3");
   }).getAssignedSyorPeneraju();
@@ -470,7 +472,7 @@ function checkUserRoleAndInit() {
  function loadTab3Dashboard() {
   google.script.run.withSuccessHandler(function (user) {
     const isAdmin = user.peranan === "Admin";
-    const getDataFn = isAdmin ? "getAssignedSyor" : "getAssignedSyorLimited";
+    const getDataFn = isAdmin ? "getAssignedSyor" : "getAssignedSyorLimited" : "getAssignedSyorPeneraju" ;
 
     // KPI Card (Hijau/Kuning/Merah)
     google.script.run.withSuccessHandler(function (data) {
