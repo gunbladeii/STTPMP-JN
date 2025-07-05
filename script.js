@@ -217,6 +217,7 @@ function initDataTableDesign(tableId) {
   document.getElementById("tab2-tab").addEventListener("click", loadDataTab2);
   document.getElementById("tab5-tab").addEventListener("click", loadDataTab3);
   document.getElementById("tab3-tab").addEventListener("click", () => {loadTab3Dashboard();});
+  
 
 
 
@@ -858,6 +859,9 @@ document.addEventListener("click", function (e) {
   document.getElementById("kemaskiniForm2").addEventListener("submit", function (e) {
     document.getElementById("syorInfo").value = quillSyorInfo.root.innerHTML;
   });
+
+  document.getElementById("sektorBaru").value = item.Sektor || "";
+
 
 
 
