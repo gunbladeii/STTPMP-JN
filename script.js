@@ -250,17 +250,18 @@ function checkUserRoleAndInit() {
   }
 
   function loadDataTab3() {
-    google.script.run.withSuccessHandler(function(data) {
-      
-      if (!data || data.length === 0) {
-        document.getElementById("dataBody3").innerHTML = `<tr><td colspan='11' class='text-center text-danger fw-bold'>Akses tidak dibenarkan</td></tr>`;
-        return;
-      }
-      dataTab3 = JSON.parse(JSON.stringify(data));
-      renderTableTab3(dataTab3);
-      initDataTableDesign("dataTableDesign3");
-    }).getAssignedSyorPeneraju();
-  }
+  google.script.run.withSuccessHandler(function(data) {
+    if (!data || data.length === 0) {
+      document.getElementById("dataBody3").innerHTML = `<tr><td colspan='11' class='text-center text-danger fw-bold'>Akses tidak dibenarkan</td></tr>`;
+      return;
+    }
+
+    dataTab3 = data; // ❗ TAK PERLU parse/stringify lagi
+    renderTableTab3(dataTab3);
+    initDataTableDesign("dataTableDesign3");
+  }).getAssignedSyorPeneraju();
+}
+
 
   function renderTableTab3(data) {
     const body = document.getElementById("dataBody3");
