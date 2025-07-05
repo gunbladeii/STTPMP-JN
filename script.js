@@ -631,10 +631,21 @@ function initDataTableDesign(tableId) {
     renderTableTab2(filtered);
   });
 
+  function loadDataUsers() {
+    google.script.run.withSuccessHandler(function(data) {
+      
+      if (!data || data.length === 0) {
+        document.getElementById("dataBodyUsers").innerHTML = `<tr><td colspan='9' class='text-center text-danger fw-bold'>Akses tidak dibenarkan</td></tr>`;
+        return;
+      }
+      dataTab3 = JSON.parse(JSON.stringify(data));
+      renderTableUsers(dataTab3);
+      initDataTableDesign("dataTableUsers");
+    }).getAssignedSyor();
+  }
+  
   let users = [];
-
-function loadDataUsers() {
-  google.script.run.withSuccessHandler(function(data) {
+  function renderTableUsers(data) {
     const body = document.getElementById("dataBodyUsers");
     body.innerHTML = "";
     data.forEach((item, i) => {
@@ -669,11 +680,7 @@ function loadDataUsers() {
       `;
       body.appendChild(row);
     });
-
-    initDataTableDesign("dataTableUsers");
-
-  }).getAllUsers();
-}
+  }
 
 // Event delegation utk butang Kemaskini
 document.addEventListener("click", function (e) {
