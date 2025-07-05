@@ -191,6 +191,8 @@ function checkUserRoleAndInit() {
       document.getElementById("tab2").style.display = "none";
       document.getElementById("tab4-tab").style.display = "none";
       document.getElementById("tab4").style.display = "none";
+      document.getElementById("tab5-tab").style.display = "none";
+      document.getElementById("tab5").style.display = "none";
       document.getElementById("tab1-tab").click();
       document.getElementById("loadingSpinner").style.display = "none";
       loadDataTab1();
