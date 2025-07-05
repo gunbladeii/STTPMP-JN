@@ -80,6 +80,20 @@ function populateNegeriDropdown(...ids) {
     .getSenaraiNegeri();
 }
 
+function populateSektorDropdown(...ids) {
+  google.script.run
+    .withSuccessHandler(function (data) {
+      ids.forEach((id) => {
+        const dropdown = document.getElementById(id);
+        dropdown.innerHTML = `<option value="">Pilih Sektor</option>`;
+        data.forEach((item) => {
+          dropdown.innerHTML += `<option value="${item}">${item}</option>`;
+        });
+      });
+    })
+    .getSektorNegeri();
+}
+
 function simpanSyorBaru() {
   // Sync Quill value
   document.getElementById("syorBaru").value = quillSyorBaru.root.innerHTML;
@@ -547,6 +561,7 @@ function loadDataUsers() {
         <td>${item.peranan}</td>
         <td>${item.bahagian || "-"}</td>
         <td>${item.negeri || "-"}</td>
+        <td>${item.sektor || "-"}</td>
         <td class="text-center">
           <div class="d-flex justify-content-center gap-1">
             <button class="btn btn-warning btn-sm btn-kemaskini"
@@ -556,6 +571,7 @@ function loadDataUsers() {
               data-peranan="${item.peranan}"
               data-bahagian="${item.bahagian || ''}"
               data-negeri="${item.negeri || ''}">
+              data-sektor="${item.sektor || ''}">
               <i class="bi bi-pencil-square"></i>
             </button>
             <button class="btn btn-danger btn-sm btn-delete"
@@ -631,7 +647,8 @@ document.addEventListener("click", function (e) {
     loadTab3Dashboard();
     populateLaporanDropdown();
     populateBahagianDropdown("bahagianBaru", "bahagianUserBaru","bahagianUserKemaskini");
-    populateNegeriDropdown("negeriBaru", "negeriUserBaru","negeriUserKemaskini")
+    populateNegeriDropdown("negeriBaru", "negeriUserBaru","negeriUserKemaskini");
+    populateSektorDropdown("sektorUserBaru","sektorUserKemaskini")
  
 
     const hariList = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
