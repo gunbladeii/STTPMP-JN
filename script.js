@@ -757,9 +757,9 @@ document.addEventListener("click", function (e) {
 
 
   // Auto-run ikut peranan
-  window.onload = function () {
-    checkUserRoleAndInit();
+  window.onload = function () {    
     showUserDetails();
+    checkUserRoleAndInit();
     loadTab3Dashboard();
     populateLaporanDropdown();
     populateBahagianDropdown("bahagianBaru", "bahagianUserBaru","bahagianUserKemaskini");
