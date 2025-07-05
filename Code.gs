@@ -53,6 +53,7 @@ function isUserPeneraju() {
   return false;
 }
 
+
 function getUsers() {
   const userSheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
   const data = userSheet.getDataRange().getValues();
@@ -129,11 +130,12 @@ function getAssignedSyor() {
 }
 
 function getAssignedSyorPeneraju() {
-  const isPeneraju = isUserPeneraju();
+  const user = getUserDetails();
+  if (!user) return [];
+
   const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
-  const email = Session.getActiveUser().getEmail().toLowerCase();
   const rowData = [];
 
   for (let i = 1; i < data.length; i++) {
@@ -142,14 +144,15 @@ function getAssignedSyorPeneraju() {
     row.RowNum = i + 1;
 
     if (
-      isPeneraju || 
-      (row["Sektor"] && email.includes(row["Sektor"].toString().toLowerCase()))
+      (user.peranan === "Peneraju" && row["Sektor"]?.toLowerCase().includes(user.sektor.toLowerCase()))
     ) {
       rowData.push(row);
     }
   }
   return JSON.parse(JSON.stringify(rowData));
 }
+
+
 
 function getAssignedSyorLimited() {
   const user = getUserDetails();
@@ -249,6 +252,7 @@ function getSkorWajaranByUser() {
   const laporanIdx = headers.indexOf("Laporan");
   const syorIdx = headers.indexOf("Syor");
   const bahagianIdx = headers.indexOf("BahagianJpn");
+  const sektorIdx = headers.indexOf("Sektor");
   const negeriIdx = headers.indexOf("Negeri");
   const indicatorIdx = headers.indexOf("Indicator");
 
@@ -259,6 +263,7 @@ function getSkorWajaranByUser() {
     const laporan = data[i][laporanIdx];
     const syor = data[i][syorIdx];
     const bahagian = data[i][bahagianIdx]?.toLowerCase() || "";
+    const sektor = data[i][sektorIdx]?.toLowerCase() || "";
     const negeri = data[i][negeriIdx]?.toLowerCase() || "";
     const status = data[i][indicatorIdx];
 
@@ -267,6 +272,7 @@ function getSkorWajaranByUser() {
     if (
       user.peranan === "Admin" ||
       (user.peranan === "Bahagian" && bahagian.includes(user.bahagian.toLowerCase())) ||
+      (user.peranan === "Peneraju" && sektor.includes(user.sektor.toLowerCase())) ||
       (user.peranan === "JPN" && negeri.includes(user.negeri.toLowerCase()))
     ) {
       if (!laporanMap[laporan]) laporanMap[laporan] = [];
