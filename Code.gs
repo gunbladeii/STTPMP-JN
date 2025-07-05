@@ -53,6 +53,79 @@ function isUserPeneraju() {
   return false;
 }
 
+function getUserCheck() {
+  const email = Session.getActiveUser().getEmail().toLowerCase();
+  const users = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Users").getDataRange().getValues();
+  
+  if (!users || users.length === 0) {
+    console.log("❌ Tiada data dalam sheet Users");
+    return { isAdmin: false, isPeneraju: false };
+  }
+
+  const headers = users[0];
+  console.log("✅ Headers:", headers);
+
+  const emailIdx = headers.indexOf("Email");
+  const perananIdx = headers.indexOf("Peranan");
+
+  if (emailIdx === -1 || perananIdx === -1) {
+    console.log("❌ Column Email atau Peranan tak dijumpai!");
+    return { isAdmin: false, isPeneraju: false };
+  }
+
+  let isAdmin = false;
+  let isPeneraju = false;
+
+  for (let i = 1; i < users.length; i++) {
+    if ((users[i][emailIdx] || "").toLowerCase() === email) {
+      const role = (users[i][perananIdx] || "").toLowerCase();
+      isAdmin = role === "admin";
+      isPeneraju = role === "peneraju";
+      break;
+    }
+  }
+
+  return { isAdmin, isPeneraju  };
+}
+
+function getUserCheck2() {
+  const email = Session.getActiveUser().getEmail().toLowerCase();
+  const users = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Users").getDataRange().getValues();
+  
+  if (!users || users.length === 0) {
+    console.log("❌ Tiada data dalam sheet Users");
+    return { isAdmin: false, isPeneraju: false };
+  }
+
+  const headers = users[0];
+  console.log("✅ Headers:", headers);
+
+  const emailIdx = headers.indexOf("Email");
+  const perananIdx = headers.indexOf("Peranan");
+  const sektorIdx = headers.indexOf("Sektor");
+  const sektor = users[i][sektorIdx] || "";
+
+  if (emailIdx === -1 || perananIdx === -1) {
+    console.log("❌ Column Email atau Peranan tak dijumpai!");
+    return { isAdmin: false, isPeneraju: false };
+  }
+
+  let isAdmin = false;
+  let isPeneraju = false;
+
+  for (let i = 1; i < users.length; i++) {
+    if ((users[i][emailIdx] || "").toLowerCase() === email) {
+      const role = (users[i][perananIdx] || "").toLowerCase();
+      isAdmin = role === "admin";
+      isPeneraju = role === "peneraju";
+      break;
+    }
+  }
+
+  return { isAdmin, isPeneraju, sektor  };
+}
+
+
 
 function getUsers() {
   const userSheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
@@ -104,6 +177,22 @@ function getUserDetails() {
     }
   }
   return null;
+}
+function getAllUsers() {
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Users");
+  const user = getUserDetails();
+  const data = sheet.getDataRange().getValues();
+  const headers = data.shift();
+  return data.map((row, i) => {
+    const obj = {};
+    headers.forEach((h, j) => obj[h.toLowerCase()] = row[j]);
+    if (
+      (user.peranan === "Admin")
+    ) {
+      return obj;
+    }
+    return JSON.parse(JSON.stringify(obj));
+  });
 }
 
 function getAssignedSyor() {
@@ -539,17 +628,6 @@ function getLastBilFromSTTMP_DB(laporan) {
     }
   }
   return bil;
-}
-
-function getAllUsers() {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Users");
-  const data = sheet.getDataRange().getValues();
-  const headers = data.shift();
-  return data.map((row, i) => {
-    const obj = {};
-    headers.forEach((h, j) => obj[h.toLowerCase()] = row[j]);
-    return obj;
-  });
 }
 
 
