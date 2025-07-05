@@ -160,43 +160,42 @@ function initDataTableDesign(tableId) {
   return "bg-secondary";
   }
 
-  function checkUserRoleAndInit() {
-    
-    google.script.run.withSuccessHandler(function(isAdmin) {
-      if (isAdmin) {
-        
-        document.getElementById("tab1-tab").style.display = "none";
-        document.getElementById("tab1").style.display = "none";
-        document.getElementById("tab5-tab").style.display = "none";
-        document.getElementById("tab5").style.display = "none";
-        document.getElementById("tab2-tab").click();
-        document.getElementById("loadingSpinner").style.display = "none";
-        loadDataTab2();
-        
-      } 
-      
-        else if (isPeneraju) {
-          document.getElementById("tab1-tab").style.display = "none";
-          document.getElementById("tab1").style.display = "none";
-          document.getElementById("tab5-tab").click();
-          document.getElementById("loadingSpinner").style.display = "none";
-          loadDataTab3();
+function checkUserRoleAndInit() {
 
-      }
-      
-        else {
-        
-        document.getElementById("tab2-tab").style.display = "none";
-        document.getElementById("tab2").style.display = "none";
-        document.getElementById("tab4-tab").style.display = "none";
-        document.getElementById("tab4").style.display = "none";
-        document.getElementById("tab1-tab").click();
-        document.getElementById("loadingSpinner").style.display = "none";
-        loadDataTab1();
-        document.getElementById("tambahSyorBtn").style.display = "none"; // ❌ Hide for non-admin
-      }
-    }).isUserAdmin();
-  }
+  // Check Admin
+  google.script.run.withSuccessHandler(function(isAdmin) {
+    if (isAdmin) {
+      document.getElementById("tab1-tab").style.display = "none";
+      document.getElementById("tab1").style.display = "none";
+      document.getElementById("tab5-tab").style.display = "none";
+      document.getElementById("tab5").style.display = "none";
+      document.getElementById("tab2-tab").click();
+      document.getElementById("loadingSpinner").style.display = "none";
+      loadDataTab2();
+    }
+  }).isUserAdmin();
+
+  // Check Peneraju
+  google.script.run.withSuccessHandler(function(isPeneraju) {
+    if (isPeneraju) {
+      document.getElementById("tab1-tab").style.display = "none";
+      document.getElementById("tab1").style.display = "none";
+      document.getElementById("tab5-tab").click();
+      document.getElementById("loadingSpinner").style.display = "none";
+      loadDataTab3();
+    } else {
+      // For others (JPN/Bahagian etc.)
+      document.getElementById("tab2-tab").style.display = "none";
+      document.getElementById("tab2").style.display = "none";
+      document.getElementById("tab4-tab").style.display = "none";
+      document.getElementById("tab4").style.display = "none";
+      document.getElementById("tab1-tab").click();
+      document.getElementById("loadingSpinner").style.display = "none";
+      loadDataTab1();
+      document.getElementById("tambahSyorBtn").style.display = "none";
+    }
+  }).isUserPeneraju();
+}
 
 
   function showUserDetails() {
