@@ -641,7 +641,7 @@ function initDataTableDesign(tableId) {
       dataTab3 = JSON.parse(JSON.stringify(data));
       renderTableUsers(dataTab3);
       initDataTableDesign("dataTableUsers");
-    }).getAssignedSyor();
+    }).getAllUsers();
   }
   
   let users = [];
