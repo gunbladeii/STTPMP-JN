@@ -160,49 +160,48 @@ function initDataTableDesign(tableId) {
   return "bg-secondary";
   }
 
-function checkUserRoleAndInit() {
+  function hideTabsExcept(allowedTabs) {
+    const allTabs = ["tab1", "tab2", "tab3", "tab4", "tab5"];
 
-  // Check Admin
-  google.script.run.withSuccessHandler(function(isAdmin) {
-    if (isAdmin) {
-      document.getElementById("tab1-tab").style.display = "none";
-      document.getElementById("tab1").style.display = "none";
-      document.getElementById("tab5-tab").style.display = "none";
-      document.getElementById("tab5").style.display = "none";
-      document.getElementById("tab2-tab").click();
-      document.getElementById("loadingSpinner").style.display = "none";
-      loadDataTab2();
-    }
-  }).isUserAdmin();
+    allTabs.forEach(id => {
+      const tabBtn = document.getElementById(`${id}-tab`);
+      const tabPane = document.getElementById(id);
 
-  // Check Peneraju
-  google.script.run.withSuccessHandler(function(isPeneraju) {
-    if (isPeneraju) {
-      document.getElementById("tab1-tab").style.display = "none";
-      document.getElementById("tab1").style.display = "none";
-      document.getElementById("tab2-tab").style.display = "none";
-      document.getElementById("tab2").style.display = "none";
-      document.getElementById("tab4-tab").style.display = "none";
-      document.getElementById("tab4").style.display = "none";
-      document.getElementById("tab5-tab").click();
-      document.getElementById("loadingSpinner").style.display = "none";
-      loadDataTab3();
-    } else {
-      // For others (JPN/Bahagian etc.)
-      document.getElementById("tab2-tab").style.display = "none";
-      document.getElementById("tab2").style.display = "none";
-      document.getElementById("tab4-tab").style.display = "none";
-      document.getElementById("tab4").style.display = "none";
-      document.getElementById("tab5-tab").style.display = "none";
-      document.getElementById("tab5").style.display = "none";
-      document.getElementById("tab1-tab").click();
-      document.getElementById("loadingSpinner").style.display = "none";
-      loadDataTab1();
-      document.getElementById("tambahSyorBtn").style.display = "none";
-    }
-  }).isUserPeneraju();
-}
+      if (allowedTabs.includes(id)) {
+        if (tabBtn) tabBtn.style.display = "block";
+        if (tabPane) tabPane.style.display = "block";
+      } else {
+        if (tabBtn) tabBtn.style.display = "none";
+        if (tabPane) tabPane.style.display = "none";
+      }
+    });
+  }
 
+
+  function checkUserRoleAndInit() {
+    google.script.run.withSuccessHandler(function(roleData) {
+      const isAdmin = roleData.isAdmin;
+      const isPeneraju = roleData.isPeneraju;
+
+      if (isAdmin) {
+        hideTabsExcept(["tab2", "tab3", "tab4"]);
+        document.getElementById("tab2-tab").click();
+        loadDataTab2();
+
+      } else if (isPeneraju) {
+        hideTabsExcept(["tab5", "tab4"]);
+        document.getElementById("tab5-tab").click();
+        loadDataTab3();
+
+      } else {
+        hideTabsExcept(["tab1", "tab4"]);
+        document.getElementById("tab1-tab").click();
+        loadDataTab1();
+      }
+
+      document.getElementById("loadingSpinner").style.display = "none";
+    }).getUserRole(); // function di Code.gs
+  }
 
   function showUserDetails() {
     google.script.run.withSuccessHandler(function(user) {
