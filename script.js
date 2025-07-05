@@ -183,14 +183,29 @@ function initDataTableDesign(tableId) {
   }
 
   function hideTabsExcept(allowedIds) {
-  const allTabIds = ["tab1", "tab2", "tab3", "tab4", "tab5", "tab1-tab", "tab2-tab", "tab3-tab", "tab4-tab", "tab5-tab"];
-  allTabIds.forEach(tabId => {
-    const tab = document.getElementById(tabId);
-    if (tab) {
-      tab.style.display = allowedIds.includes(tabId) ? "" : "none";
-    }
-  });
-}
+    const allTabIds = ["tab1", "tab2", "tab3", "tab4", "tab5", "tab1-tab", "tab2-tab", "tab3-tab", "tab4-tab", "tab5-tab"];
+    allTabIds.forEach(tabId => {
+      const tab = document.getElementById(tabId);
+      if (tab) {
+        tab.style.display = allowedIds.includes(tabId) ? "" : "none";
+      }
+    });
+  }
+
+  function bindTabClickListeners() {
+    const tab1 = document.getElementById("tab1-tab");
+    const tab2 = document.getElementById("tab2-tab");
+    const tab3 = document.getElementById("tab3-tab");
+    const tab4 = document.getElementById("tab4-tab");
+    const tab5 = document.getElementById("tab5-tab");
+
+    if (tab1) tab1.addEventListener("click", loadDataTab1);
+    if (tab2) tab2.addEventListener("click", loadDataTab2);
+    if (tab3) tab3.addEventListener("click", loadTab3Dashboard);
+    if (tab4) tab4.addEventListener("click", loadDataUsers);
+    if (tab5) tab5.addEventListener("click", loadDataTab3);
+  }
+
 
   function checkUserRoleAndInit() {
   google.script.run.withSuccessHandler(function(roleData) {
@@ -225,6 +240,7 @@ function initDataTableDesign(tableId) {
         </li>
       </ul>`;
       document.getElementById("tab2-tab").click();
+      bindTabClickListeners()
       loadDataTab2();
     } else if (isPeneraju) {
       tabContainer.innerHTML = `
@@ -241,6 +257,7 @@ function initDataTableDesign(tableId) {
         </li>
       </ul>`;
       document.getElementById("tab5-tab").click();
+      bindTabClickListeners()
       loadDataTab3();
     } else {
       tabContainer.innerHTML = `
@@ -257,6 +274,7 @@ function initDataTableDesign(tableId) {
         </li>
       </ul>`;
       document.getElementById("tab1-tab").click();
+      bindTabClickListeners()
       loadDataTab1();
     }
 
@@ -276,16 +294,6 @@ function initDataTableDesign(tableId) {
       `;
     }).getUsers();
   }
-
-
-
-  document.getElementById("tab1-tab").addEventListener("click", loadDataTab1);
-  document.getElementById("tab2-tab").addEventListener("click", loadDataTab2);
-  document.getElementById("tab5-tab").addEventListener("click", loadDataTab3);
-  document.getElementById("tab3-tab").addEventListener("click", () => {loadTab3Dashboard();});
-  
-
-
 
   function loadDataTab1() {
     google.script.run.withSuccessHandler(function(data) {
@@ -821,7 +829,6 @@ document.addEventListener("click", function (e) {
       const tahun = today.getFullYear();
 
       document.getElementById("liveDate").innerText = `${hari}, ${tarikh} ${bulan} ${tahun}`;
-      document.getElementById("tab4-tab").addEventListener("click", loadDataUsers);
     
     document.getElementById("formKemaskiniPengguna").addEventListener("submit", function(e) {
     e.preventDefault();
