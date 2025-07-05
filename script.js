@@ -167,6 +167,8 @@ function initDataTableDesign(tableId) {
         
         document.getElementById("tab1-tab").style.display = "none";
         document.getElementById("tab1").style.display = "none";
+        document.getElementById("tab5-tab").style.display = "none";
+        document.getElementById("tab5").style.display = "none";
         document.getElementById("tab2-tab").click();
         document.getElementById("loadingSpinner").style.display = "none";
         loadDataTab2();
@@ -176,7 +178,7 @@ function initDataTableDesign(tableId) {
         else if (isPeneraju) {
           document.getElementById("tab1-tab").style.display = "none";
           document.getElementById("tab1").style.display = "none";
-          document.getElementById("tab3-tab").click();
+          document.getElementById("tab5-tab").click();
           document.getElementById("loadingSpinner").style.display = "none";
           loadDataTab3();
 
