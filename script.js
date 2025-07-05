@@ -256,11 +256,13 @@ function checkUserRoleAndInit() {
       return;
     }
 
-    dataTab3 = data; // ❗ TAK PERLU parse/stringify lagi
+    // ✅ Parse sini sebab backend return string
+    dataTab3 = JSON.parse(data); 
     renderTableTab3(dataTab3);
     initDataTableDesign("dataTableDesign3");
   }).getAssignedSyorPeneraju();
 }
+
 
 
   function renderTableTab3(data) {
