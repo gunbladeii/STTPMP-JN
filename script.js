@@ -860,8 +860,6 @@ document.addEventListener("click", function (e) {
     document.getElementById("syorInfo").value = quillSyorInfo.root.innerHTML;
   });
 
-  document.getElementById("sektorBaru").value = item.Sektor || "";
-
 
 
 
