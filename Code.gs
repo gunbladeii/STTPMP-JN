@@ -38,6 +38,21 @@ function isUserAdmin() {
   return false;
 }
 
+function isUserPeneraju() {
+  const userSheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
+  const data = userSheet.getDataRange().getValues();
+  const email = Session.getActiveUser().getEmail().toLowerCase();
+
+  for (let i = 1; i < data.length; i++) {
+    const userEmail = data[i][0]?.toLowerCase();
+    const role = data[i][2]; // Kolum C = Peranan
+    if (userEmail === email && role === "Peneraju") {
+      return true;
+    }
+  }
+  return false;
+}
+
 function getUsers() {
   const userSheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
   const data = userSheet.getDataRange().getValues();
@@ -49,6 +64,7 @@ function getUsers() {
     const peranan = data[i][2];
     const bahagian = data[i][3];
     const negeri = data[i][4];
+    const sektor = data[i][5];
 
     if (email === userEmail) {
       let lokasi = "";
@@ -56,7 +72,9 @@ function getUsers() {
         lokasi = negeri || "-";
       } else if (peranan === "Bahagian") {
         lokasi = bahagian || "-";
-      } // Admin = kekal ""
+      } else if (peranan === "Peneraju") {
+        lokasi = sektor || "-";
+      }
 
       return { nama, peranan, lokasi, email };
     }
@@ -103,6 +121,29 @@ function getAssignedSyor() {
     if (
       isAdmin || 
       (row["BahagianJpn"] && email.includes(row["BahagianJpn"].toString().toLowerCase()))
+    ) {
+      rowData.push(row);
+    }
+  }
+  return JSON.parse(JSON.stringify(rowData));
+}
+
+function getAssignedSyorPeneraju() {
+  const isPeneraju = isUserPeneraju();
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0];
+  const email = Session.getActiveUser().getEmail().toLowerCase();
+  const rowData = [];
+
+  for (let i = 1; i < data.length; i++) {
+    const row = {};
+    headers.forEach((head, idx) => row[head] = data[i][idx]);
+    row.RowNum = i + 1;
+
+    if (
+      isPeneraju || 
+      (row["Sektor"] && email.includes(row["Sektor"].toString().toLowerCase()))
     ) {
       rowData.push(row);
     }
@@ -509,13 +550,13 @@ function getAllUsers() {
 function insertUser(data) {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   const sheet = ss.getSheetByName(USER_SHEET_NAME);
-  sheet.appendRow([data.nama, data.email, data.peranan, data.bahagian, data.negeri, data.sektor || ""]);
+  sheet.appendRow([data.email, data.nama, data.peranan, data.bahagian, data.negeri, data.sektor]);
 }
 
 function updateUser(data) {
   const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
   const row = Number(data.row);
-  sheet.getRange(data.row, 1, 1, 6).setValues([[data.nama, data.email, data.peranan, data.bahagian, data.negeri, data.sektor || ""]]);
+  sheet.getRange(row, 1, 1, 6).setValues([[data.email, data.nama, data.peranan, data.bahagian, data.negeri, data.sektor]]);
 }
 
 function deleteUser(row) {
