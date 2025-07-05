@@ -108,6 +108,7 @@ function simpanSyorBaru() {
     Syor: document.getElementById("syorBaru").value,
     BahagianJpn: document.getElementById("bahagianBaru").value,
     Negeri: document.getElementById("negeriBaru").value,
+    Sektor: document.getElementById("sektorBaru").value,
     Indicator: document.getElementById("indicatorBaru").value,
     TarikhKemaskini: document.getElementById("tarikhBaru").value,
     Catatan: document.getElementById("catatanBaru").value,
@@ -170,7 +171,18 @@ function initDataTableDesign(tableId) {
         document.getElementById("loadingSpinner").style.display = "none";
         loadDataTab2();
         
-      } else {
+      } 
+      
+        else if (isPeneraju) {
+          document.getElementById("tab1-tab").style.display = "none";
+          document.getElementById("tab1").style.display = "none";
+          document.getElementById("tab3-tab").click();
+          document.getElementById("loadingSpinner").style.display = "none";
+          loadDataTab3();
+
+      }
+      
+        else {
         
         document.getElementById("tab2-tab").style.display = "none";
         document.getElementById("tab2").style.display = "none";
@@ -200,6 +212,7 @@ function initDataTableDesign(tableId) {
 
   document.getElementById("tab1-tab").addEventListener("click", loadDataTab1);
   document.getElementById("tab2-tab").addEventListener("click", loadDataTab2);
+  document.getElementById("tab5-tab").addEventListener("click", loadDataTab3);
   document.getElementById("tab3-tab").addEventListener("click", () => {loadTab3Dashboard();});
 
 
@@ -231,6 +244,45 @@ function initDataTableDesign(tableId) {
       renderTableTab2(dataTab2);
       initDataTableDesign("dataTableDesign2");
     }).getAssignedSyor();
+  }
+
+  function loadDataTab3() {
+    google.script.run.withSuccessHandler(function(data) {
+      
+      if (!data || data.length === 0) {
+        document.getElementById("dataBody3").innerHTML = `<tr><td colspan='9' class='text-center text-danger fw-bold'>Akses tidak dibenarkan</td></tr>`;
+        return;
+      }
+      dataTab3 = JSON.parse(JSON.stringify(data));
+      renderTableTab3(dataTab3);
+      initDataTableDesign("dataTableDesign3");
+    }).getAssignedSyorPeneraju();
+  }
+
+  function renderTableTab3(data) {
+    const body = document.getElementById("dataBody3");
+    body.innerHTML = "";
+    data.forEach((item, idx) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${item.Laporan}</td>
+        <td>${item.Syor || ""}</td>
+        <td>${item.Sektor || ""}</td>
+        <td>${item.BahagianJpn || ""}</td>
+        <td>${item.Negeri || ""}</td>
+        <td>${
+          item.FileLink 
+            ? `<a href="${item.FileLink}" target="_blank">Klik Sini</a>` 
+            : `<span class="text-muted fst-italic">Tiada</span>`
+        }</td>
+        <td><div class="text-center"><span class="status-circle ${circleClass(item.Indicator)}" title="${item.Indicator}"></span></div></td>
+        <td>${formatDate(item.TarikhKemaskini)}</td>
+        <td>${item.Catatan || ""}</td>
+        <td><button class="btn btn-primary btn-sm" onclick='bukaModalTab2(${JSON.stringify(item)})'>Kemaskini</button></td>
+      `;
+      body.appendChild(row);
+    });
   }
 
   function renderTableTab1(data) {
@@ -650,7 +702,7 @@ document.addEventListener("click", function (e) {
     populateLaporanDropdown();
     populateBahagianDropdown("bahagianBaru", "bahagianUserBaru","bahagianUserKemaskini");
     populateNegeriDropdown("negeriBaru", "negeriUserBaru","negeriUserKemaskini");
-    populateSektorDropdown("sektorUserBaru","sektorUserKemaskini")
+    populateSektorDropdown("sektorBaru","sektorUserBaru","sektorUserKemaskini")
  
 
     const hariList = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
