@@ -79,7 +79,8 @@ function getUserDetails() {
         name: row[1],
         peranan: row[2],
         bahagian: row[3],
-        negeri: row[4]
+        negeri: row[4],
+        sektor: row[5]
       };
     }
   }

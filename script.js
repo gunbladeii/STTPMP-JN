@@ -681,6 +681,7 @@ document.addEventListener("click", function (e) {
       peranan: document.getElementById("perananKemaskini").value,
       bahagian: document.getElementById("bahagianUserKemaskini").value,
       negeri: document.getElementById("negeriUserKemaskini").value,
+      sektor: document.getElementById("sektorUserKemaskini").value,
     };
 
     google.script.run.withSuccessHandler(() => {
