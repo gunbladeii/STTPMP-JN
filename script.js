@@ -203,22 +203,67 @@ function initDataTableDesign(tableId) {
     const isAdmin = roleData.isAdmin;
     const isPeneraju = roleData.isPeneraju;
 
+    const tabContainer = document.getElementById("PaparanTab");
+
     if (isAdmin) {
-      hideTabsExcept(["tab2", "tab3", "tab4","tab2-tab", "tab3-tab", "tab4-tab"]);
+      tabContainer.innerHTML = `
+      <ul class="nav nav-tabs custom-nav-tab mt-4" id="myTab" role="tablist">        
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab">
+            Akses Admin
+          </button>
+        </li>        
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" type="button" role="tab">
+            Daftar Pengguna
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab">
+            Dashboard
+          </button>
+        </li>
+      </ul>`;
       document.getElementById("tab2-tab").click();
       loadDataTab2();
     } else if (isPeneraju) {
-      hideTabsExcept(["tab5", "tab3","tab5-tab", "tab3-tab"]);
+      tabContainer.innerHTML = `
+      <ul class="nav nav-tabs custom-nav-tab mt-4" id="myTab" role="tablist"> 
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab5-tab" data-bs-toggle="tab" data-bs-target="#tab5" type="button" role="tab">
+            Akses Peneraju
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab">
+            Dashboard
+          </button>
+        </li>
+      </ul>`;
       document.getElementById("tab5-tab").click();
       loadDataTab3();
     } else {
-      hideTabsExcept(["tab1", "tab3","tab1-tab", "tab3-tab"]);
+      tabContainer.innerHTML = `
+      <ul class="nav nav-tabs custom-nav-tab mt-4" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab">
+            Akses Bahagian/JPN
+          </button>
+        </li>       
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab">
+            Dashboard
+          </button>
+        </li>
+      </ul>`;
       document.getElementById("tab1-tab").click();
       loadDataTab1();
     }
 
+    // Selepas semua ok, tunjukkan tab dan sembunyi spinner
     document.getElementById("loadingSpinner").style.display = "none";
-  }).getUserCheck(); // pastikan function ni memang wujud dan return objek
+    tabContainer.style.display = "block";
+  }).getUserCheck(); // Pastikan backend return isAdmin dan isPeneraju
 }
 
   function showUserDetails() {
@@ -757,9 +802,9 @@ document.addEventListener("click", function (e) {
 
 
   // Auto-run ikut peranan
-  window.onload = function () {    
-    showUserDetails();
+  window.onload = function () {       
     checkUserRoleAndInit();
+    showUserDetails();
     loadTab3Dashboard();
     populateLaporanDropdown();
     populateBahagianDropdown("bahagianBaru", "bahagianUserBaru","bahagianUserKemaskini");

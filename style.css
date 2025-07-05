@@ -1,4 +1,8 @@
 
+    #PaparanTab {
+    display: none;
+  }
+  
     .custom-nav-tab .nav-link {
       color: #6c757d;
       background-color: #f8f9fa;
