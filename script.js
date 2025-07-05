@@ -599,7 +599,8 @@ document.addEventListener("click", function (e) {
       email: btn.getAttribute('data-email'),
       peranan: btn.getAttribute('data-peranan'),
       bahagian: btn.getAttribute('data-bahagian'),
-      negeri: btn.getAttribute('data-negeri')
+      negeri: btn.getAttribute('data-negeri'),
+      sektor: btn.getAttribute('data-sektor')
     };
     const index = parseInt(btn.getAttribute('data-index'));
     bukaModalKemaskiniPengguna(item, index);
@@ -634,6 +635,7 @@ document.addEventListener("click", function (e) {
   document.getElementById("perananKemaskini").value = item.peranan;
   document.getElementById("bahagianUserKemaskini").value = item.bahagian || "";
   document.getElementById("negeriUserKemaskini").value = item.negeri || "";
+  document.getElementById("sektorUserKemaskini").value = item.sektor || "";
 
   const modal = new bootstrap.Modal(document.getElementById("kemaskiniPenggunaModal"));
   modal.show();
@@ -702,6 +704,7 @@ document.addEventListener("click", function (e) {
         peranan: document.getElementById("perananBaru").value,
         bahagian: document.getElementById("bahagianUserBaru").value,
         negeri: document.getElementById("negeriUserBaru").value,
+        sektor: document.getElementById("sektorUserBaru").value,
       };
       google.script.run.withSuccessHandler(() => {
         bootstrap.Modal.getInstance(document.getElementById("daftarPenggunaModal")).hide();
