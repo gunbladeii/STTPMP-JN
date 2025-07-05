@@ -196,7 +196,7 @@ function initDataTableDesign(tableId) {
     }
 
     document.getElementById("loadingSpinner").style.display = "none";
-  }).getUserRole(email); // pastikan function ni memang wujud dan return objek
+  }).getUserCheck(); // pastikan function ni memang wujud dan return objek
 }
 
 
