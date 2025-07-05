@@ -824,7 +824,7 @@ document.addEventListener("click", function (e) {
       const tahun = today.getFullYear();
 
       document.getElementById("liveDate").innerText = `${hari}, ${tarikh} ${bulan} ${tahun}`;
-      document.getElementById("tab4-tab").addEventListener("click", loadDataUsers);
+      // document.getElementById("tab4-tab").addEventListener("click", loadDataUsers);
     
     document.getElementById("formKemaskiniPengguna").addEventListener("submit", function(e) {
     e.preventDefault();
