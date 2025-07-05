@@ -160,48 +160,45 @@ function initDataTableDesign(tableId) {
   return "bg-secondary";
   }
 
-  function hideTabsExcept(allowedTabs) {
-    const allTabs = ["tab1", "tab2", "tab3", "tab4", "tab5"];
-
-    allTabs.forEach(id => {
-      const tabBtn = document.getElementById(`${id}-tab`);
-      const tabPane = document.getElementById(id);
-
-      if (allowedTabs.includes(id)) {
-        if (tabBtn) tabBtn.style.display = "block";
-        if (tabPane) tabPane.style.display = "block";
-      } else {
-        if (tabBtn) tabBtn.style.display = "none";
-        if (tabPane) tabPane.style.display = "none";
-      }
-    });
-  }
-
+  function hideTabsExcept(allowedIds) {
+  const allTabIds = ["tab1", "tab2", "tab3", "tab4", "tab5"];
+  allTabIds.forEach(tabId => {
+    const tab = document.getElementById(tabId);
+    if (tab) {
+      tab.style.display = allowedIds.includes(tabId) ? "" : "none";
+    }
+  });
+}
 
   function checkUserRoleAndInit() {
-    google.script.run.withSuccessHandler(function(roleData) {
-      const isAdmin = roleData.isAdmin;
-      const isPeneraju = roleData.isPeneraju;
-
-      if (isAdmin) {
-        hideTabsExcept(["tab2", "tab3", "tab4"]);
-        document.getElementById("tab2-tab").click();
-        loadDataTab2();
-
-      } else if (isPeneraju) {
-        hideTabsExcept(["tab5", "tab4"]);
-        document.getElementById("tab5-tab").click();
-        loadDataTab3();
-
-      } else {
-        hideTabsExcept(["tab1", "tab4"]);
-        document.getElementById("tab1-tab").click();
-        loadDataTab1();
-      }
-
+  google.script.run.withSuccessHandler(function(roleData) {
+    if (!roleData) {
+      console.error("❌ roleData is undefined!");
       document.getElementById("loadingSpinner").style.display = "none";
-    }).getUserRole(); // function di Code.gs
-  }
+      return;
+    }
+
+    const isAdmin = roleData.isAdmin;
+    const isPeneraju = roleData.isPeneraju;
+
+    if (isAdmin) {
+      hideTabsExcept(["tab2", "tab3", "tab4"]);
+      document.getElementById("tab2-tab").click();
+      loadDataTab2();
+    } else if (isPeneraju) {
+      hideTabsExcept(["tab5", "tab4"]);
+      document.getElementById("tab5-tab").click();
+      loadDataTab3();
+    } else {
+      hideTabsExcept(["tab1", "tab4"]);
+      document.getElementById("tab1-tab").click();
+      loadDataTab1();
+    }
+
+    document.getElementById("loadingSpinner").style.display = "none";
+  }).getUserRole(); // pastikan function ni memang wujud dan return objek
+}
+
 
   function showUserDetails() {
     google.script.run.withSuccessHandler(function(user) {
