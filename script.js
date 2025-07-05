@@ -253,7 +253,7 @@ function checkUserRoleAndInit() {
     google.script.run.withSuccessHandler(function(data) {
       
       if (!data || data.length === 0) {
-        document.getElementById("dataBody3").innerHTML = `<tr><td colspan='9' class='text-center text-danger fw-bold'>Akses tidak dibenarkan</td></tr>`;
+        document.getElementById("dataBody3").innerHTML = `<tr><td colspan='11' class='text-center text-danger fw-bold'>Akses tidak dibenarkan</td></tr>`;
         return;
       }
       dataTab3 = JSON.parse(JSON.stringify(data));
