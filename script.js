@@ -411,7 +411,7 @@ function initDataTableDesign(tableId) {
     document.getElementById("rowNum2").value = item.RowNum;
     document.getElementById("PemeriksaanInfo").value = item.Laporan || "";
     document.getElementById("SyorInfo").value = item.Syor || "";
-    document.getElementById("ResponInfo").value = item.Respon || "";
+    document.getElementById("ResponInfo").innerHTML = item.Respon || "";
     document.getElementById("statusInput").value = item.Indicator || "";
 
     quillSyorInfo.root.innerHTML = item.Syor || "";
