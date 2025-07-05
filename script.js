@@ -161,7 +161,7 @@ function initDataTableDesign(tableId) {
   }
 
   function hideTabsExcept(allowedIds) {
-  const allTabIds = ["tab1", "tab2", "tab3", "tab4", "tab5"];
+  const allTabIds = ["tab1", "tab2", "tab3", "tab4", "tab5", "tab1-tab", "tab2-tab", "tab3-tab", "tab4-tab", "tab5-tab"];
   allTabIds.forEach(tabId => {
     const tab = document.getElementById(tabId);
     if (tab) {
@@ -182,15 +182,15 @@ function initDataTableDesign(tableId) {
     const isPeneraju = roleData.isPeneraju;
 
     if (isAdmin) {
-      hideTabsExcept(["tab2", "tab3", "tab4"]);
+      hideTabsExcept(["tab2", "tab3", "tab4","tab2-tab", "tab3-tab", "tab4-tab"]);
       document.getElementById("tab2-tab").click();
       loadDataTab2();
     } else if (isPeneraju) {
-      hideTabsExcept(["tab5", "tab3"]);
+      hideTabsExcept(["tab5", "tab3","tab5-tab", "tab3-tab"]);
       document.getElementById("tab5-tab").click();
       loadDataTab3();
     } else {
-      hideTabsExcept(["tab1", "tab3"]);
+      hideTabsExcept(["tab1", "tab3","tab1-tab", "tab3-tab"]);
       document.getElementById("tab1-tab").click();
       loadDataTab1();
     }
