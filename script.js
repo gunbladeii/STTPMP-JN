@@ -472,7 +472,15 @@ function checkUserRoleAndInit() {
  function loadTab3Dashboard() {
   google.script.run.withSuccessHandler(function (user) {
     const isAdmin = user.peranan === "Admin";
-    const getDataFn = isAdmin ? "getAssignedSyor" : "getAssignedSyorLimited" : "getAssignedSyorPeneraju" ;
+    let getDataFn = "";
+
+    if (user.peranan === "Admin") {
+      getDataFn = "getAssignedSyor";
+    } else if (user.peranan === "Peneraju") {
+      getDataFn = "getAssignedSyorPeneraju";
+    } else {
+      getDataFn = "getAssignedSyorLimited";
+    }
 
     // KPI Card (Hijau/Kuning/Merah)
     google.script.run.withSuccessHandler(function (data) {
