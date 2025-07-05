@@ -231,6 +231,7 @@
               <th>Peranan</th>
               <th>Bahagian</th>
               <th>Negeri</th>
+              <th>Sektor</th>
               <th>Kemaskini</th>
             </tr>
           </thead>
@@ -263,19 +264,26 @@
                 <select class="form-select" id="perananBaru" required>
                   <option value="">Pilih</option>
                   <option>Admin</option>
+                  <option>Peneraju</option>
                   <option>Bahagian</option>
                   <option>JPN</option>
                 </select>
               </div>
               <div class="mb-2">
-                <label class="form-label">Bahagian</label>
+                <label class="form-label">Bahagian (Jika Peranan Bahagian)</label>
                   <select id="bahagianUserBaru" class="form-control">
                     <option value="">Memuatkan...</option>
                   </select>
               </div>
               <div class="mb-2">
-                <label class="form-label">Negeri</label>
+                <label class="form-label">Negeri (Jika Peranan JPN)</label>
                 <select class="form-select" id="negeriUserBaru">
+                    <option value="">Memuatkan...</option>
+                </select>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Sektor (Jika Peranan Peneraju)</label>
+                <select class="form-select" id="sektorUserBaru">
                     <option value="">Memuatkan...</option>
                 </select>
               </div>
@@ -314,17 +322,22 @@
                 <select class="form-select" id="perananKemaskini" required>
                   <option value="">Pilih Peranan</option>
                   <option value="Admin">Admin</option>
+                  <option value="Peneraju">Peneraju</option>
                   <option value="Bahagian">Bahagian</option>
                   <option value="JPN">JPN</option>
                 </select>
               </div>
+              <div class="mb-3">
+                  <label class="form-label">Sektor (Jika Peranan Peneraju)</label>
+                  <select class="form-select" id="sektorUserKemaskini"></select>
+              </div>
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label class="form-label">Bahagian</label>
+                  <label class="form-label">Bahagian (Jika Peranan Bahagian)</label>
                   <select class="form-select" id="bahagianUserKemaskini"></select>
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label class="form-label">Negeri</label>
+                  <label class="form-label">Negeri (Jika Peranan Negeri)</label>
                   <select class="form-select" id="negeriUserKemaskini"></select>
                 </div>
               </div>
