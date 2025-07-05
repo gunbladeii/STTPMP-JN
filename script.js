@@ -180,6 +180,8 @@ function checkUserRoleAndInit() {
     if (isPeneraju) {
       document.getElementById("tab1-tab").style.display = "none";
       document.getElementById("tab1").style.display = "none";
+      document.getElementById("tab2-tab").style.display = "none";
+      document.getElementById("tab2").style.display = "none";
       document.getElementById("tab5-tab").click();
       document.getElementById("loadingSpinner").style.display = "none";
       loadDataTab3();
