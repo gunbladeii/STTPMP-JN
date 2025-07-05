@@ -204,15 +204,62 @@ function initDataTableDesign(tableId) {
     const isPeneraju = roleData.isPeneraju;
 
     if (isAdmin) {
-      hideTabsExcept(["tab2", "tab3", "tab4","tab2-tab", "tab3-tab", "tab4-tab"]);
+      const body = document.getElementById("PaparanTab");
+      body.innerHTML = `
+      <ul class="nav nav-tabs custom-nav-tab mt-4" id="myTab" role="tablist">        
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab">
+            Akses Admin
+          </button>
+        </li>        
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" type="button" role="tab">
+            Daftar Pengguna
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab">
+            Dashboard
+          </button>
+        </li>
+      </ul>
+      `;      
       document.getElementById("tab2-tab").click();
       loadDataTab2();
     } else if (isPeneraju) {
-      hideTabsExcept(["tab5", "tab3","tab5-tab", "tab3-tab"]);
+      const body = document.getElementById("PaparanTab");
+      body.innerHTML = `
+      <ul class="nav nav-tabs custom-nav-tab mt-4" id="myTab" role="tablist"> 
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab5-tab" data-bs-toggle="tab" data-bs-target="#tab5" type="button" role="tab">
+            Akses Peneraju
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab">
+            Dashboard
+          </button>
+        </li>
+      </ul>
+      `;      
       document.getElementById("tab5-tab").click();
       loadDataTab3();
     } else {
-      hideTabsExcept(["tab1", "tab3","tab1-tab", "tab3-tab"]);
+      const body = document.getElementById("PaparanTab");
+      body.innerHTML = `
+      <ul class="nav nav-tabs custom-nav-tab mt-4" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab">
+            Akses Bahagian/JPN
+          </button>
+        </li>       
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab">
+            Dashboard
+          </button>
+        </li>
+      </ul>
+      `;
       document.getElementById("tab1-tab").click();
       loadDataTab1();
     }
