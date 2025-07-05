@@ -439,6 +439,25 @@ function initDataTableDesign(tableId) {
     })
     .updateSyor(row, syor, status, tarikh, catatan);
   }
+  
+  function simpanKemaskiniTab3() {
+    document.getElementById("SyorInfo").value = quillSyorInfo.root.innerHTML;
+
+    const row = document.getElementById("rowNum2").value;
+    const syor = document.getElementById("SyorInfo").value;
+    const status = document.getElementById("statusInput").value;
+    const tarikh = document.getElementById("tarikhInput2").value;
+    const catatan = document.getElementById("catatanInput").value;
+    google.script.run
+    .withSuccessHandler(() => {
+      bootstrap.Modal.getInstance(document.getElementById("kemaskiniModal3")).hide();
+      loadDataTab3();
+    })
+    .withFailureHandler(err => {
+      alert("Ralat semasa menghantar data atau emel: " + err.message);
+    })
+    .updateSyor(row, syor, status, tarikh, catatan);
+  }
 
  function loadTab3Dashboard() {
   google.script.run.withSuccessHandler(function (user) {
