@@ -94,6 +94,28 @@ function populateSektorDropdown(...ids) {
     .getSenaraiSektor();
 }
 
+function prefillSektorIfPeneraju() {
+  google.script.run.withSuccessHandler(function (roleData) {
+    const isPeneraju = roleData.isPeneraju;
+    const sektor = roleData.sektor;
+
+    if (isPeneraju && sektor) {
+      const sektorDropdown = document.getElementById("sektorBaru");
+
+      // Autoselect value jika wujud
+      const optionToSelect = Array.from(sektorDropdown.options).find(opt => opt.text === sektor || opt.value === sektor);
+      if (optionToSelect) {
+        optionToSelect.selected = true;
+      } else {
+        // Kalau option tak wujud, tambah terus
+        const newOption = new Option(sektor, sektor);
+        sektorDropdown.appendChild(newOption);
+        newOption.selected = true;
+      }
+    }
+  }).getUserCheck();
+}
+
 function simpanSyorBaru() {
   // Sync Quill value
   document.getElementById("syorBaru").value = quillSyorBaru.root.innerHTML;
