@@ -113,7 +113,7 @@ function prefillSektorIfPeneraju() {
         newOption.selected = true;
       }
     }
-  }).getUserCheck();
+  }).getUserCheck2();
 }
 
 function simpanSyorBaru() {
