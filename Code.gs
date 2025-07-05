@@ -449,6 +449,12 @@ function getSenaraiNegeri() {
   return data.filter(n => n).sort();
 }
 
+function getSenaraiSektor() {
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('Setting');
+  const data = sheet.getRange('C2:C' + sheet.getLastRow()).getValues().flat();
+  return data.filter(n => n).sort();
+}
+
 // ✅ Logging aktiviti pengguna ke sheet Log_Aktiviti
 function logAktiviti(email, laporan, indicator, catatan) {
   const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Log_Aktiviti");
@@ -488,28 +494,27 @@ function getLastBilFromSTTMP_DB(laporan) {
 }
 
 function getAllUsers() {
-  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-  const sheet = ss.getSheetByName(USER_SHEET_NAME);
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Users");
   const data = sheet.getDataRange().getValues();
-  return data.slice(1).map(row => ({
-    email: row[0],
-    nama: row[1],
-    peranan: row[2],
-    bahagian: row[3],
-    negeri: row[4]
-  }));
+  const headers = data.shift();
+  return data.map((row, i) => {
+    const obj = {};
+    headers.forEach((h, j) => obj[h.toLowerCase()] = row[j]);
+    return obj;
+  });
 }
+
 
 function insertUser(data) {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   const sheet = ss.getSheetByName(USER_SHEET_NAME);
-  sheet.appendRow([data.email, data.nama, data.peranan, data.bahagian, data.negeri]);
+  sheet.appendRow([data.nama, data.email, data.peranan, data.bahagian, data.negeri, data.sektor || ""]);
 }
 
 function updateUser(data) {
   const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
   const row = Number(data.row);
-  sheet.getRange(row, 1, 1, 5).setValues([[data.email, data.nama, data.peranan, data.bahagian, data.negeri]]);
+  sheet.getRange(data.row, 1, 1, 6).setValues([[data.nama, data.email, data.peranan, data.bahagian, data.negeri, data.sektor || ""]]);
 }
 
 function deleteUser(row) {
