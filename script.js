@@ -27,27 +27,18 @@
 }
 
 //dropdown laporanBaru
-function populateLaporanDropdown(dropdownId) {
+function populateLaporanDropdown(...dropdownIds) {
   const tahunSemasa = new Date().getFullYear();
 
   fetch("https://enazir.moe.gov.my/APIcall.php/tknamapemeriksaan")
     .then(response => response.json())
     .then(data => {
-      const dropdown = document.getElementById(dropdownId);
-      if (!dropdown) {
-        console.error(`❌ Element with ID '${dropdownId}' not found`);
-        return;
-      }
-
-      dropdown.innerHTML = `<option value="">Pilih Laporan</option>`;
-
       const filtered = data.filter(item => {
         const tahun = parseInt(item.Tahun);
         return tahun >= 2024 && tahun <= tahunSemasa;
       });
 
       const namaSet = new Set();
-
       const sortedList = filtered
         .map(item => item.NamaPemeriksaan)
         .filter(nama => {
@@ -59,12 +50,21 @@ function populateLaporanDropdown(dropdownId) {
         })
         .sort((a, b) => a.localeCompare(b));
 
-      sortedList.forEach(nama => {
-        dropdown.innerHTML += `<option value="${nama}">${nama}</option>`;
+      dropdownIds.forEach(dropdownId => {
+        const dropdown = document.getElementById(dropdownId);
+        if (!dropdown) {
+          console.warn(`❌ Element with ID '${dropdownId}' not found`);
+          return;
+        }
+        dropdown.innerHTML = `<option value="">Pilih Laporan</option>`;
+        sortedList.forEach(nama => {
+          dropdown.innerHTML += `<option value="${nama}">${nama}</option>`;
+        });
       });
     })
     .catch(err => console.error("Gagal fetch laporan:", err));
 }
+
 
 function populateBahagianDropdown(...ids) {
   google.script.run
@@ -879,8 +879,7 @@ document.addEventListener("click", function (e) {
     checkUserRoleAndInit();
     showUserDetails();
     loadTab3Dashboard();
-    populateLaporanDropdown("laporanBaru");
-    populateLaporanDropdown("laporanBaru2");
+    populateLaporanDropdown("laporanBaru", "laporanBaru2");
     populateBahagianDropdown("bahagianBaru","bahagianBaru2", "bahagianUserBaru","bahagianUserKemaskini");
     populateNegeriDropdown("negeriBaru","negeriBaru2", "negeriUserBaru","negeriUserKemaskini");
     populateSektorDropdown("sektorBaru","sektorBaru2","sektorUserBaru","sektorUserKemaskini")
