@@ -536,7 +536,7 @@ function initDataTableDesign(tableId) {
 
   function bukaModalTab3(item) {
     document.getElementById("rowNum3").value = item.RowNum;
-    document.getElementById("PemeriksaanInfo2").value = item.Laporan || "";
+    document.getElementById("PemeriksaanInfo3").value = item.Laporan || "";
     document.getElementById("SyorInfo2").value = item.Syor || "";
     document.getElementById("ResponInfo2").innerHTML = item.Respon || "";
     document.getElementById("statusInput2").value = item.Indicator || "";
