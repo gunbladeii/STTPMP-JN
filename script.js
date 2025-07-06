@@ -20,10 +20,10 @@
   if (tambahBtn) {
     tambahBtn.addEventListener("click", function () {
       const sektorInput = document.getElementById("sektorBaru");
-      if (window.perananPengguna === "Peneraju") {
+      if (window.perananPengguna === "Peneraju" && sektorInput) {
         sektorInput.value = window.sektorPengguna || "";
         sektorInput.setAttribute("readonly", true);
-      } else {
+      } else if (sektorInput) {
         sektorInput.removeAttribute("readonly");
         sektorInput.value = "";
       }
@@ -31,8 +31,7 @@
   }
 });
 
-
-  //untuk batch indicator status
+//untuk batch indicator status
   function badgeClass(status) {
   if (!status) return 'bg-secondary';
   status = status.toLowerCase();
@@ -323,23 +322,6 @@ function initDataTableDesign(tableId) {
     document.getElementById("loadingSpinner").style.display = "none";
     tabContainer.style.display = "block";
   }).getUserCheck(); // Pastikan backend return isAdmin dan isPeneraju
-
-  //
-
-  google.script.run.withSuccessHandler(function(roleInfo) {
-    if (!roleInfo) return;
-
-    window.perananPengguna = roleInfo.peranan;
-    window.sektorPengguna = roleInfo.sektor;
-
-    if (roleInfo.peranan === "Peneraju") {
-      const sektorInput = document.getElementById("sektorBaru");
-      if (sektorInput) {
-        sektorInput.value = roleInfo.sektor || "";
-        sektorInput.setAttribute("readonly", true); // prevent user changes
-      }
-    }
-  }).getUserCheck();
 }
 
   function showUserDetails() {
