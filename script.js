@@ -151,7 +151,7 @@ function simpanSyorBaru() {
 //Syor baharu peneraju
 function simpanSyorBaru2() {
   // Sync Quill value
-  document.getElementById("syorBaru").value = quillSyorBaru.root.innerHTML;
+  document.getElementById("syorBaru2").value = quillSyorBaru2.root.innerHTML;
   
   const btn = document.querySelector('#tambahModal2 .btn-primary');
   btn.disabled = true;
@@ -541,7 +541,7 @@ function initDataTableDesign(tableId) {
     document.getElementById("ResponInfo").innerHTML = item.Respon || "";
     document.getElementById("statusInput").value = item.Indicator || "";
 
-    quillSyorInfo.root.innerHTML = item.Syor || "";
+    quillSyorInfo2.root.innerHTML = item.Syor || "";
 
     const tarikh = item.TarikhKemaskini 
       ? new Date(item.TarikhKemaskini).toISOString().split("T")[0] 
@@ -574,7 +574,7 @@ function initDataTableDesign(tableId) {
   }
   
   function simpanKemaskiniTab3() {
-    document.getElementById("SyorInfo").value = quillSyorInfo.root.innerHTML;
+    document.getElementById("SyorInfo2").value = quillSyorInfo2.root.innerHTML;
 
     const row = document.getElementById("rowNum2").value;
     const syor = document.getElementById("SyorInfo").value;
@@ -946,6 +946,19 @@ document.addEventListener("click", function (e) {
     }
   });
 
+  const quillSyorBaru2 = new Quill('#editorSyorBaru2', {
+    theme: 'snow',
+    placeholder: 'Masukkan kandungan syor di sini...',
+    modules: {
+      toolbar: [
+        [{ header: [1, 2, false] }],
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['clean']
+      ]
+    }
+  });
+
   const quillResponInput = new Quill('#editorResponInput', {
     theme: 'snow',
     placeholder: 'Masukkan respon di sini...',
@@ -972,13 +985,26 @@ document.addEventListener("click", function (e) {
     }
   });
 
+  const quillSyorInfo2 = new Quill('#editorSyorInfo2', {
+    theme: 'snow',
+    placeholder: 'Masukkan kandungan syor di sini...',
+    modules: {
+      toolbar: [
+        [{ header: [1, 2, false] }],
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['clean']
+      ]
+    }
+  });
+
   // Sync hidden input sebelum submit
   document.getElementById("formTambahSyor").addEventListener("submit", function (e) {
     document.getElementById("syorBaru").value = quillSyorBaru.root.innerHTML;
   });
 
   document.getElementById("formTambahSyor2").addEventListener("submit", function (e) {
-    document.getElementById("syorBaru").value = quillSyorBaru.root.innerHTML;
+    document.getElementById("syorBaru2").value = quillSyorBaru2.root.innerHTML;
   });
 
   document.getElementById("kemaskiniForm1").addEventListener("submit", function (e) {
@@ -988,7 +1014,10 @@ document.addEventListener("click", function (e) {
   document.getElementById("kemaskiniForm2").addEventListener("submit", function (e) {
     document.getElementById("syorInfo").value = quillSyorInfo.root.innerHTML;
   });
-
+  
+  document.getElementById("kemaskiniForm3").addEventListener("submit", function (e) {
+    document.getElementById("syorInfo2").value = quillSyorInfo2.root.innerHTML;
+  });
 
 
 
