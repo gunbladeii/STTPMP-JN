@@ -148,6 +148,38 @@ function simpanSyorBaru() {
   }).insertNewSyor(data);
 }
 
+//Syor baharu peneraju
+function simpanSyorBaru2() {
+  // Sync Quill value
+  document.getElementById("syorBaru").value = quillSyorBaru.root.innerHTML;
+  
+  const btn = document.querySelector('#tambahModal2 .btn-primary');
+  btn.disabled = true;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Simpan...`;
+
+  const data = {
+    Laporan: document.getElementById("laporanBaru").value,
+    Syor: document.getElementById("syorBaru").value,
+    BahagianJpn: document.getElementById("bahagianBaru").value,
+    Negeri: document.getElementById("negeriBaru").value,
+    Sektor: document.getElementById("sektorBaru").value,
+    Indicator: document.getElementById("indicatorBaru").value,
+    TarikhKemaskini: document.getElementById("tarikhBaru").value,
+    Catatan: document.getElementById("catatanBaru").value,
+  };
+
+  google.script.run.withSuccessHandler(() => {
+    bootstrap.Modal.getInstance(document.getElementById("tambahModal2")).hide();
+    loadDataTab3();
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  }).withFailureHandler((err) => {
+    alert(err.message);
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  }).insertNewSyor(data);
+}
 
 // Inisialisasi DataTable selepas table dimuat
 function initDataTableDesign(tableId) {
@@ -360,7 +392,7 @@ function initDataTableDesign(tableId) {
         <td><div class="text-center"><span class="status-circle ${circleClass(item.Indicator)}" title="${item.Indicator}"></span></div></td>
         <td>${formatDate(item.TarikhKemaskini)}</td>
         <td>${item.Catatan || ""}</td>
-        <td><button class="btn btn-primary btn-sm" onclick='bukaModalTab2(${JSON.stringify(item)})'>Kemaskini</button></td>
+        <td><button class="btn btn-primary btn-sm" onclick='bukaModalTab3(${JSON.stringify(item)})'>Kemaskini</button></td>
       `;
       body.appendChild(row);
     });
@@ -499,6 +531,26 @@ function initDataTableDesign(tableId) {
     document.getElementById("tempohMasaInput2").value = item.TempohMasa || "";
     document.getElementById("catatanInput").value = item.Catatan || "";
     const modal = new bootstrap.Modal(document.getElementById("kemaskiniModal2"));
+    modal.show();
+  }
+
+  function bukaModalTab3(item) {
+    document.getElementById("rowNum2").value = item.RowNum;
+    document.getElementById("PemeriksaanInfo").value = item.Laporan || "";
+    document.getElementById("SyorInfo").value = item.Syor || "";
+    document.getElementById("ResponInfo").innerHTML = item.Respon || "";
+    document.getElementById("statusInput").value = item.Indicator || "";
+
+    quillSyorInfo.root.innerHTML = item.Syor || "";
+
+    const tarikh = item.TarikhKemaskini 
+      ? new Date(item.TarikhKemaskini).toISOString().split("T")[0] 
+      : "";
+    document.getElementById("tarikhInput2").value = tarikh;
+
+    document.getElementById("tempohMasaInput2").value = item.TempohMasa || "";
+    document.getElementById("catatanInput").value = item.Catatan || "";
+    const modal = new bootstrap.Modal(document.getElementById("kemaskiniModal3"));
     modal.show();
   }
 
@@ -922,6 +974,10 @@ document.addEventListener("click", function (e) {
 
   // Sync hidden input sebelum submit
   document.getElementById("formTambahSyor").addEventListener("submit", function (e) {
+    document.getElementById("syorBaru").value = quillSyorBaru.root.innerHTML;
+  });
+
+  document.getElementById("formTambahSyor2").addEventListener("submit", function (e) {
     document.getElementById("syorBaru").value = quillSyorBaru.root.innerHTML;
   });
 
