@@ -166,7 +166,7 @@ function simpanSyorBaru2() {
     Syor: document.getElementById("syorBaru2").value,
     BahagianJpn: document.getElementById("bahagianBaru2").value,
     Negeri: document.getElementById("negeriBaru2").value,
-    Sektor: document.getElementById("sektorBaru2").value,
+    Sektor: document.getElementById("sektorBaru2").value.trim(),
     Indicator: document.getElementById("indicatorBaru2").value,
     TarikhKemaskini: document.getElementById("tarikhBaru2").value,
     Catatan: document.getElementById("catatanBaru2").value,
