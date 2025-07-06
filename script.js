@@ -867,9 +867,9 @@ document.addEventListener("click", function (e) {
     showUserDetails();
     loadTab3Dashboard();
     populateLaporanDropdown();
-    populateBahagianDropdown("bahagianBaru", "bahagianUserBaru","bahagianUserKemaskini");
-    populateNegeriDropdown("negeriBaru", "negeriUserBaru","negeriUserKemaskini");
-    populateSektorDropdown("sektorBaru","sektorUserBaru","sektorUserKemaskini")
+    populateBahagianDropdown("bahagianBaru","bahagianBaru2", "bahagianUserBaru","bahagianUserKemaskini");
+    populateNegeriDropdown("negeriBaru","negeriBaru2", "negeriUserBaru","negeriUserKemaskini");
+    populateSektorDropdown("sektorBaru","sektorBaru2","sektorUserBaru","sektorUserKemaskini")
  
 
     const hariList = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
