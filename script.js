@@ -553,8 +553,6 @@ function initDataTableDesign(tableId) {
     document.getElementById("PemeriksaanInfo3").value = item.Laporan || "";
     document.getElementById("SyorInfo2").value = item.Syor || "";
     document.getElementById("ResponInfo2").innerHTML = item.Respon || "";
-    document.getElementById("statusInput2").value = item.Indicator || "";
-
     quillSyorInfo2.root.innerHTML = item.Syor || "";
 
     const tarikh = item.TarikhKemaskini 
@@ -592,7 +590,6 @@ function initDataTableDesign(tableId) {
 
     const row = document.getElementById("rowNum3").value;
     const syor = document.getElementById("SyorInfo2").value;
-    const status = document.getElementById("statusInput2").value;
     const tarikh = document.getElementById("tarikhInput3").value;
     const catatan = document.getElementById("catatanInput2").value;
     google.script.run
