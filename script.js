@@ -535,21 +535,21 @@ function initDataTableDesign(tableId) {
   }
 
   function bukaModalTab3(item) {
-    document.getElementById("rowNum2").value = item.RowNum;
-    document.getElementById("PemeriksaanInfo").value = item.Laporan || "";
-    document.getElementById("SyorInfo").value = item.Syor || "";
-    document.getElementById("ResponInfo").innerHTML = item.Respon || "";
-    document.getElementById("statusInput").value = item.Indicator || "";
+    document.getElementById("rowNum3").value = item.RowNum;
+    document.getElementById("PemeriksaanInfo2").value = item.Laporan || "";
+    document.getElementById("SyorInfo2").value = item.Syor || "";
+    document.getElementById("ResponInfo2").innerHTML = item.Respon || "";
+    document.getElementById("statusInput2").value = item.Indicator || "";
 
     quillSyorInfo2.root.innerHTML = item.Syor || "";
 
     const tarikh = item.TarikhKemaskini 
       ? new Date(item.TarikhKemaskini).toISOString().split("T")[0] 
       : "";
-    document.getElementById("tarikhInput2").value = tarikh;
+    document.getElementById("tarikhInput3").value = tarikh;
 
-    document.getElementById("tempohMasaInput2").value = item.TempohMasa || "";
-    document.getElementById("catatanInput").value = item.Catatan || "";
+    document.getElementById("tempohMasaInput3").value = item.TempohMasa || "";
+    document.getElementById("catatanInput2").value = item.Catatan || "";
     const modal = new bootstrap.Modal(document.getElementById("kemaskiniModal3"));
     modal.show();
   }
@@ -576,11 +576,11 @@ function initDataTableDesign(tableId) {
   function simpanKemaskiniTab3() {
     document.getElementById("SyorInfo2").value = quillSyorInfo2.root.innerHTML;
 
-    const row = document.getElementById("rowNum2").value;
-    const syor = document.getElementById("SyorInfo").value;
-    const status = document.getElementById("statusInput").value;
-    const tarikh = document.getElementById("tarikhInput2").value;
-    const catatan = document.getElementById("catatanInput").value;
+    const row = document.getElementById("rowNum3").value;
+    const syor = document.getElementById("SyorInfo2").value;
+    const status = document.getElementById("statusInput2").value;
+    const tarikh = document.getElementById("tarikhInput3").value;
+    const catatan = document.getElementById("catatanInput2").value;
     google.script.run
     .withSuccessHandler(() => {
       bootstrap.Modal.getInstance(document.getElementById("kemaskiniModal3")).hide();
