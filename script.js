@@ -589,21 +589,30 @@ function initDataTableDesign(tableId) {
   function simpanKemaskiniTab3() {
     document.getElementById("SyorInfo2").value = quillSyorInfo2.root.innerHTML;
 
+    const btn = document.querySelector('#kemaskiniModal3 .btn-primary');
+    btn.disabled = true;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Kemaskini...`;
+
     const row = document.getElementById("rowNum3").value;
     const syor = document.getElementById("SyorInfo2").value;
-    // const status = document.getElementById("statusInput2").value;
     const tarikh = document.getElementById("tarikhInput3").value;
-    // const catatan = document.getElementById("catatanInput2").value;
+
     google.script.run
-    .withSuccessHandler(() => {
-      bootstrap.Modal.getInstance(document.getElementById("kemaskiniModal3")).hide();
-      loadDataTab3();
-    })
-    .withFailureHandler(err => {
-      alert("Ralat semasa menghantar data atau emel: " + err.message);
-    })
-    .updateSyorPeneraju(row, syor, tarikh);
+      .withSuccessHandler(() => {
+        bootstrap.Modal.getInstance(document.getElementById("kemaskiniModal3")).hide();
+        loadDataTab3();
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      })
+      .withFailureHandler(err => {
+        alert("Ralat semasa menghantar data atau emel: " + err.message);
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      })
+      .updateSyorPeneraju(row, syor, tarikh);
   }
+
 
  function loadTab3Dashboard() {
   google.script.run.withSuccessHandler(function (user) {
