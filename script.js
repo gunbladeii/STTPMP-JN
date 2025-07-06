@@ -7,6 +7,13 @@
   dropdownParent: $('#tambahModal') // 👈 Ini penting supaya dropdown z-index ikut modal
   });
 
+  $('#laporanBaru2').select2({
+  width: '100%',
+  placeholder: "Pilih Laporan",
+  dropdownAutoWidth: true,
+  dropdownParent: $('#tambahModal2') // 👈 Ini penting supaya dropdown z-index ikut modal
+  });
+
 
   //untuk batch indicator status
   function badgeClass(status) {
