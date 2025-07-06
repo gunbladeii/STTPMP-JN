@@ -7,7 +7,7 @@
   dropdownParent: $('#tambahModal') // 👈 Ini penting supaya dropdown z-index ikut modal
   });
 
-  //untuk fungsi select dropdown tab peneraju
+  //untuk fungsi select dropdown tab
   $('#laporanBaru2').select2({
   width: '100%',
   placeholder: "Pilih Laporan",
