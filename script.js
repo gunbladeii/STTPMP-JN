@@ -15,13 +15,17 @@
   dropdownParent: $('#tambahModal2') // 👈 Ini penting supaya dropdown z-index ikut modal
   });
 
-  document.addEventListener("DOMContentLoaded", function () {
+  google.script.run.withSuccessHandler(function(roleInfo) {
+  window.perananPengguna = roleInfo.peranan;
+  window.sektorPengguna = roleInfo.sektor;
+
+  // Sekarang dah boleh confident semua value wujud
   const tambahBtn = document.getElementById("tambahSyorBtn2");
   if (tambahBtn) {
     tambahBtn.addEventListener("click", function () {
       const sektorInput = document.getElementById("sektorBaru2");
-      if (window.perananPengguna === "Peneraju" && sektorInput) {
-        sektorInput.value = window.sektorPengguna || "";
+      if (roleInfo.peranan === "Peneraju" && sektorInput) {
+        sektorInput.value = roleInfo.sektor || "";
         sektorInput.setAttribute("readonly", true);
       } else if (sektorInput) {
         sektorInput.removeAttribute("readonly");
@@ -29,7 +33,8 @@
       }
     });
   }
-});
+}).getUserCheck();
+
 
 //untuk batch indicator status
   function badgeClass(status) {
