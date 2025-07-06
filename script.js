@@ -553,7 +553,6 @@ function initDataTableDesign(tableId) {
     document.getElementById("PemeriksaanInfo3").value = item.Laporan || "";
     document.getElementById("SyorInfo2").value = item.Syor || "";
     document.getElementById("ResponInfo2").innerHTML = item.Respon || "";
-    document.getElementById("statusInput2").value = item.Indicator || "";
 
     quillSyorInfo2.root.innerHTML = item.Syor || "";
 
