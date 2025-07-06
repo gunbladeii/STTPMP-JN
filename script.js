@@ -15,16 +15,22 @@
   dropdownParent: $('#tambahModal2') // 👈 Ini penting supaya dropdown z-index ikut modal
   });
 
-  document.getElementById("tambahSyorBtn2").addEventListener("click", function () {
-    const sektorInput = document.getElementById("sektorBaru");
-    if (window.perananPengguna === "Peneraju") {
-      sektorInput.value = window.sektorPengguna || "";
-      sektorInput.setAttribute("readonly", true);
-    } else {
-      sektorInput.removeAttribute("readonly");
-      sektorInput.value = "";
-    }
-  });
+  document.addEventListener("DOMContentLoaded", function () {
+  const tambahBtn = document.getElementById("tambahSyorBtn2");
+  if (tambahBtn) {
+    tambahBtn.addEventListener("click", function () {
+      const sektorInput = document.getElementById("sektorBaru");
+      if (window.perananPengguna === "Peneraju") {
+        sektorInput.value = window.sektorPengguna || "";
+        sektorInput.setAttribute("readonly", true);
+      } else {
+        sektorInput.removeAttribute("readonly");
+        sektorInput.value = "";
+      }
+    });
+  }
+});
+
 
   //untuk batch indicator status
   function badgeClass(status) {
