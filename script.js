@@ -1,5 +1,5 @@
 
-  //untuk fungsi select dropdown
+  //untuk fungsi select dropdown tab admin
   $('#laporanBaru').select2({
   width: '100%',
   placeholder: "Pilih Laporan",
@@ -7,6 +7,7 @@
   dropdownParent: $('#tambahModal') // 👈 Ini penting supaya dropdown z-index ikut modal
   });
 
+  //untuk fungsi select dropdown tab peneraju
   $('#laporanBaru2').select2({
   width: '100%',
   placeholder: "Pilih Laporan",
