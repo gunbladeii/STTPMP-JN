@@ -159,14 +159,14 @@ function simpanSyorBaru2() {
   btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Simpan...`;
 
   const data = {
-    Laporan: document.getElementById("laporanBaru").value,
-    Syor: document.getElementById("syorBaru").value,
-    BahagianJpn: document.getElementById("bahagianBaru").value,
-    Negeri: document.getElementById("negeriBaru").value,
-    Sektor: document.getElementById("sektorBaru").value,
-    Indicator: document.getElementById("indicatorBaru").value,
-    TarikhKemaskini: document.getElementById("tarikhBaru").value,
-    Catatan: document.getElementById("catatanBaru").value,
+    Laporan: document.getElementById("laporanBaru2").value,
+    Syor: document.getElementById("syorBaru2").value,
+    BahagianJpn: document.getElementById("bahagianBaru2").value,
+    Negeri: document.getElementById("negeriBaru2").value,
+    Sektor: document.getElementById("sektorBaru2").value,
+    Indicator: document.getElementById("indicatorBaru2").value,
+    TarikhKemaskini: document.getElementById("tarikhBaru2").value,
+    Catatan: document.getElementById("catatanBaru2").value,
   };
 
   google.script.run.withSuccessHandler(() => {
