@@ -591,7 +591,6 @@ function initDataTableDesign(tableId) {
     const row = document.getElementById("rowNum3").value;
     const syor = document.getElementById("SyorInfo2").value;
     const tarikh = document.getElementById("tarikhInput3").value;
-    const catatan = document.getElementById("catatanInput2").value;
     google.script.run
     .withSuccessHandler(() => {
       bootstrap.Modal.getInstance(document.getElementById("kemaskiniModal3")).hide();
@@ -600,7 +599,7 @@ function initDataTableDesign(tableId) {
     .withFailureHandler(err => {
       alert("Ralat semasa menghantar data atau emel: " + err.message);
     })
-    .updateSyor(row, syor, status, tarikh, catatan);
+    .updateSyorPeneraju(row, syor, tarikh);
   }
 
  function loadTab3Dashboard() {
