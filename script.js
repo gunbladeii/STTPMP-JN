@@ -19,7 +19,7 @@
   const tambahBtn = document.getElementById("tambahSyorBtn2");
   if (tambahBtn) {
     tambahBtn.addEventListener("click", function () {
-      const sektorInput = document.getElementById("sektorBaru");
+      const sektorInput = document.getElementById("sektorBaru2");
       if (window.perananPengguna === "Peneraju" && sektorInput) {
         sektorInput.value = window.sektorPengguna || "";
         sektorInput.setAttribute("readonly", true);
