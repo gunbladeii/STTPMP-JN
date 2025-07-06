@@ -294,6 +294,18 @@ function updateSyor(rowNum, syor, status, tarikh, catatan) {
 
 }
 
+function updateSyorPeneraju(rowNum, syor, tarikh) {
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
+  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+
+  const syorIdx = headers.indexOf("Syor") + 1;
+  const tarikhIdx = headers.indexOf("TarikhKemaskini") + 1;
+
+  sheet.getRange(rowNum, syorIdx).setValue(syor);
+  sheet.getRange(rowNum, tarikhIdx).setValue(tarikh);
+
+}
+
 function updateRespon(rowNum, respon, tarikh, tempohMasa) {
   const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
   const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
