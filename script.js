@@ -19,14 +19,20 @@
 }
 
 //dropdown laporanBaru
-function populateLaporanDropdown() {
+function populateLaporanDropdown(dropdownId) {
   const tahunSemasa = new Date().getFullYear();
 
   fetch("https://enazir.moe.gov.my/APIcall.php/tknamapemeriksaan")
     .then(response => response.json())
     .then(data => {
-      const laporanInput = document.getElementById("laporanBaru");
-      laporanInput.innerHTML = `<option value="">Pilih Laporan</option>`;
+      const dropdown = document.getElementById(dropdownId);
+      if (!dropdown) {
+        console.error(`❌ Element with ID '${dropdownId}' not found`);
+        return;
+      }
+
+      dropdown.innerHTML = `<option value="">Pilih Laporan</option>`;
+
       const filtered = data.filter(item => {
         const tahun = parseInt(item.Tahun);
         return tahun >= 2024 && tahun <= tahunSemasa;
@@ -46,7 +52,7 @@ function populateLaporanDropdown() {
         .sort((a, b) => a.localeCompare(b));
 
       sortedList.forEach(nama => {
-        laporanInput.innerHTML += `<option value="${nama}">${nama}</option>`;
+        dropdown.innerHTML += `<option value="${nama}">${nama}</option>`;
       });
     })
     .catch(err => console.error("Gagal fetch laporan:", err));
@@ -866,7 +872,8 @@ document.addEventListener("click", function (e) {
     checkUserRoleAndInit();
     showUserDetails();
     loadTab3Dashboard();
-    populateLaporanDropdown();
+    populateLaporanDropdown("laporanBaru");
+    populateLaporanDropdown("laporanBaru2");
     populateBahagianDropdown("bahagianBaru","bahagianBaru2", "bahagianUserBaru","bahagianUserKemaskini");
     populateNegeriDropdown("negeriBaru","negeriBaru2", "negeriUserBaru","negeriUserKemaskini");
     populateSektorDropdown("sektorBaru","sektorBaru2","sektorUserBaru","sektorUserKemaskini")
