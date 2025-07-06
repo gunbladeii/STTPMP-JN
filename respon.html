@@ -118,7 +118,7 @@
         <h5 class="text-primary fw-bold">Akses Peneraju</h5>
       <input type="text" id="searchInput2" class="form-control mb-3" placeholder="Hanya perlu taip keyword bagi carian semua column...">
       <!-- Tambah butang di atas table admin -->
-      <button id="tambahSyorBtn" class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#tambahModal">
+      <button id="tambahSyorBtn" class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#tambahModal2">
         <i class="bi bi-plus-circle"></i> Tambah Syor
       </button>
       <div class="table-responsive">
@@ -430,6 +430,76 @@
       </div>
     </div>
 
+  <!--tambahModal2 - Modal untuk simpan syor baharu peneraju -->
+  <div class="modal fade" id="tambahModal2" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Tambah Syor Baharu (Perakuan Menteri)</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="formTambahSyor2">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Laporan</label>              
+                  <select id="laporanBaru2" class="form-control select2">
+                    <option value="">Memuatkan...</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Sektor</label>
+                  <select id="sektorBaru2" class="form-control" required>
+                    <option value="">Memuatkan...</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Bahagian</label>
+                  <select id="bahagianBaru2" class="form-control">
+                    <option value="">Memuatkan...</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Negeri</label>
+                  <select class="form-select" id="negeriBaru2">
+                    <option value="">Memuatkan...</option>
+                  </select>
+                </div>
+
+               <input type="hidden" id="indicatorBaru2" value="Merah">
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Tarikh Kemaskini</label>
+                  <input type="date" class="form-control" id="tarikhBaru2">
+                </div>
+                
+                <div class="col-12 mb-3">
+                  <label class="form-label">Syor</label>
+                  <div id="editorSyorBaru2" style="height: 150px;"></div>
+                  <input type="hidden" id="syorBaru2">
+                </div>             
+
+                <div class="col-12 mb-3">
+                  <label class="form-label">Catatan</label>
+                  <textarea class="form-control" id="catatanBaru2" rows="2"></textarea>
+                </div>
+              </div>
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            <button type="button" class="btn btn-primary" onclick="simpanSyorBaru2()">Simpan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+
   <!-- Modal Tab 1 -->
   <div class="modal fade" id="kemaskiniModal1" tabindex="-1">
     <div class="modal-dialog">
@@ -543,39 +613,31 @@
         </div>
         <div class="modal-body">
           <form id="kemaskiniForm3">
-            <input type="hidden" id="rowNum2">
+            <input type="hidden" id="rowNum3">
             <div class="mb-2">
               <label class="form-label">Nama Pemeriksaan</label>
-              <input type="text" class="form-control" id="PemeriksaanInfo" readonly>
+              <input type="text" class="form-control" id="PemeriksaanInfo3" readonly>
             </div>
             <div class="mb-2">
               <label class="form-label">Perakuan Menteri (Syor)</label>
-              <div id="editorSyorInfo" style="height: 150px;"></div>
-              <input type="hidden" id="SyorInfo">
+              <div id="editorSyorInfo2" style="height: 150px;"></div>
+              <input type="hidden" id="SyorInfo2">
             </div>
             <div class="mb-2">
               <label class="form-label">Respon</label>
-              <div id="ResponInfo" class="p-3 bg-light border rounded"></div>
-            </div>
-            <div class="mb-2">
-              <label class="form-label">Status</label>
-              <select class="form-select" id="statusInput">
-                <option value="Hijau">Hijau</option>
-                <option value="Kuning">Kuning</option>
-                <option value="Merah">Merah</option>
-              </select>
-            </div>
+              <div id="ResponInfo2" class="p-3 bg-light border rounded"></div>
+            </div>            
             <div class="mb-2">
               <label class="form-label">Tempoh Masa</label>
-              <textarea class="form-control" id="tempohMasaInput2" readonly></textarea>
+              <textarea class="form-control" id="tempohMasaInput3" readonly></textarea>
             </div>
             <div class="mb-2">
               <label class="form-label">Tarikh Kemaskini</label>
-              <input type="date" class="form-control" id="tarikhInput2">
+              <input type="date" class="form-control" id="tarikhInput3">
             </div>
             <div class="mb-2">
               <label class="form-label">Catatan</label>
-              <textarea class="form-control" id="catatanInput"></textarea>
+              <textarea class="form-control" id="catatanInput2"></textarea>
             </div>
           </form>
         </div>
