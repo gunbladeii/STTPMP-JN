@@ -713,6 +713,7 @@
   
       function renderBahagianBarStackedChart(data) {
       const bahagianList = [...new Set(data.map(item => item.BahagianJpn || "Lain-lain"))];
+      const negeriList = [...new Set(data.map(item => item.Negeri || "Lain-lain"))];
       const statusKategori = ["Hijau", "Kuning", "Merah"];
 
       const statusData = {
@@ -729,11 +730,57 @@
         });
       });
 
-      const ctx = document.getElementById("bahagianPieChart").getContext("2d");
-      new Chart(ctx, {
+      negeriList.forEach(negeri => {
+        const items = data.filter(item => (item.Negeri || "Lain-lain") === negeri);
+        statusKategori.forEach(status => {
+          const count = items.filter(item => (item.Indicator || "").toLowerCase() === status.toLowerCase()).length;
+          statusData[status].push(count);
+        });
+      });
+
+      const ctxBahagian = document.getElementById("statusChartBahagian").getContext("2d");
+      const ctxNegeri = document.getElementById("statusChartNegeri").getContext("2d");
+      new Chart(ctxBahagian, {
         type: "bar",
         data: {
           labels: bahagianList,
+          datasets: [
+            {
+              label: "Selesai",
+              data: statusData.Hijau,
+              backgroundColor: "#28a745",
+              stack: 'Status'
+            },
+            {
+              label: "Dalam Tindakan",
+              data: statusData.Kuning,
+              backgroundColor: "#ffc107",
+              stack: 'Status'
+            },
+            {
+              label: "Belum Selesai",
+              data: statusData.Merah,
+              backgroundColor: "#dc3545",
+              stack: 'Status'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'bottom' }
+          },
+          scales: {
+            x: { stacked: true },
+            y: { stacked: true, beginAtZero: true }
+          }
+        }
+      });
+
+      new Chart(ctxNegeri, {
+        type: "bar",
+        data: {
+          labels: negeriList,
           datasets: [
             {
               label: "Selesai",
