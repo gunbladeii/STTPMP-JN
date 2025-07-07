@@ -118,8 +118,8 @@
         <h5 class="text-primary fw-bold">Akses Peneraju</h5>
       <input type="text" id="searchInput2" class="form-control mb-3" placeholder="Hanya perlu taip keyword bagi carian semua column...">
       <!-- Tambah butang di atas table admin -->      
-      <button class="btn btn-primary btn-sm" onclick='bukaModaTambahSyorBaharuPeneraju(item)'><i class="bi bi-plus-circle"></i> Tambah Syor</button>
-      </button>
+     <button id = "tambahSyorBtn2" class="btn btn-primary btn-sm" onclick="bukaModaTambahSyorBaharuPeneraju()">
+      <i class="bi bi-plus-circle"></i> Tambah Syor</button>
       <div class="table-responsive">
         <table class="table table-bordered table-hover w-100" id="dataTableDesign3">
           <thead>
@@ -449,7 +449,7 @@
 
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Sektor</label>                  
-                  <input type="text" id="sektorBaru2" class="form-control" readonly>
+                  <select type="text" id="sektorBaru2" class="form-control" readonly></select>
                 </div>
 
                 <div class="col-md-6 mb-3">

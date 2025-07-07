@@ -108,44 +108,36 @@ function getUserRoleInfo() {
   return null;
 }
 
-
-function getUserCheck2() {
+function getUserInfoSektor() {
   const email = Session.getActiveUser().getEmail().toLowerCase();
-  const users = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Users").getDataRange().getValues();
-  
-  if (!users || users.length === 0) {
-    console.log("❌ Tiada data dalam sheet Users");
-    return { isAdmin: false, isPeneraju: false };
-  }
+  const usersSheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Users");
+  const data = usersSheet.getDataRange().getValues();
 
-  const headers = users[0];
-  console.log("✅ Headers:", headers);
-
+  const headers = data[0];
   const emailIdx = headers.indexOf("Email");
   const perananIdx = headers.indexOf("Peranan");
   const sektorIdx = headers.indexOf("Sektor");
-  const sektor = users[i][sektorIdx] || "";
 
-  if (emailIdx === -1 || perananIdx === -1) {
-    console.log("❌ Column Email atau Peranan tak dijumpai!");
-    return { isAdmin: false, isPeneraju: false };
+  if (emailIdx === -1 || perananIdx === -1 || sektorIdx === -1) {
+    console.log("❌ Column Email/Peranan/Sektor tak dijumpai!");
+    return null;
   }
 
-  let isAdmin = false;
-  let isPeneraju = false;
-
-  for (let i = 1; i < users.length; i++) {
-    if ((users[i][emailIdx] || "").toLowerCase() === email) {
-      const role = (users[i][perananIdx] || "").toLowerCase();
-      isAdmin = role === "admin";
-      isPeneraju = role === "peneraju";
-      break;
+  for (let i = 1; i < data.length; i++) {
+    if ((data[i][emailIdx] || "").toLowerCase() === email) {
+      const peranan = data[i][perananIdx] || "";
+      const sektor = data[i][sektorIdx] || "";
+      return {
+        peranan: peranan,
+        sektor: sektor,
+        isAdmin: peranan === "Admin",
+        isPeneraju: peranan === "Peneraju"
+      };
     }
   }
 
-  return { isAdmin, isPeneraju, sektor  };
+  return null;
 }
-
 
 
 function getUsers() {
