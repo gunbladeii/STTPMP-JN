@@ -645,6 +645,7 @@
       // KPI Card (Hijau/Kuning/Merah)
       google.script.run.withSuccessHandler(function (data) {
         renderBahagianBarStackedChart(data);
+        
       })[getDataFn]();
 
   
@@ -655,7 +656,7 @@
           const bahagian = item.BahagianJpn || "Lain-lain";
           countByBahagian[bahagian] = (countByBahagian[bahagian] || 0) + 1;
         });
-        renderBahagianPieChart(countByBahagian);
+        renderStatusBarChart(statusCount);
       })[getDataFn]();
   
       // Top 5 syor
