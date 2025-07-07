@@ -15,27 +15,7 @@
   dropdownParent: $('#tambahModal2') // 👈 Ini penting supaya dropdown z-index ikut modal
   });
 
-  google.script.run.withSuccessHandler(function(roleInfo) {
-  window.perananPengguna = roleInfo.peranan;
-  window.sektorPengguna = roleInfo.sektor;
-
-  // Sekarang dah boleh confident semua value wujud
-  const tambahBtn = document.getElementById("tambahSyorBtn2");
-  if (tambahBtn) {
-    tambahBtn.addEventListener("click", function () {
-      const sektorInput = document.getElementById("sektorBaru2");
-      if (roleInfo.peranan === "Peneraju" && sektorInput) {
-        sektorInput.value = roleInfo.sektor || "";
-        sektorInput.setAttribute("readonly", true);
-      } else if (sektorInput) {
-        sektorInput.removeAttribute("readonly");
-        sektorInput.value = "";
-      }
-    });
-  }
-}).getUserCheck();
-
-
+  
 //untuk batch indicator status
   function badgeClass(status) {
   if (!status) return 'bg-secondary';
@@ -944,6 +924,28 @@ document.addEventListener("click", function (e) {
         loadDataUsers();
       }).updateUser(data);
     });
+
+    //load kan fungsi sektor auto appear untuk akses peneraju
+
+    google.script.run.withSuccessHandler(function(roleInfo) {
+      window.perananPengguna = roleInfo.peranan;
+      window.sektorPengguna = roleInfo.sektor;
+    
+      // Sekarang dah boleh confident semua value wujud
+      const tambahBtn = document.getElementById("tambahSyorBtn2");
+      if (tambahBtn) {
+        tambahBtn.addEventListener("click", function () {
+          const sektorInput = document.getElementById("sektorBaru2");
+          if (roleInfo.peranan === "Peneraju" && sektorInput) {
+            sektorInput.value = roleInfo.sektor || "";
+            sektorInput.setAttribute("readonly", true);
+          } else if (sektorInput) {
+            sektorInput.removeAttribute("readonly");
+            sektorInput.value = "";
+          }
+        });
+      }
+    }).getUserCheck();
 
     document.getElementById("formDaftarPengguna").addEventListener("submit", function(e) {
       e.preventDefault();
