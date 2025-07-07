@@ -547,6 +547,13 @@ function initDataTableDesign(tableId) {
     modal.show();
   }
 
+  function bukaModaTambahSyorBaharuPeneraju(item) {
+    
+    document.getElementById("sektorBaru2").value = item.Sektor || "";
+    const modal = new bootstrap.Modal(document.getElementById("tambahModal2"));
+    modal.show();
+  }
+
   function bukaModalTab3(item) {
     document.getElementById("rowNum3").value = item.RowNum;
     document.getElementById("PemeriksaanInfo3").value = item.Laporan || "";
