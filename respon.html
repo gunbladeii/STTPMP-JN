@@ -146,78 +146,78 @@
 
     <!-- Dashboard Tab Start -->
    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
-      <div class="container py-4">
-        <h4 class="mb-4">📊 Ringkasan Dashboard STTMP</h4>
-
-        <!-- KPI Cards -->
-        <div class="row" id="kpiCards">
+      <div class="container-fluid">
+        <!-- Row 1: Summary Cards -->
+        <div class="row text-center">
           <div class="col-md-3 mb-3">
-            <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card shadow-sm">
               <div class="card-body">
-                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Jumlah Syor</div>
-                <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalSyor">0</div>
+                <h6 class="text-muted">JUMLAH SYOR</h6>
+                <h3 id="jumlahSyor">0</h3>
               </div>
             </div>
           </div>
           <div class="col-md-3 mb-3">
-            <div class="card border-left-success shadow h-100 py-2">
-              <div class="card-body">
-                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Selesai</div>
-                <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalSelesai">0</div>
+            <div class="card shadow-sm">
+              <div class="card-body text-success">
+                <h6>SELESAI</h6>
+                <h3 id="jumlahSelesai">0</h3>
               </div>
             </div>
           </div>
           <div class="col-md-3 mb-3">
-            <div class="card border-left-warning shadow h-100 py-2">
-              <div class="card-body">
-                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Dalam Tindakan</div>
-                <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalTindakan">0</div>
+            <div class="card shadow-sm">
+              <div class="card-body text-warning">
+                <h6>DALAM TINDAKAN</h6>
+                <h3 id="jumlahTindakan">0</h3>
               </div>
             </div>
           </div>
           <div class="col-md-3 mb-3">
-            <div class="card border-left-danger shadow h-100 py-2">
-              <div class="card-body">
-                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Belum Selesai</div>
-                <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalBelum">0</div>
+            <div class="card shadow-sm">
+              <div class="card-body text-danger">
+                <h6>BELUM SELESAI</h6>
+                <h3 id="jumlahBelum">0</h3>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Bar Chart -->
-        <div class="row mb-4">
-          <div class="col-md-6">
-            <canvas id="statusBarChart"></canvas>
+        <!-- Row 2: Bar Chart + Map Chart -->
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <canvas id="bahagianBarChart"></canvas>
           </div>
-
-          <!-- Pie Chart -->
-          <div class="col-md-6">
-            <canvas id="bahagianPieChart"></canvas>
+          <div class="col-md-6 mb-4">
+            <div id="mapMalaysiaContainer" style="height: 400px;"></div>
           </div>
         </div>
 
-        <!-- Top 5 Skor Terendah -->
-        <div class="card shadow mb-4">
-          <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Top 5 Syor Skor Terendah</h6>
+        <!-- Row 3: Bahagian Chart + Top 5 Table -->
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <canvas id="bahagianStackedChart"></canvas>
           </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-bordered" id="top5SyorTable" width="100%" cellspacing="0">
-                <thead>
-                  <tr>
-                    <th>No</th>
-                    <th>Laporan</th>
-                    <th>Syor</th>
-                    <th>Bahagian</th>
-                    <th>Skor</th>
-                  </tr>
-                </thead>
-                <tbody id="top5SyorBody">
-                  <!-- data populated dynamically -->
-                </tbody>
-              </table>
+          <div class="col-md-6 mb-4">
+            <div class="card">
+              <div class="card-header">5 SYOR TERENDAH (MENGIKUT STATUS)</div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-bordered table-sm" id="top5SyorTable">
+                    <thead class="table-light">
+                      <tr>
+                        <th>#</th>
+                        <th>Bahagian</th>
+                        <th>Syor</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- data populate by JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
