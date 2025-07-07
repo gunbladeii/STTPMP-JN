@@ -644,22 +644,9 @@
   
       // KPI Card (Hijau/Kuning/Merah)
       google.script.run.withSuccessHandler(function (data) {
-        const statusCount = { Selesai: 0, "Dalam Tindakan": 0, "Belum Selesai": 0 };
-  
-        document.getElementById("totalSyor").textContent = data.length;
-  
-        data.forEach(item => {
-          const status = item.Indicator?.toLowerCase();
-          if (status === "hijau") statusCount.Selesai++;
-          else if (status === "kuning") statusCount["Dalam Tindakan"]++;
-          else if (status === "merah") statusCount["Belum Selesai"]++;
-        });
-  
-        document.getElementById("totalSelesai").textContent = statusCount.Selesai;
-        document.getElementById("totalTindakan").textContent = statusCount["Dalam Tindakan"];
-        document.getElementById("totalBelum").textContent = statusCount["Belum Selesai"];
-        renderStatusBarChart(statusCount);
+        renderBahagianBarStackedChart(data);
       })[getDataFn]();
+
   
       // Pie chart
       google.script.run.withSuccessHandler(function (data) {
@@ -719,28 +706,62 @@
         });
       }
   
-      function renderBahagianPieChart(data) {
-        const ctx = document.getElementById("bahagianPieChart").getContext("2d");
-        new Chart(ctx, {
-          type: 'pie',
-          data: {
-            labels: Object.keys(data),
-            datasets: [{
-              data: Object.values(data),
-              backgroundColor: Object.keys(data).map(() =>
-                `hsl(${Math.random() * 360}, 60%, 60%)`)
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { position: 'bottom' }
-            }
-          }
+      function renderBahagianBarStackedChart(data) {
+      const bahagianList = [...new Set(data.map(item => item.BahagianJpn || "Lain-lain"))];
+      const statusKategori = ["Hijau", "Kuning", "Merah"];
+
+      const statusData = {
+        Hijau: [],
+        Kuning: [],
+        Merah: []
+      };
+
+      bahagianList.forEach(bahagian => {
+        const items = data.filter(item => (item.BahagianJpn || "Lain-lain") === bahagian);
+        statusKategori.forEach(status => {
+          const count = items.filter(item => (item.Indicator || "").toLowerCase() === status.toLowerCase()).length;
+          statusData[status].push(count);
         });
-      }
-  
-  
+      });
+
+      const ctx = document.getElementById("bahagianPieChart").getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: bahagianList,
+          datasets: [
+            {
+              label: "Selesai (Hijau)",
+              data: statusData.Hijau,
+              backgroundColor: "#28a745",
+              stack: 'Status'
+            },
+            {
+              label: "Dalam Tindakan (Kuning)",
+              data: statusData.Kuning,
+              backgroundColor: "#ffc107",
+              stack: 'Status'
+            },
+            {
+              label: "Belum Selesai (Merah)",
+              data: statusData.Merah,
+              backgroundColor: "#dc3545",
+              stack: 'Status'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'bottom' }
+          },
+          scales: {
+            x: { stacked: true },
+            y: { stacked: true, beginAtZero: true }
+          }
+        }
+      });
+    }  
   
     function badgeClass(status) {
       if (status === "Hijau") return "badge-success";
