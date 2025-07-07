@@ -644,10 +644,22 @@
   
       // KPI Card (Hijau/Kuning/Merah)
       google.script.run.withSuccessHandler(function (data) {
-        renderBahagianBarStackedChart(data);
-        
+        const statusCount = { Selesai: 0, "Dalam Tindakan": 0, "Belum Selesai": 0 };
+  
+        document.getElementById("totalSyor").textContent = data.length;
+  
+        data.forEach(item => {
+          const status = item.Indicator?.toLowerCase();
+          if (status === "hijau") statusCount.Selesai++;
+          else if (status === "kuning") statusCount["Dalam Tindakan"]++;
+          else if (status === "merah") statusCount["Belum Selesai"]++;
+        });
+  
+        document.getElementById("totalSelesai").textContent = statusCount.Selesai;
+        document.getElementById("totalTindakan").textContent = statusCount["Dalam Tindakan"];
+        document.getElementById("totalBelum").textContent = statusCount["Belum Selesai"];
+        renderStatusBarChart(statusCount);
       })[getDataFn]();
-
   
       // Pie chart
       google.script.run.withSuccessHandler(function (data) {
@@ -656,7 +668,7 @@
           const bahagian = item.BahagianJpn || "Lain-lain";
           countByBahagian[bahagian] = (countByBahagian[bahagian] || 0) + 1;
         });
-        renderStatusBarChart(statusCount);
+        renderBahagianBarStackedChart(countByBahagian);
       })[getDataFn]();
   
       // Top 5 syor
