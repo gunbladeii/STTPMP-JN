@@ -547,12 +547,21 @@ function initDataTableDesign(tableId) {
     modal.show();
   }
 
-  function bukaModaTambahSyorBaharuPeneraju(item) {
-    
-    document.getElementById("sektorBaru2").value = item.Sektor || "";
-    const modal = new bootstrap.Modal(document.getElementById("tambahModal2"));
-    modal.show();
+  function bukaModaTambahSyorBaharuPeneraju() {
+    const sektorInput = document.getElementById("sektorBaru2");
+    if (window.perananPengguna === "Peneraju" && sektorInput) {
+      sektorInput.value = window.sektorPengguna || "";
+      sektorInput.setAttribute("readonly", true);
+    } else if (sektorInput) {
+      sektorInput.removeAttribute("readonly");
+      sektorInput.value = "";
+    }
+  
+    // Paparkan modal
+    const tambahModal2 = new bootstrap.Modal(document.getElementById("tambahModal2"));
+    tambahModal2.show();
   }
+  
 
   function bukaModalTab3(item) {
     document.getElementById("rowNum3").value = item.RowNum;
