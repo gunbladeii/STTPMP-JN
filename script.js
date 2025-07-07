@@ -684,6 +684,7 @@
     }).getUsers(); // Get role first
   }
   
+    let chartBahagianStacked;
   
      function renderStatusBarChart(data) {
         const ctx = document.getElementById("statusBarChart").getContext("2d");
@@ -740,7 +741,12 @@
 
       const ctxBahagian = document.getElementById("statusChartBahagian").getContext("2d");
       const ctxNegeri = document.getElementById("statusChartNegeri").getContext("2d");
-      new Chart(ctxBahagian, {
+
+      if (chartBahagianStacked) {
+        chartBahagianStacked.destroy();
+      }
+
+      chartBahagianStacked = new Chart(ctxBahagian, {
         type: "bar",
         data: {
           labels: bahagianList,
