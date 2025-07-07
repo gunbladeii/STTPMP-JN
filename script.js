@@ -648,7 +648,7 @@ function initDataTableDesign(tableId) {
         const bahagian = item.BahagianJpn || "Lain-lain";
         countByBahagian[bahagian] = (countByBahagian[bahagian] || 0) + 1;
       });
-      renderBahagianPieChart(countByBahagian);
+      renderBahagianBarChart(countByBahagian);
     })[getDataFn]();
 
     // Top 5 syor
@@ -674,7 +674,7 @@ function initDataTableDesign(tableId) {
 
 
    function renderStatusBarChart(data) {
-      const ctx = document.getElementById("statusBarChart").getContext("2d");
+      const ctx = document.getElementById("bahagianStackedChart").getContext("2d");
       new Chart(ctx, {
         type: 'bar',
         data: {
@@ -699,22 +699,86 @@ function initDataTableDesign(tableId) {
       });
     }
 
-    function renderBahagianPieChart(data) {
-      const ctx = document.getElementById("bahagianPieChart").getContext("2d");
-      new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: Object.keys(data),
-          datasets: [{
-            data: Object.values(data),
-            backgroundColor: Object.keys(data).map(() =>
-              `hsl(${Math.random() * 360}, 60%, 60%)`)
+    function renderMapChart(data) {
+      fetch('https://code.highcharts.com/mapdata/countries/my/my-all.geo.json')
+      .then(response => response.json())
+      .then(mapData => {
+        Highcharts.mapChart('mapMalaysiaContainer', {
+          chart: {
+            map: mapData
+          },
+          title: {
+            text: 'Status Syor Mengikut Negeri'
+          },
+          tooltip: {
+            useHTML: true,
+            pointFormatter: function () {
+              return `
+                <b>${this.name}</b><br/>
+                Selesai: ${this.selesai}<br/>
+                Dalam Tindakan: ${this.dalamTindakan}<br/>
+                Belum Selesai: ${this.belumSelesai}
+              `;
+            }
+          },
+          series: [{
+            data: [
+              { 'hc-key': 'my-01', name: 'Johor', selesai: 3, dalamTindakan: 2, belumSelesai: 1, value: 6 },
+              { 'hc-key': 'my-10', name: 'Selangor', selesai: 2, dalamTindakan: 1, belumSelesai: 4, value: 7 },
+              { 'hc-key': 'my-08', name: 'Perak', selesai: 1, dalamTindakan: 3, belumSelesai: 2, value: 6 }
+            ],
+            joinBy: 'hc-key',
+            name: 'Jumlah Syor',
+            states: {
+              hover: {
+                color: '#BADA55'
+              }
+            },
+            dataLabels: {
+              enabled: true,
+              format: '{point.name}'
+            }
           }]
-        },
+        });
+      });
+    }
+
+    function renderBahagianBarChart(data) {
+      const ctxBar = document.getElementById("bahagianBarChart").getContext("2d");
+      const bahagianLabels = ["BPK", "JPS", "LP"];
+      const dataBar = {
+        labels: bahagianLabels,
+        datasets: [
+          {
+            label: "Selesai",
+            data: [3, 2, 1],
+            backgroundColor: "#28a745"
+          },
+          {
+            label: "Dalam Tindakan",
+            data: [1, 1, 1],
+            backgroundColor: "#ffc107"
+          },
+          {
+            label: "Belum Selesai",
+            data: [2, 3, 4],
+            backgroundColor: "#dc3545"
+          }
+        ]
+      };
+
+      new Chart(ctxBar, {
+        type: "bar",
+        data: dataBar,
         options: {
           responsive: true,
           plugins: {
-            legend: { position: 'bottom' }
+            legend: { position: "top" },
+            title: { display: true, text: "Status Syor Mengikut Bahagian" }
+          },
+          scales: {
+            x: { stacked: true },
+            y: { stacked: true, beginAtZero: true }
           }
         }
       });
