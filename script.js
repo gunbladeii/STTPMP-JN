@@ -685,6 +685,7 @@
   }
   
     let chartBahagianStacked;
+    let chartNegeriStacked;
   
      function renderStatusBarChart(data) {
         const ctx = document.getElementById("statusBarChart").getContext("2d");
@@ -746,6 +747,10 @@
         chartBahagianStacked.destroy();
       }
 
+      if (chartNegeriStacked) {
+        chartNegeriStacked.destroy();
+      }
+
       chartBahagianStacked = new Chart(ctxBahagian, {
         type: "bar",
         data: {
@@ -783,7 +788,7 @@
         }
       });
 
-      new Chart(ctxNegeri, {
+      chartNegeriStacked = new Chart(ctxNegeri, {
         type: "bar",
         data: {
           labels: negeriList,
