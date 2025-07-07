@@ -967,7 +967,7 @@ document.addEventListener("click", function (e) {
           }
         });
       }
-    }).getUserCheck2();
+    }).getUserCheck();
   });  
 
 
