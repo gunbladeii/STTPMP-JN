@@ -925,28 +925,6 @@ document.addEventListener("click", function (e) {
       }).updateUser(data);
     });
 
-    //load kan fungsi sektor auto appear untuk akses peneraju
-
-    google.script.run.withSuccessHandler(function(roleInfo) {
-      window.perananPengguna = roleInfo.peranan;
-      window.sektorPengguna = roleInfo.sektor;
-    
-      // Sekarang dah boleh confident semua value wujud
-      const tambahBtn = document.getElementById("tambahSyorBtn2");
-      if (tambahBtn) {
-        tambahBtn.addEventListener("click", function () {
-          const sektorInput = document.getElementById("sektorBaru2");
-          if (roleInfo.peranan === "Peneraju" && sektorInput) {
-            sektorInput.value = roleInfo.sektor || "";
-            sektorInput.setAttribute("readonly", true);
-          } else if (sektorInput) {
-            sektorInput.removeAttribute("readonly");
-            sektorInput.value = "";
-          }
-        });
-      }
-    }).getUserCheck();
-
     document.getElementById("formDaftarPengguna").addEventListener("submit", function(e) {
       e.preventDefault();
       const emailInput = document.getElementById("emelBaru").value.trim();
@@ -970,6 +948,27 @@ document.addEventListener("click", function (e) {
       }).insertUser(data);
     });
   };
+
+  document.addEventListener("DOMContentLoaded", function () {
+    google.script.run.withSuccessHandler(function(roleInfo) {
+      window.perananPengguna = roleInfo.peranan;
+      window.sektorPengguna = roleInfo.sektor;
+  
+      const tambahBtn = document.getElementById("tambahSyorBtn2");
+      if (tambahBtn) {
+        tambahBtn.addEventListener("click", function () {
+          const sektorInput = document.getElementById("sektorBaru2");
+          if (window.perananPengguna === "Peneraju" && sektorInput) {
+            sektorInput.value = window.sektorPengguna || "";
+            sektorInput.setAttribute("readonly", true);
+          } else if (sektorInput) {
+            sektorInput.removeAttribute("readonly");
+            sektorInput.value = "";
+          }
+        });
+      }
+    }).getUserCheck2();
+  });  
 
 
   const quillSyorBaru = new Quill('#editorSyorBaru', {
