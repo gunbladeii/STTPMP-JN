@@ -668,7 +668,7 @@
           const bahagian = item.BahagianJpn || "Lain-lain";
           countByBahagian[bahagian] = (countByBahagian[bahagian] || 0) + 1;
         });
-        renderBahagianBarStackedChart(countByBahagian);
+        renderBahagianBarStackedChart();
       })[getDataFn]();
   
       // Top 5 syor
