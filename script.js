@@ -659,14 +659,10 @@
         document.getElementById("totalTindakan").textContent = statusCount["Dalam Tindakan"];
         document.getElementById("totalBelum").textContent = statusCount["Belum Selesai"];
         renderStatusBarChart(statusCount);
-      })[getDataFn]();
-  
-      // Stack Bar chart
-      google.script.run.withSuccessHandler(function (data) {
         renderBahagianBarStackedChart(data);
       })[getDataFn]();
-
   
+     
       // Top 5 syor
       google.script.run.withSuccessHandler(function (data) {
         const sorted = data.sort((a, b) => a.SkorWajaran - b.SkorWajaran).slice(0, 5);
