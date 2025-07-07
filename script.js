@@ -712,8 +712,8 @@
       }
   
       function renderBahagianBarStackedChart(data) {
-      const bahagianList = [...new Set(data.map(item => item.BahagianJpn || "Lain-lain"))];
-      const negeriList = [...new Set(data.map(item => item.Negeri || "Lain-lain"))];
+      const bahagianList = [...new Set(data.map(item => item.BahagianJpn))];
+      const negeriList = [...new Set(data.map(item => item.Negeri))];
       const statusKategori = ["Hijau", "Kuning", "Merah"];
 
       const statusData = {
@@ -723,7 +723,7 @@
       };
 
       bahagianList.forEach(bahagian => {
-        const items = data.filter(item => (item.BahagianJpn || "Lain-lain") === bahagian);
+        const items = data.filter(item => (item.BahagianJpn) === bahagian);
         statusKategori.forEach(status => {
           const count = items.filter(item => (item.Indicator || "").toLowerCase() === status.toLowerCase()).length;
           statusData[status].push(count);
@@ -731,7 +731,7 @@
       });
 
       negeriList.forEach(negeri => {
-        const items = data.filter(item => (item.Negeri || "Lain-lain") === negeri);
+        const items = data.filter(item => (item.Negeri) === negeri);
         statusKategori.forEach(status => {
           const count = items.filter(item => (item.Indicator || "").toLowerCase() === status.toLowerCase()).length;
           statusData[status].push(count);
