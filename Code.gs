@@ -460,6 +460,57 @@ function getPieChartDataByUser() {
   return statusCount;
 }
 
+function getMapData() {
+  const settingSheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Setting");
+  const dbSheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("STTMP_DB");
+
+  const settingData = settingSheet.getDataRange().getValues();
+  const dbData = dbSheet.getDataRange().getValues();
+
+  const negeriIndex = settingData[0].indexOf("Negeri");
+  const bahagianIndex = settingData[0].indexOf("Bahagian");
+
+  const negeriMap = {};
+
+  for (let i = 1; i < settingData.length; i++) {
+    const negeri = settingData[i][negeriIndex];
+    const bahagian = settingData[i][bahagianIndex];
+    if (!negeri || !bahagian) continue;
+    if (!negeriMap[negeri]) negeriMap[negeri] = [];
+    negeriMap[negeri].push(bahagian);
+  }
+
+  const dbBahagianIndex = dbData[0].indexOf("BahagianJPN");
+  const dbStatusIndex = dbData[0].indexOf("Indicator");
+
+  const statusMap = {};
+
+  for (const [negeri, bahagians] of Object.entries(negeriMap)) {
+    statusMap[negeri] = { "Selesai": 0, "Dalam Tindakan": 0, "Belum Selesai": 0 };
+
+    for (let i = 1; i < dbData.length; i++) {
+      const rowBahagian = dbData[i][dbBahagianIndex];
+      const status = dbData[i][dbStatusIndex];
+
+      if (bahagians.includes(rowBahagian)) {
+        if (status === "Hijau") statusMap[negeri]["Selesai"]++;
+        else if (status === "Kuning") statusMap[negeri]["Dalam Tindakan"]++;
+        else if (status === "Merah") statusMap[negeri]["Belum Selesai"]++;
+      }
+    }
+  }
+
+  // Convert to array for chart use
+  const result = Object.entries(statusMap).map(([name, data]) => ({
+    id: name.toLowerCase().replace(/\s+/g, '_'),
+    name,
+    customData: data
+  }));
+
+  return result;
+}
+
+
 function getUserRole(email) {
   const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
   const data = sheet.getDataRange().getValues();
