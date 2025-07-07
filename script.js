@@ -438,6 +438,11 @@
     function simpanKemaskiniTab1() {
   
     document.getElementById("responInput").value = quillResponInput.root.innerHTML;
+
+    const btn = document.querySelector('#kemaskiniModal1 .btn-primary');
+      btn.disabled = true;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Kemaskini...`;
   
     const row = document.getElementById("rowNum1").value;
     const respon = document.getElementById("responInput").value;
@@ -465,10 +470,14 @@
             google.script.run.withSuccessHandler(() => {
               bootstrap.Modal.getInstance(document.getElementById("kemaskiniModal1")).hide();
               loadDataTab1();
+              btn.disabled = false;
+              btn.innerHTML = originalText;
             }).updateRespon(row, respon, tarikh, tempohMasa);
           })
           .withFailureHandler(err => {
             alert("Ralat upload PDF: " + err.message);
+            btn.disabled = false;
+            btn.innerHTML = originalText;
           })
           .uploadPDFtoDrive(base64, namaFail, data.Laporan, data.Syor, data.TarikhKemaskini);
       };
@@ -478,6 +487,8 @@
       google.script.run.withSuccessHandler(() => {
         bootstrap.Modal.getInstance(document.getElementById("kemaskiniModal1")).hide();
         loadDataTab1();
+        btn.disabled = false;
+        btn.innerHTML = originalText;
       }).updateRespon(row, respon, tarikh, tempohMasa);
     }
   }
@@ -564,6 +575,11 @@
   
     function simpanKemaskiniTab2() {
       document.getElementById("SyorInfo").value = quillSyorInfo.root.innerHTML;
+
+      const btn = document.querySelector('#kemaskiniModal2 .btn-primary');
+      btn.disabled = true;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Kemaskini...`;
   
       const row = document.getElementById("rowNum2").value;
       const syor = document.getElementById("SyorInfo").value;
@@ -574,9 +590,13 @@
       .withSuccessHandler(() => {
         bootstrap.Modal.getInstance(document.getElementById("kemaskiniModal2")).hide();
         loadDataTab2();
+        btn.disabled = false;
+        btn.innerHTML = originalText;
       })
       .withFailureHandler(err => {
         alert("Ralat semasa menghantar data atau emel: " + err.message);
+        btn.disabled = false;
+        btn.innerHTML = originalText;
       })
       .updateSyor(row, syor, status, tarikh, catatan);
     }
