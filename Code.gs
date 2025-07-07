@@ -88,6 +88,27 @@ function getUserCheck() {
   return { isAdmin, isPeneraju  };
 }
 
+function getUserRoleInfo() {
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Users");
+  const email = Session.getActiveUser().getEmail().toLowerCase();
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0];
+  const emailIdx = headers.indexOf("Emel");
+  const roleIdx = headers.indexOf("Peranan");
+  const sektorIdx = headers.indexOf("Sektor");
+
+  for (let i = 1; i < data.length; i++) {
+    if ((data[i][emailIdx] || "").toLowerCase() === email) {
+      return {
+        peranan: data[i][roleIdx],
+        sektor: data[i][sektorIdx]
+      };
+    }
+  }
+  return null;
+}
+
+
 function getUserCheck2() {
   const email = Session.getActiveUser().getEmail().toLowerCase();
   const users = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Users").getDataRange().getValues();

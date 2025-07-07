@@ -117,9 +117,8 @@
     <div class="tab-pane fade" id="tab5" role="tabpanel">
         <h5 class="text-primary fw-bold">Akses Peneraju</h5>
       <input type="text" id="searchInput2" class="form-control mb-3" placeholder="Hanya perlu taip keyword bagi carian semua column...">
-      <!-- Tambah butang di atas table admin -->
-      <button id="tambahSyorBtn2" class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#tambahModal2">
-        <i class="bi bi-plus-circle"></i> Tambah Syor
+      <!-- Tambah butang di atas table admin -->      
+      <button class="btn btn-primary btn-sm" onclick='bukaModaTambahSyorBaharuPeneraju(${JSON.stringify(item)})'><i class="bi bi-plus-circle"></i> Tambah Syor</button>
       </button>
       <div class="table-responsive">
         <table class="table table-bordered table-hover w-100" id="dataTableDesign3">
@@ -449,10 +448,8 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                  <label class="form-label">Sektor</label>
-                  <select id="sektorBaru2" class="form-control" read only>
-                    <option value="">Memuatkan...</option>
-                  </select>
+                  <label class="form-label">Sektor</label>                  
+                  <input type="text" id="sektorBaru2" class="form-control" readonly>
                 </div>
 
                 <div class="col-md-6 mb-3">
