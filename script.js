@@ -661,15 +661,11 @@
         renderStatusBarChart(statusCount);
       })[getDataFn]();
   
-      // Pie chart
+      // Stack Bar chart
       google.script.run.withSuccessHandler(function (data) {
-        const countByBahagian = {};
-        data.forEach(item => {
-          const bahagian = item.BahagianJpn || "Lain-lain";
-          countByBahagian[bahagian] = (countByBahagian[bahagian] || 0) + 1;
-        });
-        renderBahagianBarStackedChart();
+        renderBahagianBarStackedChart(data);
       })[getDataFn]();
+
   
       // Top 5 syor
       google.script.run.withSuccessHandler(function (data) {
