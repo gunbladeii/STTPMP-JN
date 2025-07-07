@@ -699,49 +699,71 @@ function initDataTableDesign(tableId) {
       });
     }
 
+    // Script mapChart Malaysia Interaktif untuk tab Dashboard STTMP
+    // Guna Highcharts Map API
+
+    async function loadMapChart() {
+      try {
+        const response = await google.script.run.withSuccessHandler(renderMapChart).getMapData();
+      } catch (err) {
+        console.error("❌ Gagal load data map:", err);
+      }
+    }
+
     function renderMapChart(data) {
-      fetch('https://code.highcharts.com/mapdata/countries/my/my-all.geo.json')
-      .then(response => response.json())
-      .then(mapData => {
-        Highcharts.mapChart('mapMalaysiaContainer', {
-          chart: {
-            map: mapData
-          },
-          title: {
-            text: 'Status Syor Mengikut Negeri'
-          },
-          tooltip: {
-            useHTML: true,
-            pointFormatter: function () {
-              return `
-                <b>${this.name}</b><br/>
-                Selesai: ${this.selesai}<br/>
-                Dalam Tindakan: ${this.dalamTindakan}<br/>
-                Belum Selesai: ${this.belumSelesai}
-              `;
+      Highcharts.mapChart('mapContainer', {
+        chart: {
+          map: 'countries/my/my-all',
+          borderWidth: 1
+        },
+
+        title: {
+          text: 'Syor Mengikut Negeri',
+          align: 'left'
+        },
+
+        tooltip: {
+          formatter: function () {
+            const d = this.point.customData;
+            return `<b>${this.point.name}</b><br>` +
+              `Selesai: <b>${d.selesai}</b><br>` +
+              `Dalam Tindakan: <b>${d.dalam_tindakan}</b><br>` +
+              `Belum Selesai: <b>${d.belum_selesai}</b>`;
+          }
+        },
+
+        colorAxis: {
+          min: 0,
+          stops: [
+            [0, '#e0f7fa'],
+            [0.5, '#26c6da'],
+            [1, '#006064']
+          ]
+        },
+
+        series: [{
+          data: data,
+          keys: ['id', 'value', 'customData'],
+          joinBy: 'id',
+          name: 'Jumlah Syor',
+          states: {
+            hover: {
+              color: '#a4edba'
             }
           },
-          series: [{
-            data: [
-              { 'hc-key': 'my-01', name: 'Johor', selesai: 3, dalamTindakan: 2, belumSelesai: 1, value: 6 },
-              { 'hc-key': 'my-10', name: 'Selangor', selesai: 2, dalamTindakan: 1, belumSelesai: 4, value: 7 },
-              { 'hc-key': 'my-08', name: 'Perak', selesai: 1, dalamTindakan: 3, belumSelesai: 2, value: 6 }
-            ],
-            joinBy: 'hc-key',
-            name: 'Jumlah Syor',
-            states: {
-              hover: {
-                color: '#BADA55'
-              }
-            },
-            dataLabels: {
-              enabled: true,
-              format: '{point.name}'
-            }
-          }]
-        });
+          dataLabels: {
+            enabled: true,
+            format: '{point.name}'
+          }
+        }]
       });
     }
+
+    // Auto-trigger bila dashboard tab load
+    if (document.getElementById('mapContainer')) {
+      loadMapChart();
+    }
+
 
     function renderBahagianBarChart(data) {
       const ctxBar = document.getElementById("bahagianBarChart").getContext("2d");
