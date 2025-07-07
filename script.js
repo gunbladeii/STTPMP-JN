@@ -736,19 +736,19 @@
           labels: bahagianList,
           datasets: [
             {
-              label: "Selesai (Hijau)",
+              label: "Selesai",
               data: statusData.Hijau,
               backgroundColor: "#28a745",
               stack: 'Status'
             },
             {
-              label: "Dalam Tindakan (Kuning)",
+              label: "Dalam Tindakan",
               data: statusData.Kuning,
               backgroundColor: "#ffc107",
               stack: 'Status'
             },
             {
-              label: "Belum Selesai (Merah)",
+              label: "Belum Selesai",
               data: statusData.Merah,
               backgroundColor: "#dc3545",
               stack: 'Status'
