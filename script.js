@@ -717,8 +717,15 @@
       const bahagianList = [...new Set(data.map(item => item.BahagianJpn || "Lain-lain"))];
       const negeriList = [...new Set(data.map(item => item.Negeri || "Lain-lain"))];
       const statusKategori = ["Hijau", "Kuning", "Merah"];
+      const statusKategori2 = ["Hijau", "Kuning", "Merah"];
 
       const statusData = {
+        Hijau: [],
+        Kuning: [],
+        Merah: []
+      };
+
+      const statusData2 = {
         Hijau: [],
         Kuning: [],
         Merah: []
@@ -734,9 +741,9 @@
 
       negeriList.forEach(negeri => {
         const items = data.filter(item => (item.Negeri || "Lain-lain") === negeri);
-        statusKategori.forEach(status => {
-          const count = items.filter(item => (item.Indicator || "").toLowerCase() === status.toLowerCase()).length;
-          statusData[status].push(count);
+        statusKategori2.forEach(status2 => {
+          const count = items.filter(item => (item.Indicator || "").toLowerCase() === status2.toLowerCase()).length;
+          statusData2[status2].push(count);
         });
       });
 
@@ -795,19 +802,19 @@
           datasets: [
             {
               label: "Selesai",
-              data: statusData.Hijau,
+              data: statusData2.Hijau,
               backgroundColor: "#28a745",
               stack: 'Status'
             },
             {
               label: "Dalam Tindakan",
-              data: statusData.Kuning,
+              data: statusData2.Kuning,
               backgroundColor: "#ffc107",
               stack: 'Status'
             },
             {
               label: "Belum Selesai",
-              data: statusData.Merah,
+              data: statusData2.Merah,
               backgroundColor: "#dc3545",
               stack: 'Status'
             }
