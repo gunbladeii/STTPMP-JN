@@ -264,6 +264,7 @@
             </button>
           </li>
         </ul>`;
+        document.getElementById("viewChart2").style.display = "none";
         document.getElementById("tab2-tab").click();
         bindTabClickListeners()
         loadDataTab2();
@@ -281,6 +282,7 @@
             </button>
           </li>
         </ul>`;
+        document.getElementById("viewChart2").style.display = "none";
         document.getElementById("tab5-tab").click();
         bindTabClickListeners()
         loadDataTab3();
@@ -299,7 +301,7 @@
           </li>
         </ul>`;
         
-        ["viewChartBahagian", "viewChartNegeri", "viewbahagianPieChart"].forEach(id => {
+        ["viewChart1", "viewChart3"].forEach(id => {
           const elem = document.getElementById(id);
           if (elem) elem.style.display = "none";
         });
