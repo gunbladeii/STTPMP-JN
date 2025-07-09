@@ -696,7 +696,33 @@
   
      function renderStatusBarChart(data) {
         const ctx = document.getElementById("statusBarChart").getContext("2d");
+        const ctx2 = document.getElementById("statusBarChart2").getContext("2d");
         new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: Object.keys(data),
+            datasets: [{
+              label: 'Jumlah Syor',
+              data: Object.values(data),
+              backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+
+        //
+
+        new Chart(ctx2, {
           type: 'bar',
           data: {
             labels: Object.keys(data),
