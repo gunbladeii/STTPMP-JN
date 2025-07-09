@@ -298,6 +298,11 @@
             </button>
           </li>
         </ul>`;
+        
+        ["viewChartBahagian", "viewChartNegeri", "viewbahagianPieChart"].forEach(id => {
+          const elem = document.getElementById(id);
+          if (elem) elem.style.display = "none";
+        });
         document.getElementById("tab1-tab").click();
         bindTabClickListeners()
         loadDataTab1();
