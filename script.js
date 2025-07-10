@@ -1122,7 +1122,7 @@
       };
 
       const btnKemaskiniUser = document.querySelector('#kemaskiniPenggunaModal .btn-success');
-      btnKemaskiniUser.disabled2 = true;
+      btnKemaskiniUser.disabled = true;
       const originalTextUser = btnKemaskiniUser.innerHTML;
       btnKemaskiniUser.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Kemaskini...`;
       
@@ -1130,7 +1130,7 @@
       google.script.run.withSuccessHandler(() => {
           bootstrap.Modal.getInstance(document.getElementById("kemaskiniPenggunaModal")).hide();
           loadDataUsers();
-          btnKemaskiniUser.disabled2 = false;
+          btnKemaskiniUser.disabled = false;
           btnKemaskiniUser.innerHTML = originalTextUser;
         }).updateUser(data);
       });
