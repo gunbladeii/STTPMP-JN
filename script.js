@@ -705,49 +705,62 @@
   }
 
     function renderNegeriMap(negeriData) {
-      // kosongkan dulu container
-      d3.select("#negeriMapContainer").html("");
+  // Kosongkan container dulu
+  d3.select("#negeriMapContainer").html("");
 
-      // SVG setup
-      const width = 400, height = 500;
-      const svg = d3.select("#negeriMapContainer")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height);
+  // Tetapkan saiz
+  const width = 400, height = 500;
 
-      const projection = d3.geoMercator().scale(1500).center([110, 2.5]).translate([width / 2, height / 2]);
-      const path = d3.geoPath().projection(projection);
+  // Setup SVG
+  const svg = d3.select("#negeriMapContainer")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height);
 
-      d3.json("https://gunbladeii.github.io/STTPMP-JN/malaysia-states.json").then(function (mapData) {
-        svg.selectAll("path")
-          .data(mapData.features)
-          .enter()
-          .append("path")
-          .attr("d", path)
-          .attr("fill", d => {
-            const name = d.properties.name;
-            const status = negeriData[name] || { Selesai: 0, "Dalam Tindakan": 0, "Belum Selesai": 0 };
-            return status["Belum Selesai"] > 0 ? "#dc3545" : (status["Dalam Tindakan"] > 0 ? "#ffc107" : "#28a745");
-          })
-          .on("mouseover", function (event, d) {
-            const name = d.properties.name;
-            const status = negeriData[name] || {};
-            const tooltip = document.getElementById("tooltipNegeri");
-            tooltip.innerHTML = `
-              <strong>${name}</strong><br/>
-              ✅ Selesai: ${status.Selesai || 0}<br/>
-              ⏳ Dalam Tindakan: ${status["Dalam Tindakan"] || 0}<br/>
-              ❌ Belum Selesai: ${status["Belum Selesai"] || 0}
-            `;
-            tooltip.style.left = event.pageX + "px";
-            tooltip.style.top = event.pageY - 40 + "px";
-            tooltip.style.display = "block";
-          })
-          .on("mouseout", function () {
-            document.getElementById("tooltipNegeri").style.display = "none";
-          });
+  const projection = d3.geoMercator();
+  const path = d3.geoPath().projection(projection);
+
+  // Load GeoJSON dan fit saiz ikut container
+  d3.json("https://gunbladeii.github.io/STTMP-JN/malaysia-states.json").then(function (mapData) {
+    projection.fitSize([width, height], mapData); // 👈 auto-fit peta
+
+    svg.selectAll("path")
+      .data(mapData.features)
+      .enter()
+      .append("path")
+      .attr("d", path)
+      .attr("fill", d => {
+        const name = d.properties.name;
+        const status = negeriData[name] || { Selesai: 0, "Dalam Tindakan": 0, "Belum Selesai": 0 };
+
+        return status["Belum Selesai"] > 0 ? "#dc3545"
+             : status["Dalam Tindakan"] > 0 ? "#ffc107"
+             : status["Selesai"] > 0 ? "#28a745"
+             : "#ccc"; // fallback kelabu jika tiada data
+      })
+      .attr("stroke", "#fff")
+      .attr("stroke-width", 1)
+      .on("mouseover", function (event, d) {
+        const name = d.properties.name;
+        const status = negeriData[name] || {};
+        const tooltip = document.getElementById("tooltipNegeri");
+
+        tooltip.innerHTML = `
+          <strong>${name}</strong><br/>
+          ✅ Selesai: ${status.Selesai || 0}<br/>
+          ⏳ Dalam Tindakan: ${status["Dalam Tindakan"] || 0}<br/>
+          ❌ Belum Selesai: ${status["Belum Selesai"] || 0}
+        `;
+        tooltip.style.left = event.pageX + "px";
+        tooltip.style.top = event.pageY - 40 + "px";
+        tooltip.style.display = "block";
+      })
+      .on("mouseout", function () {
+        document.getElementById("tooltipNegeri").style.display = "none";
       });
-    }
+  });
+}
+
   
     let chartBahagianStacked;
     let chartNegeriStacked;
