@@ -666,20 +666,7 @@
         document.getElementById("totalTindakan").textContent = statusCount["Dalam Tindakan"];
         document.getElementById("totalBelum").textContent = statusCount["Belum Selesai"];
         renderStatusBarChart(statusCount);
-        renderBahagianBarStackedChart(data);
-        //
-        const negeriCount = {};
-        data.forEach(item => {
-          const negeri = item.Negeri;
-          const status = item.Indicator?.toLowerCase();
-          if (!negeriCount[negeri]) negeriCount[negeri] = { Selesai: 0, "Dalam Tindakan": 0, "Belum Selesai": 0 };
-
-          if (status === "hijau") negeriCount[negeri].Selesai++;
-          else if (status === "kuning") negeriCount[negeri]["Dalam Tindakan"]++;
-          else if (status === "merah") negeriCount[negeri]["Belum Selesai"]++;
-        });
-
-        renderNegeriMap(negeriCount);
+        renderBahagianBarStackedChart(data);        
       })[getDataFn]();
   
      
@@ -703,67 +690,10 @@
   
     }).getUsers(); // Get role first
   }
-
-    function renderNegeriMap(negeriData) {
-  // Kosongkan container dulu
-  d3.select("#negeriMapContainer").html("");
-
-  // Tetapkan saiz
-  const width = 50, height = 25;
-
-  // Setup SVG
-  const svg = d3.select("#negeriMapContainer")
-    .append("svg")
-    .attr("width", width)
-    .attr("height", height);
-
-  const projection = d3.geoMercator();
-  const path = d3.geoPath().projection(projection);
-
-  // Load GeoJSON dan fit saiz ikut container
-  d3.json("https://gunbladeii.github.io/STTPMP-JN/malaysia-states.json").then(function (mapData) {
-    projection.fitSize([width, height], mapData); // 👈 auto-fit peta
-
-    svg.selectAll("path")
-      .data(mapData.features)
-      .enter()
-      .append("path")
-      .attr("d", path)
-      .attr("fill", d => {
-        const name = d.properties.state;
-        const status = negeriData[name] || { Selesai: 0, "Dalam Tindakan": 0, "Belum Selesai": 0 };
-
-        return status["Belum Selesai"] > 0 ? "#dc3545"
-             : status["Dalam Tindakan"] > 0 ? "#ffc107"
-             : status["Selesai"] > 0 ? "#28a745"
-             : "#ccc"; // fallback kelabu jika tiada data
-      })
-      .attr("stroke", "#fff")
-      .attr("stroke-width", 1)
-      .on("mouseover", function (event, d) {
-        const name = d.properties.state;
-        const status = negeriData[name] || {};
-        const tooltip = document.getElementById("tooltipNegeri");
-
-        tooltip.innerHTML = `
-          <strong>${name}</strong><br/>
-          ✅ Selesai: ${status.Selesai || 0}<br/>
-          ⏳ Dalam Tindakan: ${status["Dalam Tindakan"] || 0}<br/>
-          ❌ Belum Selesai: ${status["Belum Selesai"] || 0}
-        `;
-        tooltip.style.left = event.pageX + "px";
-        tooltip.style.top = event.pageY - 40 + "px";
-        tooltip.style.display = "block";
-      })
-      .on("mouseout", function () {
-        document.getElementById("tooltipNegeri").style.display = "none";
-      });
-  });
-}
-
-  
+      
     let chartBahagianStacked;
     let chartNegeriStacked;
+    let chartPenerajuStacked;
   
      function renderStatusBarChart(data) {
         const ctx = document.getElementById("statusBarChart").getContext("2d");
@@ -820,8 +750,10 @@
       function renderBahagianBarStackedChart(data) {
       const bahagianList = [...new Set(data.map(item => item.BahagianJpn || "Lain-lain"))];
       const negeriList = [...new Set(data.map(item => item.Negeri || "Lain-lain"))];
+      const penerajuList = [...new Set(data.map(item => item.Sektor || "Lain-lain"))];
       const statusKategori = ["Hijau", "Kuning", "Merah"];
       const statusKategori2 = ["Hijau", "Kuning", "Merah"];
+      const statusKategori3 = ["Hijau", "Kuning", "Merah"];
 
       const statusData = {
         Hijau: [],
@@ -830,6 +762,12 @@
       };
 
       const statusData2 = {
+        Hijau: [],
+        Kuning: [],
+        Merah: []
+      };
+
+      const statusData3 = {
         Hijau: [],
         Kuning: [],
         Merah: []
@@ -850,9 +788,17 @@
           statusData2[status2].push(count);
         });
       });
-
+      
+      penerajuListList.forEach(negeri => {
+        const items = data.filter(item => (item.Sektor || "Lain-lain") === sektor);
+        statusKategori3.forEach(status3 => {
+          const count = items.filter(item => (item.Indicator || "").toLowerCase() === status3.toLowerCase()).length;
+          statusData3[status3].push(count);
+        });
+      });
       const ctxBahagian = document.getElementById("statusChartBahagian").getContext("2d");
       const ctxNegeri = document.getElementById("statusChartNegeri").getContext("2d");
+      const ctxPeneraju = document.getElementById("statusChartPeneraju").getContext("2d");
 
       if (chartBahagianStacked) {
         chartBahagianStacked.destroy();
@@ -860,6 +806,10 @@
 
       if (chartNegeriStacked) {
         chartNegeriStacked.destroy();
+      }
+
+      if (chartPenerajuStacked) {
+        chartPenerajuStacked.destroy();
       }
 
       chartBahagianStacked = new Chart(ctxBahagian, {
@@ -882,6 +832,43 @@
             {
               label: "Belum Selesai",
               data: statusData.Merah,
+              backgroundColor: "#dc3545",
+              stack: 'Status'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'bottom' }
+          },
+          scales: {
+            x: { stacked: true },
+            y: { stacked: true, beginAtZero: true }
+          }
+        }
+      });
+
+      chartPenerajuStacked = new Chart(ctxPeneraju, {
+        type: "bar",
+        data: {
+          labels: penerajuList,
+          datasets: [
+            {
+              label: "Selesai",
+              data: statusData3.Hijau,
+              backgroundColor: "#28a745",
+              stack: 'Status'
+            },
+            {
+              label: "Dalam Tindakan",
+              data: statusData3.Kuning,
+              backgroundColor: "#ffc107",
+              stack: 'Status'
+            },
+            {
+              label: "Belum Selesai",
+              data: statusData3.Merah,
               backgroundColor: "#dc3545",
               stack: 'Status'
             }
