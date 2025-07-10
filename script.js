@@ -1120,10 +1120,18 @@
         negeri: document.getElementById("negeriUserKemaskini").value,
         sektor: document.getElementById("sektorUserKemaskini").value,
       };
+
+      const btnKemaskiniUser = document.querySelector('#kemaskiniPenggunaModal .btn-success');
+      btn.disabled2 = true;
+      const originalTextUser = btn.innerHTML;
+      btn.innerHTML2 = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Kemaskini...`;
+      
   
       google.script.run.withSuccessHandler(() => {
           bootstrap.Modal.getInstance(document.getElementById("kemaskiniPenggunaModal")).hide();
           loadDataUsers();
+          btnKemaskiniUser.disabled2 = false;
+          btnKemaskiniUser.innerHTML2 = originalTextUser;
         }).updateUser(data);
       });
   
