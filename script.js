@@ -789,7 +789,7 @@
         });
       });
       
-      penerajuList.forEach(negeri => {
+      penerajuList.forEach(sektor => {
         const items = data.filter(item => (item.Sektor || "Lain-lain") === sektor);
         statusKategori3.forEach(status3 => {
           const count = items.filter(item => (item.Indicator || "").toLowerCase() === status3.toLowerCase()).length;
