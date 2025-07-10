@@ -104,3 +104,21 @@
       width: 100%;
       aspect-ratio: 4 / 1;      
     }
+
+    #tooltipNegeri {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 8px;
+  font-size: 0.8rem;
+  display: none;
+  z-index: 9999;
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+#negeriMapContainer svg path:hover {
+  fill: #007bff !important;
+  cursor: pointer;
+}
+
