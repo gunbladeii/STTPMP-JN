@@ -718,7 +718,7 @@
       const projection = d3.geoMercator().scale(1500).center([110, 2.5]).translate([width / 2, height / 2]);
       const path = d3.geoPath().projection(projection);
 
-      d3.json("URL_KE_GEOJSON_MALAYSIA").then(function (mapData) {
+      d3.json("https://gunbladeii.github.io/STTPMP-JN/malaysia-states.json").then(function (mapData) {
         svg.selectAll("path")
           .data(mapData.features)
           .enter()
