@@ -666,8 +666,7 @@
         document.getElementById("totalTindakan").textContent = statusCount["Dalam Tindakan"];
         document.getElementById("totalBelum").textContent = statusCount["Belum Selesai"];
         renderStatusBarChart(statusCount);
-        renderBahagianBarStackedChart(data);
-        loadMapDashboardData();
+        renderBahagianBarStackedChart(data);        loadMapDashboardData();
       })[getDataFn]();
   
      
@@ -1058,6 +1057,7 @@
       checkUserRoleAndInit();
       showUserDetails();
       loadTab3Dashboard();
+      loadMapDashboardData();
       populateLaporanDropdown("laporanBaru", "laporanBaru2");
       populateBahagianDropdown("bahagianBaru","bahagianBaru2", "bahagianUserBaru","bahagianUserKemaskini");
       populateNegeriDropdown("negeriBaru","negeriBaru2", "negeriUserBaru","negeriUserKemaskini");
