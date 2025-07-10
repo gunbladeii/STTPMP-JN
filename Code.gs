@@ -672,3 +672,31 @@ function deleteUser(row) {
   const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Users");
   sheet.deleteRow(parseInt(row));
 }
+
+function getDashboardDataNegeri() {
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0];
+  const rows = data.slice(1);
+
+  const negeriStat = {};
+
+  rows.forEach(row => {
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = row[i]);
+
+    const negeri = obj.Negeri || 'LAIN';
+    const status = obj.Status || 'Lain';
+
+    if (!negeriStat[negeri]) {
+      negeriStat[negeri] = { Selesai: 0, DalamTindakan: 0, BelumSelesai: 0 };
+    }
+
+    if (status === "Selesai") negeriStat[negeri].Selesai++;
+    else if (status === "Dalam Tindakan") negeriStat[negeri].DalamTindakan++;
+    else negeriStat[negeri].BelumSelesai++;
+  });
+
+  return negeriStat;
+}
+

@@ -666,7 +666,20 @@
         document.getElementById("totalTindakan").textContent = statusCount["Dalam Tindakan"];
         document.getElementById("totalBelum").textContent = statusCount["Belum Selesai"];
         renderStatusBarChart(statusCount);
-        renderBahagianBarStackedChart(data);        loadMapDashboardData();
+        renderBahagianBarStackedChart(data);
+        //
+        const negeriCount = {};
+        data.forEach(item => {
+          const negeri = item.Negeri;
+          const status = item.Indicator?.toLowerCase();
+          if (!negeriCount[negeri]) negeriCount[negeri] = { Selesai: 0, "Dalam Tindakan": 0, "Belum Selesai": 0 };
+
+          if (status === "hijau") negeriCount[negeri].Selesai++;
+          else if (status === "kuning") negeriCount[negeri]["Dalam Tindakan"]++;
+          else if (status === "merah") negeriCount[negeri]["Belum Selesai"]++;
+        });
+
+        renderNegeriMap(negeriCount);
       })[getDataFn]();
   
      
@@ -691,35 +704,50 @@
     }).getUsers(); // Get role first
   }
 
-    function loadMapDashboardData() {
-      google.script.run.withSuccessHandler(function(data) {
-        for (const negeri in data) {
-          const element = document.getElementById(negeri.toLowerCase());
-          if (element) {
-            const total = data[negeri].Selesai + data[negeri].DalamTindakan + data[negeri].BelumSelesai;
+    function renderNegeriMap(negeriData) {
+      // kosongkan dulu container
+      d3.select("#negeriMapContainer").html("");
 
-            element.setAttribute("data-status", JSON.stringify(data[negeri]));
+      // SVG setup
+      const width = 400, height = 500;
+      const svg = d3.select("#negeriMapContainer")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
 
-            // Tooltip atau style ikut jumlah
-            element.addEventListener("mouseenter", (e) => {
-              const tooltip = document.getElementById("tooltipNegeri");
-              tooltip.innerHTML = `
-                <strong>${negeri}</strong><br>
-                ✅ Selesai: ${data[negeri].Selesai}<br>
-                ⏳ Dalam Tindakan: ${data[negeri].DalamTindakan}<br>
-                ❌ Belum Selesai: ${data[negeri].BelumSelesai}
-              `;
-              tooltip.style.display = "block";
-            });
+      const projection = d3.geoMercator().scale(1500).center([110, 2.5]).translate([width / 2, height / 2]);
+      const path = d3.geoPath().projection(projection);
 
-            element.addEventListener("mouseleave", () => {
-              document.getElementById("tooltipNegeri").style.display = "none";
-            });
-          }
-        }
-      }).getDashboardDataNegeri();
+      d3.json("URL_KE_GEOJSON_MALAYSIA").then(function (mapData) {
+        svg.selectAll("path")
+          .data(mapData.features)
+          .enter()
+          .append("path")
+          .attr("d", path)
+          .attr("fill", d => {
+            const name = d.properties.name;
+            const status = negeriData[name] || { Selesai: 0, "Dalam Tindakan": 0, "Belum Selesai": 0 };
+            return status["Belum Selesai"] > 0 ? "#dc3545" : (status["Dalam Tindakan"] > 0 ? "#ffc107" : "#28a745");
+          })
+          .on("mouseover", function (event, d) {
+            const name = d.properties.name;
+            const status = negeriData[name] || {};
+            const tooltip = document.getElementById("tooltipNegeri");
+            tooltip.innerHTML = `
+              <strong>${name}</strong><br/>
+              ✅ Selesai: ${status.Selesai || 0}<br/>
+              ⏳ Dalam Tindakan: ${status["Dalam Tindakan"] || 0}<br/>
+              ❌ Belum Selesai: ${status["Belum Selesai"] || 0}
+            `;
+            tooltip.style.left = event.pageX + "px";
+            tooltip.style.top = event.pageY - 40 + "px";
+            tooltip.style.display = "block";
+          })
+          .on("mouseout", function () {
+            document.getElementById("tooltipNegeri").style.display = "none";
+          });
+      });
     }
-
   
     let chartBahagianStacked;
     let chartNegeriStacked;
@@ -1057,7 +1085,6 @@
       checkUserRoleAndInit();
       showUserDetails();
       loadTab3Dashboard();
-      loadMapDashboardData();
       populateLaporanDropdown("laporanBaru", "laporanBaru2");
       populateBahagianDropdown("bahagianBaru","bahagianBaru2", "bahagianUserBaru","bahagianUserKemaskini");
       populateNegeriDropdown("negeriBaru","negeriBaru2", "negeriUserBaru","negeriUserKemaskini");
