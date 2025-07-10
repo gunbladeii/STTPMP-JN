@@ -721,7 +721,7 @@
   const path = d3.geoPath().projection(projection);
 
   // Load GeoJSON dan fit saiz ikut container
-  d3.json("https://gunbladeii.github.io/STTMP-JN/malaysia-states.json").then(function (mapData) {
+  d3.json("https://gunbladeii.github.io/STTPMP-JN/malaysia-states.json").then(function (mapData) {
     projection.fitSize([width, height], mapData); // 👈 auto-fit peta
 
     svg.selectAll("path")
