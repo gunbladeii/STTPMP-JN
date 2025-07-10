@@ -709,7 +709,7 @@
   d3.select("#negeriMapContainer").html("");
 
   // Tetapkan saiz
-  const width = 400, height = 500;
+  const width = 50, height = 25;
 
   // Setup SVG
   const svg = d3.select("#negeriMapContainer")
