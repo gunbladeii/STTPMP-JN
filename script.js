@@ -730,7 +730,7 @@
       .append("path")
       .attr("d", path)
       .attr("fill", d => {
-        const name = d.properties.name;
+        const name = d.properties.state;
         const status = negeriData[name] || { Selesai: 0, "Dalam Tindakan": 0, "Belum Selesai": 0 };
 
         return status["Belum Selesai"] > 0 ? "#dc3545"
@@ -741,7 +741,7 @@
       .attr("stroke", "#fff")
       .attr("stroke-width", 1)
       .on("mouseover", function (event, d) {
-        const name = d.properties.name;
+        const name = d.properties.state;
         const status = negeriData[name] || {};
         const tooltip = document.getElementById("tooltipNegeri");
 
