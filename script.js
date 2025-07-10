@@ -1131,7 +1131,7 @@
           bootstrap.Modal.getInstance(document.getElementById("kemaskiniPenggunaModal")).hide();
           loadDataUsers();
           btnKemaskiniUser.disabled2 = false;
-          btnKemaskiniUser.innerHTML2 = originalTextUser;
+          btnKemaskiniUser.innerHTML = originalTextUser;
         }).updateUser(data);
       });
   
