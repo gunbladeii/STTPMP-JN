@@ -637,87 +637,91 @@
   
   
    function loadTab3Dashboard() {
-  google.script.run.withSuccessHandler(function (user) {
-    const isAdmin = user.peranan === "Admin";
-    let getDataFn = "";
+    google.script.run.withSuccessHandler(function (user) {
+      const isAdmin = user.peranan === "Admin";
+      let getDataFn = "";
+  
+      if (user.peranan === "Admin") {
+        getDataFn = "getAssignedSyor";
+      } else if (user.peranan === "Peneraju") {
+        getDataFn = "getAssignedSyorPeneraju";
+      } else {
+        getDataFn = "getAssignedSyorLimited";
+      }
+  
+      // KPI Card (Hijau/Kuning/Merah)
+      google.script.run.withSuccessHandler(function (data) {
+        const statusCount = { Selesai: 0, "Dalam Tindakan": 0, "Belum Selesai": 0 };
+  
+        document.getElementById("totalSyor").textContent = data.length;
+  
+        data.forEach(item => {
+          const status = item.Indicator?.toLowerCase();
+          if (status === "hijau") statusCount.Selesai++;
+          else if (status === "kuning") statusCount["Dalam Tindakan"]++;
+          else if (status === "merah") statusCount["Belum Selesai"]++;
+        });
+  
+        document.getElementById("totalSelesai").textContent = statusCount.Selesai;
+        document.getElementById("totalTindakan").textContent = statusCount["Dalam Tindakan"];
+        document.getElementById("totalBelum").textContent = statusCount["Belum Selesai"];
+        renderStatusBarChart(statusCount);
+        renderBahagianBarStackedChart(data);
+        loadMapDashboardData();
+      })[getDataFn]();
+  
+     
+      // Top 5 syor
+      google.script.run.withSuccessHandler(function (data) {
+        const sorted = data.sort((a, b) => a.SkorWajaran - b.SkorWajaran).slice(0, 5);
+        const body = document.getElementById("top5SyorBody");
+        body.innerHTML = "";
+        sorted.forEach((item, idx) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${idx + 1}</td>
+            <td>${item.Laporan}</td>
+            <td>${item.Syor}</td>
+            <td>${item.BahagianJpn}</td>
+            <td><span class="fw-bold">${item.SkorWajaran}</span></td>
+          `;
+          body.appendChild(row);
+        });
+      }).getSkorWajaranByUser();
+  
+    }).getUsers(); // Get role first
+  }
 
-    if (user.peranan === "Admin") {
-      getDataFn = "getAssignedSyor";
-    } else if (user.peranan === "Peneraju") {
-      getDataFn = "getAssignedSyorPeneraju";
-    } else {
-      getDataFn = "getAssignedSyorLimited";
+    function loadMapDashboardData() {
+      google.script.run.withSuccessHandler(function(data) {
+        for (const negeri in data) {
+          const element = document.getElementById(negeri.toLowerCase());
+          if (element) {
+            const total = data[negeri].Selesai + data[negeri].DalamTindakan + data[negeri].BelumSelesai;
+
+            element.setAttribute("data-status", JSON.stringify(data[negeri]));
+
+            // Tooltip atau style ikut jumlah
+            element.addEventListener("mouseenter", (e) => {
+              const tooltip = document.getElementById("tooltipNegeri");
+              tooltip.innerHTML = `
+                <strong>${negeri}</strong><br>
+                ✅ Selesai: ${data[negeri].Selesai}<br>
+                ⏳ Dalam Tindakan: ${data[negeri].DalamTindakan}<br>
+                ❌ Belum Selesai: ${data[negeri].BelumSelesai}
+              `;
+              tooltip.style.display = "block";
+            });
+
+            element.addEventListener("mouseleave", () => {
+              document.getElementById("tooltipNegeri").style.display = "none";
+            });
+          }
+        }
+      }).getDashboardDataNegeri();
     }
 
-    // KPI Card (Hijau/Kuning/Merah)
-    google.script.run.withSuccessHandler(function (data) {
-      const statusCount = { Selesai: 0, "Dalam Tindakan": 0, "Belum Selesai": 0 };
-
-      document.getElementById("totalSyor").textContent = data.length;
-
-      data.forEach(item => {
-        const status = item.Indicator?.toLowerCase();
-        if (status === "hijau") statusCount.Selesai++;
-        else if (status === "kuning") statusCount["Dalam Tindakan"]++;
-        else if (status === "merah") statusCount["Belum Selesai"]++;
-      });
-
-      document.getElementById("totalSelesai").textContent = statusCount.Selesai;
-      document.getElementById("totalTindakan").textContent = statusCount["Dalam Tindakan"];
-      document.getElementById("totalBelum").textContent = statusCount["Belum Selesai"];
-      renderStatusBarChart(statusCount);
-      renderBahagianBarStackedChart(data);
-    })[getDataFn]();
-
-    // Top 5 syor
-    google.script.run.withSuccessHandler(function (data) {
-      const sorted = data.sort((a, b) => a.SkorWajaran - b.SkorWajaran).slice(0, 5);
-      const body = document.getElementById("top5SyorBody");
-      body.innerHTML = "";
-      sorted.forEach((item, idx) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${idx + 1}</td>
-          <td>${item.Laporan}</td>
-          <td>${item.Syor}</td>
-          <td>${item.BahagianJpn}</td>
-          <td><span class="fw-bold">${item.SkorWajaran}</span></td>
-        `;
-        body.appendChild(row);
-      });
-    }).getSkorWajaranByUser();
-
-    // Negeri map chart (interactive)
-    google.script.run.withSuccessHandler(function (data) {
-      for (const negeri in data) {
-        const element = document.getElementById(negeri.toLowerCase());
-        if (element) {
-          const total = data[negeri].Selesai + data[negeri].DalamTindakan + data[negeri].BelumSelesai;
-
-          element.setAttribute("data-status", JSON.stringify(data[negeri]));
-
-          element.addEventListener("mouseenter", (e) => {
-            const tooltip = document.getElementById("tooltipNegeri");
-            tooltip.innerHTML = `
-              <strong>${negeri}</strong><br>
-              ✅ Selesai: ${data[negeri].Selesai}<br>
-              ⏳ Dalam Tindakan: ${data[negeri].DalamTindakan}<br>
-              ❌ Belum Selesai: ${data[negeri].BelumSelesai}
-            `;
-            tooltip.style.display = "block";
-          });
-
-          element.addEventListener("mouseleave", () => {
-            document.getElementById("tooltipNegeri").style.display = "none";
-          });
-        }
-      }
-    }).getDashboardDataNegeri();
-
-  }).getUsers(); // Get role first
-}
-
- 
+  
     let chartBahagianStacked;
     let chartNegeriStacked;
   
