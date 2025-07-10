@@ -1122,9 +1122,9 @@
       };
 
       const btnKemaskiniUser = document.querySelector('#kemaskiniPenggunaModal .btn-success');
-      btn.disabled2 = true;
-      const originalTextUser = btn.innerHTML;
-      btn.innerHTML2 = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Kemaskini...`;
+      btnKemaskiniUser.disabled2 = true;
+      const originalTextUser = btnKemaskiniUser.innerHTML;
+      btnKemaskiniUser.innerHTML2 = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Kemaskini...`;
       
   
       google.script.run.withSuccessHandler(() => {
