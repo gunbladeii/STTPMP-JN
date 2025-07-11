@@ -1116,7 +1116,24 @@
       .getDashboardDataByYear(tahun); // <-- diubah
   }
 
+  function processDashboardData(data) {
+    // Split data ikut status
+    const selesai = data.filter(row => row.Status === "Selesai");
+    const tindakan = data.filter(row => row.Status === "Dalam Tindakan");
+    const belum = data.filter(row => row.Status === "Belum Selesai");
 
+    document.getElementById("totalSyor").textContent = data.length;
+    document.getElementById("totalSelesai").textContent = selesai.length;
+    document.getElementById("totalTindakan").textContent = tindakan.length;
+    document.getElementById("totalBelum").textContent = belum.length;
+
+    // Call chart rendering
+    renderBarChartStatus(selesai.length, tindakan.length, belum.length);
+    renderChartByBahagian(data);
+    renderChartByNegeri(data);
+    renderChartByPeneraju(data);
+    renderTop5Syor(data);
+  }
   
   
     // Auto-run ikut peranan
