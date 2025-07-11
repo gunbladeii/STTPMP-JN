@@ -1080,20 +1080,23 @@
   }
 
   function initTahunDropdown() {
-    const dropdown = document.getElementById("tahunFilter");
-    const currentYear = new Date().getFullYear();
-    dropdown.innerHTML = "";
+  const dropdown = document.getElementById("tahunFilter");
+  dropdown.innerHTML = "";
 
-    for (let year = 2025; year <= currentYear; year++) {
-      const option = document.createElement("option");
-      option.value = year;
-      option.textContent = year;
-      if (year === currentYear) option.selected = true;
-      dropdown.appendChild(option);
-    }
+  const startYear = 2024;
+  const currentYear = new Date().getFullYear();
 
-    renderDashboardByYear(currentYear); // Papar default tahun semasa
+  for (let year = startYear; year <= currentYear; year++) {
+    const option = document.createElement("option");
+    option.value = year;
+    option.textContent = year;
+    if (year === currentYear) option.selected = true;
+    dropdown.appendChild(option);
   }
+
+  renderDashboardByYear(currentYear); // Papar data ikut tahun terkini
+}
+
 
   function renderDashboardByYear(tahun) {
     // Fungsi utama yang akan fetch semula semua data ikut tahun
