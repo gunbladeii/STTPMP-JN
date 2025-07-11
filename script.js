@@ -1078,6 +1078,42 @@
     const modal = new bootstrap.Modal(document.getElementById("kemaskiniPenggunaModal"));
     modal.show();
   }
+
+  function initTahunDropdown() {
+    const dropdown = document.getElementById("tahunFilter");
+    const currentYear = new Date().getFullYear();
+    dropdown.innerHTML = "";
+
+    for (let year = 2025; year <= currentYear; year++) {
+      const option = document.createElement("option");
+      option.value = year;
+      option.textContent = year;
+      if (year === currentYear) option.selected = true;
+      dropdown.appendChild(option);
+    }
+
+    renderDashboardByYear(currentYear); // Papar default tahun semasa
+  }
+
+  function renderDashboardByYear(tahun) {
+    // Fungsi utama yang akan fetch semula semua data ikut tahun
+    getDashboardData(tahun); // ganti atau wrap logik asal anda dalam fungsi ini
+  }
+
+  function getDashboardData(tahun) {
+    google.script.run
+      .withSuccessHandler(function (data) {
+        // pastikan semua data render ikut tahun
+        renderSummaryCards(data.summary);
+        renderStatusCharts(data.statusByOverall);
+        renderStatusByBahagian(data.statusByBahagian);
+        renderStatusByNegeri(data.statusByNegeri);
+        renderNegeriMap(data.statusByNegeri);
+      })
+      .getDashboardDataByYear(tahun); // <-- diubah
+  }
+
+
   
   
     // Auto-run ikut peranan
@@ -1160,6 +1196,11 @@
     };
   
     document.addEventListener("DOMContentLoaded", function () {
+      initTahunDropdown();
+      document.getElementById("tahunFilter").addEventListener("change", function () {
+        const selectedYear = this.value;
+        renderDashboardByYear(parseInt(selectedYear));
+      });
       google.script.run.withSuccessHandler(function(roleInfo) {
         window.perananPengguna = roleInfo.peranan;
         window.sektorPengguna = roleInfo.sektor;
