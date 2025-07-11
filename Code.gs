@@ -700,3 +700,13 @@ function getDashboardDataNegeri() {
   return negeriStat;
 }
 
+function getDashboardDataByYear(tahun) {
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("STTMP_DB");
+  const data = sheet.getDataRange().getValues();
+  const header = data[0];
+  const rows = data.slice(1).filter(r => r[1] === tahun); // Tahun = Col B (index 1)
+
+  return processDashboardData(rows); // kekalkan fungsi asal
+}
+
+
