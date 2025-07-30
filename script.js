@@ -672,23 +672,30 @@
      
       // Top 5 syor
       google.script.run.withSuccessHandler(function (data) {
-  // Baris ini telah diubah: dibuang .sort(...).slice(...)
-        const body = document.getElementById("top5SyorBody");
-        body.innerHTML = "";
-        
-        // Menggunakan semua data yang dikembalikan tanpa penapisan
-        data.forEach((item, idx) => {
+                const body = document.getElementById("syorTableBody"); // Gunakan ID jadual tunggal anda
+                if (!body) {
+                  console.error("Elemen 'syorTableBody' tidak ditemui.");
+                  return;
+                }
+                body.innerHTML = "";
+
+                if (data && data.length > 0) {
+                  data.forEach((item, idx) => {
+                    const row = document.createElement("tr");
+                    const badgeClass = item.DominantStatus === "Hijau" ? "bg-success" : item.DominantStatus === "Kuning" ? "bg-warning text-dark" : "bg-danger";
+                    row.innerHTML = `
+                      <td>${idx + 1}</td>
+                      <td>${item.Laporan}</td>
+                      <td>${item.ResponsibleUnits}</td> <td><span class="fw-bold">${item.SkorWajaran}</span> <span class="badge ${badgeClass}">${item.DominantStatus}</span></td>
+                    `;
+                    body.appendChild(row);
+                  });
+                } else {
                   const row = document.createElement("tr");
-                  row.innerHTML = `
-                    <td>${idx + 1}</td>
-                    <td>${item.Laporan}</td>
-                    <td>${item.BahagianJpn}</td>
-                    <td>${item.Negeri}</td>
-                    <td><span class="fw-bold">${item.SkorWajaran}</span></td>
-                  `;
+                  row.innerHTML = `<td colspan="4" class="text-center">Tiada data dijumpai mengikut kriteria anda.</td>`;
                   body.appendChild(row);
-                });
-              }).getSkorWajaranByUser();          
+                }
+              }).getSkorWajaranByUser();        
             }).getUsers(); // Get role first
           }
       
