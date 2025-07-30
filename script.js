@@ -672,24 +672,25 @@
      
       // Top 5 syor
       google.script.run.withSuccessHandler(function (data) {
-        const sorted = data.sort((a, b) => a.SkorWajaran - b.SkorWajaran).slice(0, 5);
+  // Baris ini telah diubah: dibuang .sort(...).slice(...)
         const body = document.getElementById("top5SyorBody");
         body.innerHTML = "";
-        sorted.forEach((item, idx) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${idx + 1}</td>
-            <td>${item.Laporan}</td>
-            <td>${item.BahagianJpn}</td>
-            <td>${item.Negeri}</td>
-            <td><span class="fw-bold">${item.SkorWajaran}</span></td>
-          `;
-          body.appendChild(row);
-        });
-      }).getSkorWajaranByUser();
-  
-    }).getUsers(); // Get role first
-  }
+        
+        // Menggunakan semua data yang dikembalikan tanpa penapisan
+        data.forEach((item, idx) => {
+                  const row = document.createElement("tr");
+                  row.innerHTML = `
+                    <td>${idx + 1}</td>
+                    <td>${item.Laporan}</td>
+                    <td>${item.BahagianJpn}</td>
+                    <td>${item.Negeri}</td>
+                    <td><span class="fw-bold">${item.SkorWajaran}</span></td>
+                  `;
+                  body.appendChild(row);
+                });
+              }).getSkorWajaranByUser();          
+            }).getUsers(); // Get role first
+          }
       
     let chartBahagianStacked;
     let chartNegeriStacked;
