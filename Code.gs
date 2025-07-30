@@ -6,7 +6,7 @@ const USER_SHEET_NAME = "Users";
 
 function doGet() {
   return HtmlService.createHtmlOutputFromFile("respon.html")
-    .setTitle("Sistem Respon STTMP")
+    .setTitle("Sistem Respon STTPMP")
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
@@ -537,7 +537,7 @@ function sendNotificationEmail(bahagian, negeri, laporan, syor, catatan) {
 
   if (recipients.length === 0) return;
 
-  const subject = `📬 Notifikasi STTMP: Syor Menteri bagi ${laporan}`;
+  const subject = `📬 Notifikasi STTPMP: Syor Menteri bagi ${laporan}`;
   const htmlBody = `
       <div style="font-family:Arial,sans-serif;border:1px solid #0d6efd;border-radius:8px;padding:16px;background:#f8f9fa;">
         <h3 style="color:#0d6efd;margin-top:0;">📢 Notifikasi STTMP</h3>

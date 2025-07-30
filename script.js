@@ -680,8 +680,8 @@
           row.innerHTML = `
             <td>${idx + 1}</td>
             <td>${item.Laporan}</td>
-            <td>${item.Syor}</td>
             <td>${item.BahagianJpn}</td>
+            <td>${item.Negeri}</td>
             <td><span class="fw-bold">${item.SkorWajaran}</span></td>
           `;
           body.appendChild(row);
