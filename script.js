@@ -672,7 +672,7 @@
      
       // Top 5 syor
       google.script.run.withSuccessHandler(function (data) {
-                const body = document.getElementById("syorTableBody"); // Gunakan ID jadual tunggal anda
+                const body = document.getElementById("top5SyorBody"); // Gunakan ID jadual tunggal anda
                 if (!body) {
                   console.error("Elemen 'syorTableBody' tidak ditemui.");
                   return;
@@ -697,7 +697,7 @@
                 }
               }).getSkorWajaranByUser();        
             }).getUsers(); // Get role first
-          }
+          }        
       
     let chartBahagianStacked;
     let chartNegeriStacked;
