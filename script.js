@@ -806,7 +806,7 @@ function loadTab3Dashboard() {
             statusCount["Dalam Tindakan"];
           document.getElementById("totalBelum").textContent =
             statusCount["Belum Selesai"];
-          renderStatusBarChart(statusCount);
+          renderStatusBarChart(statusCount, data);
           renderBahagianBarStackedChart(data);
         })
         [getDataFn]();
@@ -870,59 +870,68 @@ let chartBahagianStacked;
 let chartNegeriStacked;
 let chartPenerajuStacked;
 
-function renderStatusBarChart(data) {
+// UBAH TANDATANGAN FUNGSI INI
+function renderStatusBarChart(statusCount, fullData) {
   const ctx = document.getElementById("statusBarChart").getContext("2d");
   const ctx2 = document.getElementById("statusBarChart2").getContext("2d");
+
+  // Fungsi universal untuk opsyen carta
+  const getChartOptions = () => ({
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true } },
+    onClick: (event, elements) => {
+      if (elements.length === 0) return;
+
+      const chart = event.chart;
+      const element = elements[0];
+      const dataIndex = element.index;
+
+      const statusLabel = chart.data.labels[dataIndex]; // "Selesai", "Dalam Tindakan", dll.
+
+      let statusFilter;
+      if (statusLabel === "Selesai") statusFilter = "hijau";
+      else if (statusLabel === "Dalam Tindakan") statusFilter = "kuning";
+      else statusFilter = "merah";
+
+      // Tapis data penuh (fullData) berdasarkan status sahaja
+      const filteredData = fullData.filter(
+        (item) => (item.Indicator || "").toLowerCase() === statusFilter
+      );
+
+      const modalTitle = `Senarai Keseluruhan Syor Berstatus [${statusLabel}]`;
+      showDrillDownModal(filteredData, modalTitle);
+    },
+  });
+
   new Chart(ctx, {
     type: "bar",
     data: {
-      labels: Object.keys(data),
+      labels: Object.keys(statusCount),
       datasets: [
         {
           label: "Jumlah Syor",
-          data: Object.values(data),
+          data: Object.values(statusCount),
           backgroundColor: ["#28a745", "#ffc107", "#dc3545"],
         },
       ],
     },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-    },
+    options: getChartOptions(), // Guna opsyen universal
   });
-
-  //
 
   new Chart(ctx2, {
     type: "bar",
     data: {
-      labels: Object.keys(data),
+      labels: Object.keys(statusCount),
       datasets: [
         {
           label: "Jumlah Syor",
-          data: Object.values(data),
+          data: Object.values(statusCount),
           backgroundColor: ["#28a745", "#ffc107", "#dc3545"],
         },
       ],
     },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-    },
+    options: getChartOptions(), // Guna opsyen universal
   });
 }
 
@@ -1115,6 +1124,31 @@ function renderBahagianBarStackedChart(data) {
         x: { stacked: true },
         y: { stacked: true, beginAtZero: true },
       },
+      onClick: (event, elements) => {
+        if (elements.length === 0) return;
+
+        const chart = event.chart;
+        const element = elements[0];
+        const datasetIndex = element.datasetIndex;
+        const dataIndex = element.index;
+
+        const sektorName = chart.data.labels[dataIndex];
+        const statusLabel = chart.data.datasets[datasetIndex].label;
+
+        let statusFilter;
+        if (statusLabel === "Selesai") statusFilter = "hijau";
+        else if (statusLabel === "Dalam Tindakan") statusFilter = "kuning";
+        else statusFilter = "merah";
+
+        const filteredData = data.filter(
+          (item) =>
+            (item.Sektor || "Lain-lain") === sektorName &&
+            (item.Indicator || "").toLowerCase() === statusFilter
+        );
+
+        const modalTitle = `Senarai Syor [${statusLabel}] untuk Peneraju: ${sektorName}`;
+        showDrillDownModal(filteredData, modalTitle);
+      },
     },
   });
 
@@ -1152,6 +1186,31 @@ function renderBahagianBarStackedChart(data) {
         x: { stacked: true },
         y: { stacked: true, beginAtZero: true },
       },
+    }, // ---> TAMBAH BLOK KOD INI <---
+    onClick: (event, elements) => {
+      if (elements.length === 0) return;
+
+      const chart = event.chart;
+      const element = elements[0];
+      const datasetIndex = element.datasetIndex;
+      const dataIndex = element.index;
+
+      const negeriName = chart.data.labels[dataIndex];
+      const statusLabel = chart.data.datasets[datasetIndex].label;
+
+      let statusFilter;
+      if (statusLabel === "Selesai") statusFilter = "hijau";
+      else if (statusLabel === "Dalam Tindakan") statusFilter = "kuning";
+      else statusFilter = "merah";
+
+      const filteredData = data.filter(
+        (item) =>
+          (item.Negeri || "Lain-lain") === negeriName &&
+          (item.Indicator || "").toLowerCase() === statusFilter
+      );
+
+      const modalTitle = `Senarai Syor [${statusLabel}] untuk: ${negeriName}`;
+      showDrillDownModal(filteredData, modalTitle);
     },
   });
 }
