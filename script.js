@@ -112,6 +112,7 @@
   function simpanSyorBaru() {
     // Sync Quill value
     document.getElementById("syorBaru").value = quillSyorBaru.root.innerHTML;
+    document.getElementById("catatanBaru").value = quillCatatanBaru.root.innerHTML;
     
     const btn = document.querySelector('#tambahModal .btn-primary');
     btn.disabled = true;
@@ -1277,6 +1278,19 @@
         ]
       }
     });
+
+    const quillCatatanBaru = new Quill('#editorCatatanBaru', {
+      theme: 'snow',
+      placeholder: 'Masukkan kandungan catatan di sini...',
+      modules: {
+        toolbar: [
+          [{ header: [1, 2, false] }],
+          ['bold', 'italic', 'underline'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          ['clean']
+        ]
+      }
+    });
   
     const quillSyorBaru2 = new Quill('#editorSyorBaru2', {
       theme: 'snow',
@@ -1333,6 +1347,10 @@
     // Sync hidden input sebelum submit
     document.getElementById("formTambahSyor").addEventListener("submit", function (e) {
       document.getElementById("syorBaru").value = quillSyorBaru.root.innerHTML;
+    });
+
+    document.getElementById("formTambahSyor").addEventListener("submit", function (e) {
+      document.getElementById("syorBaru").value = quillCatatanBaru.root.innerHTML;
     });
   
     document.getElementById("formTambahSyor2").addEventListener("submit", function (e) {
