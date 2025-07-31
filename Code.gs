@@ -18,13 +18,13 @@ function triggerAuth() {
   MailApp.sendEmail(Session.getActiveUser().getEmail(), "Test", "Ujian emel");
 }
 
-
 function getCurrentEmail() {
   return Session.getActiveUser().getEmail();
 }
 
 function isUserAdmin() {
-  const userSheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
+  const userSheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
   const data = userSheet.getDataRange().getValues();
   const email = Session.getActiveUser().getEmail().toLowerCase();
 
@@ -39,7 +39,8 @@ function isUserAdmin() {
 }
 
 function isUserPeneraju() {
-  const userSheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
+  const userSheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
   const data = userSheet.getDataRange().getValues();
   const email = Session.getActiveUser().getEmail().toLowerCase();
 
@@ -55,8 +56,11 @@ function isUserPeneraju() {
 
 function getUserCheck() {
   const email = Session.getActiveUser().getEmail().toLowerCase();
-  const users = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Users").getDataRange().getValues();
-  
+  const users = SpreadsheetApp.openById(SPREADSHEET_ID)
+    .getSheetByName("Users")
+    .getDataRange()
+    .getValues();
+
   if (!users || users.length === 0) {
     console.log("❌ Tiada data dalam sheet Users");
     return { isAdmin: false, isPeneraju: false };
@@ -85,7 +89,7 @@ function getUserCheck() {
     }
   }
 
-  return { isAdmin, isPeneraju  };
+  return { isAdmin, isPeneraju };
 }
 
 function getUserRoleInfo() {
@@ -101,7 +105,7 @@ function getUserRoleInfo() {
     if ((data[i][emailIdx] || "").toLowerCase() === email) {
       return {
         peranan: data[i][roleIdx],
-        sektor: data[i][sektorIdx]
+        sektor: data[i][sektorIdx],
       };
     }
   }
@@ -110,7 +114,8 @@ function getUserRoleInfo() {
 
 function getUserInfoSektor() {
   const email = Session.getActiveUser().getEmail().toLowerCase();
-  const usersSheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Users");
+  const usersSheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Users");
   const data = usersSheet.getDataRange().getValues();
 
   const headers = data[0];
@@ -131,7 +136,7 @@ function getUserInfoSektor() {
         peranan: peranan,
         sektor: sektor,
         isAdmin: peranan === "Admin",
-        isPeneraju: peranan === "Peneraju"
+        isPeneraju: peranan === "Peneraju",
       };
     }
   }
@@ -139,9 +144,9 @@ function getUserInfoSektor() {
   return null;
 }
 
-
 function getUsers() {
-  const userSheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
+  const userSheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
   const data = userSheet.getDataRange().getValues();
   const email = Session.getActiveUser().getEmail().toLowerCase();
 
@@ -170,22 +175,22 @@ function getUsers() {
   return { nama: "Tidak dikenalpasti", peranan: "Tiada", lokasi: "", email };
 }
 
-
 function getUserDetails() {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
   const data = sheet.getDataRange().getValues();
   const email = Session.getActiveUser().getEmail().toLowerCase();
 
   for (let i = 1; i < data.length; i++) {
     const row = data[i];
-    if ((row[0] || '').toLowerCase() === email) {
+    if ((row[0] || "").toLowerCase() === email) {
       return {
         email: row[0],
         name: row[1],
         peranan: row[2],
         bahagian: row[3],
         negeri: row[4],
-        sektor: row[5]
+        sektor: row[5],
       };
     }
   }
@@ -198,10 +203,8 @@ function getAllUsers() {
   const headers = data.shift();
   return data.map((row, i) => {
     const obj = {};
-    headers.forEach((h, j) => obj[h.toLowerCase()] = row[j]);
-    if (
-      (user.peranan === "Admin")
-    ) {
+    headers.forEach((h, j) => (obj[h.toLowerCase()] = row[j]));
+    if (user.peranan === "Admin") {
       return obj;
     }
     return JSON.parse(JSON.stringify(obj));
@@ -210,7 +213,8 @@ function getAllUsers() {
 
 function getAssignedSyor() {
   const isAdmin = isUserAdmin();
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
   const email = Session.getActiveUser().getEmail().toLowerCase();
@@ -218,12 +222,13 @@ function getAssignedSyor() {
 
   for (let i = 1; i < data.length; i++) {
     const row = {};
-    headers.forEach((head, idx) => row[head] = data[i][idx]);
+    headers.forEach((head, idx) => (row[head] = data[i][idx]));
     row.RowNum = i + 1;
 
     if (
-      isAdmin || 
-      (row["BahagianJpn"] && email.includes(row["BahagianJpn"].toString().toLowerCase()))
+      isAdmin ||
+      (row["BahagianJpn"] &&
+        email.includes(row["BahagianJpn"].toString().toLowerCase()))
     ) {
       rowData.push(row);
     }
@@ -235,18 +240,20 @@ function getAssignedSyorPeneraju() {
   const user = getUserDetails();
   if (!user) return [];
 
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
   const rowData = [];
 
   for (let i = 1; i < data.length; i++) {
     const row = {};
-    headers.forEach((head, idx) => row[head] = data[i][idx]);
+    headers.forEach((head, idx) => (row[head] = data[i][idx]));
     row.RowNum = i + 1;
 
     if (
-      (user.peranan === "Peneraju" && row["Sektor"]?.toLowerCase().includes(user.sektor.toLowerCase()))
+      user.peranan === "Peneraju" &&
+      row["Sektor"]?.toLowerCase().includes(user.sektor.toLowerCase())
     ) {
       rowData.push(row);
     }
@@ -254,25 +261,28 @@ function getAssignedSyorPeneraju() {
   return JSON.parse(JSON.stringify(rowData));
 }
 
-
-
 function getAssignedSyorLimited() {
   const user = getUserDetails();
   if (!user) return [];
 
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
   const rowData = [];
 
   for (let i = 1; i < data.length; i++) {
     const row = {};
-    headers.forEach((head, idx) => row[head] = data[i][idx]);
+    headers.forEach((head, idx) => (row[head] = data[i][idx]));
     row.RowNum = i + 1;
 
     if (
-      (user.peranan === "Bahagian" && row["BahagianJpn"]?.toLowerCase().includes(user.bahagian.toLowerCase())) ||
-      (user.peranan === "JPN" && row["Negeri"]?.toLowerCase().includes(user.negeri.toLowerCase()))
+      (user.peranan === "Bahagian" &&
+        row["BahagianJpn"]
+          ?.toLowerCase()
+          .includes(user.bahagian.toLowerCase())) ||
+      (user.peranan === "JPN" &&
+        row["Negeri"]?.toLowerCase().includes(user.negeri.toLowerCase()))
     ) {
       rowData.push(row);
     }
@@ -281,7 +291,8 @@ function getAssignedSyorLimited() {
 }
 
 function updateSyor(rowNum, syor, status, tarikh, catatan) {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
   const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
 
   const syorIdx = headers.indexOf("Syor") + 1;
@@ -294,7 +305,9 @@ function updateSyor(rowNum, syor, status, tarikh, catatan) {
   sheet.getRange(rowNum, tarikhIdx).setValue(tarikh);
   sheet.getRange(rowNum, catatanIdx).setValue(catatan);
 
-  const rowData = sheet.getRange(rowNum, 1, 1, sheet.getLastColumn()).getValues()[0];
+  const rowData = sheet
+    .getRange(rowNum, 1, 1, sheet.getLastColumn())
+    .getValues()[0];
   const laporan = rowData[headers.indexOf("Laporan")];
   const syorText = rowData[headers.indexOf("Syor")];
   const bahagian = rowData[headers.indexOf("BahagianJpn")];
@@ -304,11 +317,11 @@ function updateSyor(rowNum, syor, status, tarikh, catatan) {
   if (catatan && catatan.trim() !== "") {
     sendNotificationEmail(bahagian, negeri, laporan, syorText, catatan);
   }
-
 }
 
 function updateSyorPeneraju(rowNum, syor, tarikh) {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
   const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
 
   const syorIdx = headers.indexOf("Syor") + 1;
@@ -316,11 +329,11 @@ function updateSyorPeneraju(rowNum, syor, tarikh) {
 
   sheet.getRange(rowNum, syorIdx).setValue(syor);
   sheet.getRange(rowNum, tarikhIdx).setValue(tarikh);
-
 }
 
 function updateRespon(rowNum, respon, tarikh, tempohMasa) {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
   const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
 
   const responIdx = headers.indexOf("Respon") + 1;
@@ -332,108 +345,154 @@ function updateRespon(rowNum, respon, tarikh, tempohMasa) {
   sheet.getRange(rowNum, tempohMasaIdx).setValue(tempohMasa);
 }
 
+function deleteSyorById(rowNum) {
+  try {
+    const sheet =
+      SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
+    sheet.deleteRow(parseInt(rowNum)); // Padam baris berdasarkan nombor yang diterima
+    return "Padam berjaya.";
+  } catch (e) {
+    // Jika gagal, hantar mesej ralat ke frontend
+    throw new Error("Gagal memadam baris dari pangkalan data: " + e.message);
+  }
+}
+
 function insertNewSyor(data) {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
   const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
   const lastRow = sheet.getLastRow() + 1;
 
   // Semakan duplikat
-  const existing = sheet.getRange(2, 1, sheet.getLastRow() - 1, headers.length).getValues();
-  const isDuplicate = existing.some(row =>
-    row[headers.indexOf("Laporan")]?.toString().trim().toLowerCase() === data.Laporan?.toString().trim().toLowerCase() &&
-    row[headers.indexOf("Syor")]?.toString().trim().toLowerCase() === data.Syor?.toString().trim().toLowerCase() &&
-    row[headers.indexOf("BahagianJpn")]?.toString().trim().toLowerCase() === data.BahagianJpn?.toString().trim().toLowerCase() &&
-    row[headers.indexOf("Negeri")]?.toString().trim().toLowerCase() === data.Negeri?.toString().trim().toLowerCase()
+  const existing = sheet
+    .getRange(2, 1, sheet.getLastRow() - 1, headers.length)
+    .getValues();
+  const isDuplicate = existing.some(
+    (row) =>
+      row[headers.indexOf("Laporan")]?.toString().trim().toLowerCase() ===
+        data.Laporan?.toString().trim().toLowerCase() &&
+      row[headers.indexOf("Syor")]?.toString().trim().toLowerCase() ===
+        data.Syor?.toString().trim().toLowerCase() &&
+      row[headers.indexOf("BahagianJpn")]?.toString().trim().toLowerCase() ===
+        data.BahagianJpn?.toString().trim().toLowerCase() &&
+      row[headers.indexOf("Negeri")]?.toString().trim().toLowerCase() ===
+        data.Negeri?.toString().trim().toLowerCase()
   );
 
   if (isDuplicate) {
-    throw new Error("Data bertindih telah dikesan dalam sistem. Sila semak semula data bagi Data Laporan, Perakuan Menteri (Syor), Bahagian dan JPN");
+    throw new Error(
+      "Data bertindih telah dikesan dalam sistem. Sila semak semula data bagi Data Laporan, Perakuan Menteri (Syor), Bahagian dan JPN"
+    );
   }
 
-  const newRow = headers.map(header => data[header] || "");
+  const newRow = headers.map((header) => data[header] || "");
   sheet.appendRow(newRow);
 }
-
 
 function getSkorWajaranByUser() {
   const user = getUserDetails();
   if (!user) return [];
 
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
 
   const laporanIdx = headers.indexOf("Laporan");
-  const bahagianJpnIdx = headers.indexOf("Bahagian/JPN");
+  const bahagianJpnIdx = headers.indexOf("BahagianJpn");
   const sektorIdx = headers.indexOf("Sektor");
   const negeriIdx = headers.indexOf("Negeri");
-  const statusTindakanIdx = headers.indexOf("Status Tindakan");
-
-  const skorMap = { "Hijau": 1, "Kuning": 0.5, "Merah": 0 };
+  const statusTindakanIdx = headers.indexOf("Indicator");
+  const skorMap = { Hijau: 1, Kuning: 0.5, Merah: 0 };
   const groupedData = {};
 
+  // Loop utama untuk mengumpul data
   for (let i = 1; i < data.length; i++) {
     const rowData = data[i];
     const laporan = rowData[laporanIdx];
-    const dbBahagianJpnRaw = (rowData[bahagianJpnIdx] || "").toLowerCase();
-    const dbSektorRaw = (rowData[sektorIdx] || "").toLowerCase();
-    const dbNegeriRaw = (rowData[negeriIdx] || "").toLowerCase();
     const status = rowData[statusTindakanIdx];
     const skor = skorMap[status] ?? 0;
 
+    // Gabungkan semua institusi dari satu baris ke dalam satu array
+    const institutionsInRow = [];
+    const dbBahagianJpnRaw = (rowData[bahagianJpnIdx] || "").toLowerCase();
+    const dbNegeriRaw = (rowData[negeriIdx] || "").toLowerCase();
+
+    dbBahagianJpnRaw
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .forEach((val) => institutionsInRow.push(val.toUpperCase()));
+    dbNegeriRaw
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .forEach((val) => institutionsInRow.push(val.toUpperCase()));
+
+    // Pengguna yang relevan
     const isUserRelevant =
       user.peranan === "Admin" ||
-      (user.peranan === "Bahagian" && dbBahagianJpnRaw.split(',').some(b => user.bahagian.toLowerCase().includes(b.trim()))) ||
-      (user.peranan === "Peneraju" && dbSektorRaw.split(',').some(s => user.sektor.toLowerCase().includes(s.trim()))) ||
-      (user.peranan === "JPN" && dbNegeriRaw.split(',').some(n => user.negeri.toLowerCase().includes(n.trim())));
+      (user.peranan === "Bahagian" &&
+        institutionsInRow.some((b) =>
+          user.bahagian.toUpperCase().includes(b)
+        )) ||
+      (user.peranan === "JPN" &&
+        institutionsInRow.some((n) => user.negeri.toUpperCase().includes(n))) ||
+      (user.peranan === "Peneraju" &&
+        (rowData[sektorIdx] || "")
+          .toLowerCase()
+          .split(",")
+          .some((s) => user.sektor.toLowerCase().includes(s.trim())));
 
-    if (isUserRelevant) {
-      if (!groupedData[laporan]) {
-        groupedData[laporan] = {
-          Laporan: laporan,
-          SkorItems: [],
-          AssociatedBahagianJpns: new Set(),
-          AssociatedNegeris: new Set()
-        };
-      }
+    if (isUserRelevant && institutionsInRow.length > 0) {
+      // PERUBAHAN UTAMA: Loop melalui setiap institusi dalam baris dan buat kunci unik
+      institutionsInRow.forEach((institusi) => {
+        const key = laporan + "||" + institusi; // Kunci unik: Laporan + Institusi
 
-      groupedData[laporan].SkorItems.push(skor);
-      
-      dbBahagianJpnRaw.split(',').map(s => s.trim()).filter(Boolean).forEach(val => groupedData[laporan].AssociatedBahagianJpns.add(val.toUpperCase()));
-      dbNegeriRaw.split(',').map(s => s.trim()).filter(Boolean).forEach(val => groupedData[laporan].AssociatedNegeris.add(val.toUpperCase()));
+        if (!groupedData[key]) {
+          groupedData[key] = {
+            Laporan: laporan,
+            Institusi: institusi,
+            SkorItems: [],
+          };
+        }
+        // Tambah skor HANYA untuk gabungan Laporan + Institusi ini
+        groupedData[key].SkorItems.push(skor);
+      });
     }
   }
 
   const result = [];
-  for (const laporan in groupedData) {
-    const group = groupedData[laporan];
+  // Loop kedua untuk mengira purata bagi setiap kumpulan unik
+  for (const key in groupedData) {
+    const group = groupedData[key];
     const totalSkor = group.SkorItems.reduce((sum, s) => sum + s, 0);
-    const avgSkor = group.SkorItems.length ? totalSkor / group.SkorItems.length : 0;
+    const avgSkor = group.SkorItems.length
+      ? totalSkor / group.SkorItems.length
+      : 0;
 
     let dominantStatus = "Merah";
-    if (avgSkor === 1) dominantStatus = "Hijau"; // <-- Diperbetulkan
-    else if (avgSkor > 0 && avgSkor < 1) dominantStatus = "Kuning"; // <-- Diperbetulkan
-
-    const allResponsibleUnits = [
-        ...group.AssociatedBahagianJpns,
-        ...group.AssociatedNegeris
-    ];
-    const combinedUnits = allResponsibleUnits.join(', ') || "-";
+    if (avgSkor === 1) dominantStatus = "Hijau";
+    else if (avgSkor > 0 && avgSkor < 1) dominantStatus = "Kuning";
 
     result.push({
       Laporan: group.Laporan,
-      ResponsibleUnits: combinedUnits,
+      Institusi: group.Institusi,
       SkorWajaran: avgSkor.toFixed(2),
-      DominantStatus: dominantStatus
+      DominantStatus: dominantStatus,
     });
   }
 
-  return result;
+  return result.sort(
+    (a, b) =>
+      a.Laporan.localeCompare(b.Laporan) ||
+      a.Institusi.localeCompare(b.Institusi)
+  );
 }
 
-
 function getPieChartDataByUser() {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
   const email = Session.getActiveUser().getEmail().toLowerCase();
@@ -458,7 +517,8 @@ function getPieChartDataByUser() {
     let isMatch = false;
     if (role === "Admin") isMatch = true;
     else if (role === "Bahagian" && b && email.includes(b)) isMatch = true;
-    else if (role === "JPN" && n && negeri && negeri.toLowerCase() === n) isMatch = true;
+    else if (role === "JPN" && n && negeri && negeri.toLowerCase() === n)
+      isMatch = true;
 
     if (isMatch) {
       if (!statusCount[status]) statusCount[status] = 0;
@@ -470,47 +530,54 @@ function getPieChartDataByUser() {
 }
 
 function getUserRole(email) {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
   const data = sheet.getDataRange().getValues();
   email = email.toLowerCase();
   for (let i = 1; i < data.length; i++) {
-    if ((data[i][0] || '').toLowerCase() === email) return data[i][2];
+    if ((data[i][0] || "").toLowerCase() === email) return data[i][2];
   }
   return null;
 }
 
 function getUserBahagian(email) {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
   const data = sheet.getDataRange().getValues();
   email = email.toLowerCase();
   for (let i = 1; i < data.length; i++) {
-    if ((data[i][0] || '').toLowerCase() === email) return data[i][3];
+    if ((data[i][0] || "").toLowerCase() === email) return data[i][3];
   }
   return null;
 }
 
 function getUserNegeri(email) {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
   const data = sheet.getDataRange().getValues();
   email = email.toLowerCase();
   for (let i = 1; i < data.length; i++) {
-    if ((data[i][0] || '').toLowerCase() === email) return data[i][4];
+    if ((data[i][0] || "").toLowerCase() === email) return data[i][4];
   }
   return null;
 }
 
 function isDuplicateSyor(laporan, syor, bahagian, negeri) {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
   const data = sheet.getDataRange().getValues();
 
   for (let i = 1; i < data.length; i++) {
-    const laporanCell = data[i][1];  // Kolum B
-    const syorCell = data[i][2];     // Kolum C
+    const laporanCell = data[i][1]; // Kolum B
+    const syorCell = data[i][2]; // Kolum C
     const bahagianCell = data[i][4]; // Kolum E
-    const negeriCell = data[i][5];   // Kolum F
+    const negeriCell = data[i][5]; // Kolum F
 
     if (
-      laporanCell && syorCell && bahagianCell && negeriCell &&
+      laporanCell &&
+      syorCell &&
+      bahagianCell &&
+      negeriCell &&
       laporanCell.trim().toLowerCase() === laporan.trim().toLowerCase() &&
       syorCell.trim().toLowerCase() === syor.trim().toLowerCase() &&
       bahagianCell.trim().toLowerCase() === bahagian.trim().toLowerCase() &&
@@ -523,7 +590,8 @@ function isDuplicateSyor(laporan, syor, bahagian, negeri) {
 }
 
 function sendNotificationEmail(bahagian, negeri, laporan, syor, catatan) {
-  const userSheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Users");
+  const userSheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Users");
   const users = userSheet.getDataRange().getValues();
   const headers = users[0];
 
@@ -533,7 +601,7 @@ function sendNotificationEmail(bahagian, negeri, laporan, syor, catatan) {
 
   const recipients = users
     .slice(1)
-    .filter(row => {
+    .filter((row) => {
       const rowBahagian = (row[bahagianIdx] || "").toLowerCase();
       const rowNegeri = (row[negeriIdx] || "").toLowerCase();
       return (
@@ -541,8 +609,8 @@ function sendNotificationEmail(bahagian, negeri, laporan, syor, catatan) {
         rowNegeri === (negeri || "").toLowerCase()
       );
     })
-    .map(row => row[emelIdx])
-    .filter(email => email);
+    .map((row) => row[emelIdx])
+    .filter((email) => email);
 
   if (recipients.length === 0) return;
 
@@ -568,7 +636,7 @@ function sendNotificationEmail(bahagian, negeri, laporan, syor, catatan) {
   MailApp.sendEmail({
     to: recipients.join(","),
     subject: subject,
-    htmlBody: htmlBody // ✅ HTML!
+    htmlBody: htmlBody, // ✅ HTML!
   });
 }
 
@@ -580,10 +648,13 @@ function formatDate(dateObj) {
   return `${dd}/${mm}/${yyyy}`;
 }
 
-
 function uploadPDFtoDrive(base64, namaFail, laporan, syor, tarikh) {
   const folder = DriveApp.getFolderById("1SUJX6-MXVpT-kPEkl18yGXb1m4JGAZON");
-  const blob = Utilities.newBlob(Utilities.base64Decode(base64), MimeType.PDF, namaFail);
+  const blob = Utilities.newBlob(
+    Utilities.base64Decode(base64),
+    MimeType.PDF,
+    namaFail
+  );
   const file = folder.createFile(blob);
 
   file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); // optional: buat public view
@@ -591,7 +662,8 @@ function uploadPDFtoDrive(base64, namaFail, laporan, syor, tarikh) {
   const link = file.getUrl();
 
   // Cari row dalam sheet untuk kemaskini
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
   const data = sheet.getDataRange().getValues();
 
   for (let i = 1; i < data.length; i++) {
@@ -609,26 +681,39 @@ function uploadPDFtoDrive(base64, namaFail, laporan, syor, tarikh) {
 }
 
 function getSenaraiBahagian() {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('Setting');
-  const data = sheet.getRange('A2:A' + sheet.getLastRow()).getValues().flat();
-  return data.filter(n => n).sort();
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Setting");
+  const data = sheet
+    .getRange("A2:A" + sheet.getLastRow())
+    .getValues()
+    .flat();
+  return data.filter((n) => n).sort();
 }
 
 function getSenaraiNegeri() {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('Setting');
-  const data = sheet.getRange('B2:B' + sheet.getLastRow()).getValues().flat();
-  return data.filter(n => n).sort();
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Setting");
+  const data = sheet
+    .getRange("B2:B" + sheet.getLastRow())
+    .getValues()
+    .flat();
+  return data.filter((n) => n).sort();
 }
 
 function getSenaraiSektor() {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('Setting');
-  const data = sheet.getRange('C2:C' + sheet.getLastRow()).getValues().flat();
-  return data.filter(n => n).sort();
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Setting");
+  const data = sheet
+    .getRange("C2:C" + sheet.getLastRow())
+    .getValues()
+    .flat();
+  return data.filter((n) => n).sort();
 }
 
 // ✅ Logging aktiviti pengguna ke sheet Log_Aktiviti
 function logAktiviti(email, laporan, indicator, catatan) {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Log_Aktiviti");
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Log_Aktiviti");
   sheet.appendRow([
     new Date(),
     email,
@@ -636,7 +721,7 @@ function logAktiviti(email, laporan, indicator, catatan) {
     getLastBilFromSTTMP_DB(laporan),
     laporan,
     indicator,
-    catatan
+    catatan,
   ]);
 }
 
@@ -652,7 +737,8 @@ function getUserBahagian(email) {
 }
 
 function getLastBilFromSTTMP_DB(laporan) {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("STTMP_DB");
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("STTMP_DB");
   const data = sheet.getDataRange().getValues();
   let bil = "";
   for (let i = data.length - 1; i > 0; i--) {
@@ -664,17 +750,35 @@ function getLastBilFromSTTMP_DB(laporan) {
   return bil;
 }
 
-
 function insertUser(data) {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   const sheet = ss.getSheetByName(USER_SHEET_NAME);
-  sheet.appendRow([data.email, data.nama, data.peranan, data.bahagian, data.negeri, data.sektor]);
+  sheet.appendRow([
+    data.email,
+    data.nama,
+    data.peranan,
+    data.bahagian,
+    data.negeri,
+    data.sektor,
+  ]);
 }
 
 function updateUser(data) {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(USER_SHEET_NAME);
   const row = Number(data.row);
-  sheet.getRange(row, 1, 1, 6).setValues([[data.email, data.nama, data.peranan, data.bahagian, data.negeri, data.sektor]]);
+  sheet
+    .getRange(row, 1, 1, 6)
+    .setValues([
+      [
+        data.email,
+        data.nama,
+        data.peranan,
+        data.bahagian,
+        data.negeri,
+        data.sektor,
+      ],
+    ]);
 }
 
 function deleteUser(row) {
@@ -683,19 +787,20 @@ function deleteUser(row) {
 }
 
 function getDashboardDataNegeri() {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(DB_SHEET_NAME);
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
   const rows = data.slice(1);
 
   const negeriStat = {};
 
-  rows.forEach(row => {
+  rows.forEach((row) => {
     const obj = {};
-    headers.forEach((h, i) => obj[h] = row[i]);
+    headers.forEach((h, i) => (obj[h] = row[i]));
 
-    const negeri = obj.Negeri || 'LAIN';
-    const status = obj.Status || 'Lain';
+    const negeri = obj.Negeri || "LAIN";
+    const status = obj.Status || "Lain";
 
     if (!negeriStat[negeri]) {
       negeriStat[negeri] = { Selesai: 0, DalamTindakan: 0, BelumSelesai: 0 };
@@ -710,12 +815,11 @@ function getDashboardDataNegeri() {
 }
 
 function getDashboardDataByYear(tahun) {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("STTMP_DB");
+  const sheet =
+    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("STTMP_DB");
   const data = sheet.getDataRange().getValues();
   const header = data[0];
-  const rows = data.slice(1).filter(r => r[1] === tahun); // Tahun = Col B (index 1)
+  const rows = data.slice(1).filter((r) => r[1] === tahun); // Tahun = Col B (index 1)
 
   return processDashboardData(rows); // kekalkan fungsi asal
 }
-
-

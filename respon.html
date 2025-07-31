@@ -424,7 +424,7 @@
                   </select>
                 </div>
 
-               <input type="hidden" id="sektorBaru" value="Merah">
+               <input type="hidden" id="indicatorBaru" value="Merah">
 
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Tarikh Kemaskini</label>
@@ -438,8 +438,9 @@
                 </div>             
 
                 <div class="col-12 mb-3">
-                  <label class="form-label">Catatan</label>
-                  <textarea class="form-control" id="catatanBaru" rows="2"></textarea>
+                  <label class="form-label">Catatan</label>                  
+                  <div id="editorCatatanBaru" style="height: 150px;"></div>
+                  <input type="hidden" id="catatanBaru">
                 </div>
               </div>
             </form>
@@ -504,8 +505,9 @@
                 </div>             
 
                 <div class="col-12 mb-3">
-                  <label class="form-label">Catatan</label>
-                  <textarea class="form-control" id="catatanBaru2" rows="2"></textarea>
+                  <label class="form-label">Catatan</label>                  
+                  <div id="editorCatatanBaru2" style="height: 150px;"></div>
+                  <input type="hidden" id="catatanBaru2">
                 </div>
               </div>
             </form>
@@ -612,7 +614,8 @@
             </div>
             <div class="mb-2">
               <label class="form-label">Catatan</label>
-              <textarea class="form-control" id="catatanInput"></textarea>
+              <div id="editorCatatanInput" style="height: 150px;"></div>
+              <input type="hidden" id="catatanInput">
             </div>
           </form>
         </div>
@@ -657,8 +660,9 @@
               <input type="date" class="form-control" id="tarikhInput3">
             </div>
             <div class="mb-2">
-              <label class="form-label">Catatan</label>
-              <textarea class="form-control" id="catatanInput2" readonly></textarea>
+              <label class="form-label">Catatan</label>              
+              <div id="editorCatatanInput2" style="height: 150px;"></div>
+              <input type="hidden" id="catatanInput2">
             </div>
           </form>
         </div>
