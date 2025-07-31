@@ -534,6 +534,7 @@
       document.getElementById("statusInput").value = item.Indicator || "";
   
       quillSyorInfo.root.innerHTML = item.Syor || "";
+      quillCatatanInput.root.innerHTML = item.Catatan || "";
   
       const tarikh = item.TarikhKemaskini 
         ? new Date(item.TarikhKemaskini).toISOString().split("T")[0] 
@@ -569,6 +570,7 @@
       document.getElementById("ResponInfo2").innerHTML = item.Respon || "";
   
       quillSyorInfo2.root.innerHTML = item.Syor || "";
+      quillCatatanInput2.root.innerHTML = item.Catatan || "";
   
       const tarikh = item.TarikhKemaskini 
         ? new Date(item.TarikhKemaskini).toISOString().split("T")[0] 
@@ -583,6 +585,7 @@
   
     function simpanKemaskiniTab2() {
       document.getElementById("SyorInfo").value = quillSyorInfo.root.innerHTML;
+      document.getElementById("CatatanInput").value = quillCatatanInput.root.innerHTML;
 
       const btn = document.querySelector('#kemaskiniModal2 .btn-primary');
       btn.disabled = true;
@@ -611,6 +614,7 @@
     
     function simpanKemaskiniTab3() {
       document.getElementById("SyorInfo2").value = quillSyorInfo2.root.innerHTML;
+      document.getElementById("catatanInput2").value = quillCatatanInput2.root.innerHTML;
   
       const btn = document.querySelector('#kemaskiniModal3 .btn-primary');
       btn.disabled = true;
@@ -1330,8 +1334,34 @@
         ]
       }
     });
+
+    const quillCatatanInput = new Quill('#editorCatatanInput', {
+      theme: 'snow',
+      placeholder: 'Masukkan kandungan syor di sini...',
+      modules: {
+        toolbar: [
+          [{ header: [1, 2, false] }],
+          ['bold', 'italic', 'underline'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          ['clean']
+        ]
+      }
+    });
   
     const quillSyorInfo2 = new Quill('#editorSyorInfo2', {
+      theme: 'snow',
+      placeholder: 'Masukkan kandungan syor di sini...',
+      modules: {
+        toolbar: [
+          [{ header: [1, 2, false] }],
+          ['bold', 'italic', 'underline'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          ['clean']
+        ]
+      }
+    });
+
+    const quillCatatanInput2 = new Quill('#editorCatatanInput2', {
       theme: 'snow',
       placeholder: 'Masukkan kandungan syor di sini...',
       modules: {
@@ -1364,9 +1394,17 @@
     document.getElementById("kemaskiniForm2").addEventListener("submit", function (e) {
       document.getElementById("syorInfo").value = quillSyorInfo.root.innerHTML;
     });
+
+    document.getElementById("kemaskiniForm2").addEventListener("submit", function (e) {
+      document.getElementById("catatanInput").value = quillCatatanInput.root.innerHTML;
+    });
     
     document.getElementById("kemaskiniForm3").addEventListener("submit", function (e) {
       document.getElementById("syorInfo2").value = quillSyorInfo2.root.innerHTML;
+    });
+
+    document.getElementById("kemaskiniForm3").addEventListener("submit", function (e) {
+      document.getElementById("catatanInput2").value = quillCatatanInput2.root.innerHTML;
     });
   
   
