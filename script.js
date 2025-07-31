@@ -670,33 +670,47 @@
       })[getDataFn]();
   
      
-      // Top 5 syor
+      // Top 5 syor (Blok ini dikemaskini)
       google.script.run.withSuccessHandler(function (data) {
-              const body = document.getElementById("top5SyorBody"); 
-              if (!body) {
-                console.error("Elemen 'top5SyorBody' tidak ditemui."); // Nama elemen dibetulkan
-                return;
-              }
-              body.innerHTML = "";
+                const tableId = "top5SyorTable";
+                const table = document.getElementById(tableId);
+                const body = document.getElementById("top5SyorBody");
 
-              if (data && data.length > 0) {
-                data.forEach((item, idx) => {
-                  const row = document.createElement("tr");
-                  const badgeClass = item.DominantStatus === "Hijau" ? "bg-success" : item.DominantStatus === "Kuning" ? "bg-warning text-dark" : "bg-danger";
-                  row.innerHTML = `
-                    <td>${idx + 1}</td>
-                    <td>${item.Laporan}</td>
-                    <td>${item.Institusi}</td> 
-                    <td><span class="fw-bold">${item.SkorWajaran}</span> <span class="badge ${badgeClass}">${item.DominantStatus}</span></td>
-                  `;
-                  body.appendChild(row);
-                });
-              } else {
+                // 1. Hancurkan (destroy) instance DataTable sedia ada jika wujud
+                //    Ini penting supaya tiada ralat bila data dimuat semula.
+                if ($.fn.DataTable.isDataTable(table)) {
+                  $(table).DataTable().destroy();
+                }
+
+                if (!body) {
+                  console.error("Elemen 'top5SyorBody' tidak ditemui.");
+                  return;
+                }
+                body.innerHTML = "";
+
+                if (data && data.length > 0) {
+                  data.forEach((item, idx) => {
+                    const row = document.createElement("tr");
+                    const badgeClass = item.DominantStatus === "Hijau" ? "bg-success" : item.DominantStatus === "Kuning" ? "bg-warning text-dark" : "bg-danger";
+                    row.innerHTML = `
+                      <td>${idx + 1}</td>
+                      <td>${item.Laporan}</td>
+                      <td>${item.Institusi}</td>
+                      <td><span class="fw-bold">${item.SkorWajaran}</span> <span class="badge ${badgeClass}">${item.DominantStatus}</span></td>
+                    `;
+                    body.appendChild(row);
+                  });
+                } else {
                   const row = document.createElement("tr");
                   row.innerHTML = `<td colspan="4" class="text-center">Tiada data dijumpai mengikut kriteria anda.</td>`;
                   body.appendChild(row);
                 }
-              }).getSkorWajaranByUser();        
+
+                // 2. Inisiasi semula DataTable pada jadual ini
+                //    Fungsi ini akan menambah carian, pagination, dll.
+                initDataTableDesign(tableId);
+
+              }).getSkorWajaranByUser();       
             }).getUsers(); // Get role first
           }        
       
