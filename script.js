@@ -971,14 +971,26 @@ function renderStatusBarChart(statusCount, fullData) {
 
 function renderBahagianBarStackedChart(data) {
   const bahagianList = [
-    ...new Set(data.map((item) => item.BahagianJpn || "Lain-lain")),
+    ...new Set(
+      data
+        .map((item) => item.BahagianJpn) // Ambil semua nilai Bahagian
+        .filter((bahagian) => bahagian) // Tapis keluar nilai yang kosong (null, undefined, '')
+    ),
   ];
+
   const negeriList = [
-    ...new Set(data.map((item) => item.Negeri || "Lain-lain")),
+    ...new Set(
+      data
+        .map((item) => item.Negeri) // Ambil semua nilai Negeri
+        .filter((negeri) => negeri) // Tapis keluar nilai yang kosong
+    ),
   ];
+
+  // Senarai Peneraju dikekalkan, kerana "Lain-lain" mungkin relevan jika ada syor tanpa peneraju.
   const penerajuList = [
     ...new Set(data.map((item) => item.Sektor || "Lain-lain")),
   ];
+
   const statusKategori = ["Hijau", "Kuning", "Merah"];
   const statusKategori2 = ["Hijau", "Kuning", "Merah"];
   const statusKategori3 = ["Hijau", "Kuning", "Merah"];
@@ -1001,10 +1013,9 @@ function renderBahagianBarStackedChart(data) {
     Merah: [],
   };
 
+  // 2. Logik kiraan data kini merujuk kepada senarai yang telah ditapis.
   bahagianList.forEach((bahagian) => {
-    const items = data.filter(
-      (item) => (item.BahagianJpn || "Lain-lain") === bahagian
-    );
+    const items = data.filter((item) => item.BahagianJpn === bahagian);
     statusKategori.forEach((status) => {
       const count = items.filter(
         (item) => (item.Indicator || "").toLowerCase() === status.toLowerCase()
@@ -1014,14 +1025,12 @@ function renderBahagianBarStackedChart(data) {
   });
 
   negeriList.forEach((negeri) => {
-    const items = data.filter(
-      (item) => (item.Negeri || "Lain-lain") === negeri
-    );
-    statusKategori2.forEach((status2) => {
+    const items = data.filter((item) => item.Negeri === negeri);
+    statusKategori.forEach((status) => {
       const count = items.filter(
-        (item) => (item.Indicator || "").toLowerCase() === status2.toLowerCase()
+        (item) => (item.Indicator || "").toLowerCase() === status.toLowerCase()
       ).length;
-      statusData2[status2].push(count);
+      statusData2[status].push(count);
     });
   });
 
@@ -1029,13 +1038,14 @@ function renderBahagianBarStackedChart(data) {
     const items = data.filter(
       (item) => (item.Sektor || "Lain-lain") === sektor
     );
-    statusKategori3.forEach((status3) => {
+    statusKategori.forEach((status) => {
       const count = items.filter(
-        (item) => (item.Indicator || "").toLowerCase() === status3.toLowerCase()
+        (item) => (item.Indicator || "").toLowerCase() === status.toLowerCase()
       ).length;
-      statusData3[status3].push(count);
+      statusData3[status].push(count);
     });
   });
+
   const ctxBahagian = document
     .getElementById("statusChartBahagian")
     .getContext("2d");
