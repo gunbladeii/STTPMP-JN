@@ -354,7 +354,7 @@ function deleteSyor(rowNum, successCallback) {
   // Minta pengesahan dari pengguna sebelum memadam
   if (
     confirm(
-      "Anda pasti ingin memadam syor ini? Tindakan ini tidak boleh diundur."
+      "Anda pasti ingin memadam syor ini? Mohon Pengesahan anda."
     )
   ) {
     google.script.run
