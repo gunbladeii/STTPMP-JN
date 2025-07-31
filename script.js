@@ -1186,31 +1186,31 @@ function renderBahagianBarStackedChart(data) {
         x: { stacked: true },
         y: { stacked: true, beginAtZero: true },
       },
-    }, // ---> TAMBAH BLOK KOD INI <---
-    onClick: (event, elements) => {
-      if (elements.length === 0) return;
+      onClick: (event, elements) => {
+        if (elements.length === 0) return;
 
-      const chart = event.chart;
-      const element = elements[0];
-      const datasetIndex = element.datasetIndex;
-      const dataIndex = element.index;
+        const chart = event.chart;
+        const element = elements[0];
+        const datasetIndex = element.datasetIndex;
+        const dataIndex = element.index;
 
-      const negeriName = chart.data.labels[dataIndex];
-      const statusLabel = chart.data.datasets[datasetIndex].label;
+        const negeriName = chart.data.labels[dataIndex];
+        const statusLabel = chart.data.datasets[datasetIndex].label;
 
-      let statusFilter;
-      if (statusLabel === "Selesai") statusFilter = "hijau";
-      else if (statusLabel === "Dalam Tindakan") statusFilter = "kuning";
-      else statusFilter = "merah";
+        let statusFilter;
+        if (statusLabel === "Selesai") statusFilter = "hijau";
+        else if (statusLabel === "Dalam Tindakan") statusFilter = "kuning";
+        else statusFilter = "merah";
 
-      const filteredData = data.filter(
-        (item) =>
-          (item.Negeri || "Lain-lain") === negeriName &&
-          (item.Indicator || "").toLowerCase() === statusFilter
-      );
+        const filteredData = data.filter(
+          (item) =>
+            (item.Negeri || "Lain-lain") === negeriName &&
+            (item.Indicator || "").toLowerCase() === statusFilter
+        );
 
-      const modalTitle = `Senarai Syor [${statusLabel}] untuk: ${negeriName}`;
-      showDrillDownModal(filteredData, modalTitle);
+        const modalTitle = `Senarai Syor [${statusLabel}] untuk: ${negeriName}`;
+        showDrillDownModal(filteredData, modalTitle);
+      },
     },
   });
 }
