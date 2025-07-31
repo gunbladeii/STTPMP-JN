@@ -350,22 +350,25 @@ function showUserDetails() {
     .getUsers();
 }
 
-function deleteSyor(rowNum) {
+function deleteSyor(rowNum, successCallback) {
   // Minta pengesahan dari pengguna sebelum memadam
   if (
     confirm(
-      "Anda pasti ingin memadam syor ini?Mohon pengesahan anda."
+      "Anda pasti ingin memadam syor ini? Tindakan ini tidak boleh diundur."
     )
   ) {
     google.script.run
       .withSuccessHandler(function () {
         alert("Syor telah berjaya dipadam.");
-        loadDataTab2(); // Muat semula data jadual untuk memaparkan perubahan
+        // Jalankan fungsi callback jika ia wujud
+        if (typeof successCallback === "function") {
+          successCallback();
+        }
       })
       .withFailureHandler(function (err) {
         alert("Gagal memadam syor: " + err.message);
       })
-      .deleteSyorById(rowNum); // Panggil fungsi backend
+      .deleteSyorById(rowNum); // Panggil fungsi backend yang sama
   }
 }
 
@@ -448,6 +451,9 @@ function renderTableTab3(data) {
           <td><button class="btn btn-primary btn-sm" onclick='bukaModalTab3(${JSON.stringify(
             item
           )})'>Kemaskini</button></td>
+          <button class="btn btn-danger btn-sm" onclick="deleteSyor(${
+            item.RowNum
+          }, loadDataTab3)">Padam</button>
         `;
     body.appendChild(row);
   });
@@ -606,7 +612,7 @@ function renderTableTab2(data) {
           )})'>Kemaskini</button></td>
           <button class="btn btn-danger btn-sm" onclick="deleteSyor(${
             item.RowNum
-          })">Padam</button>
+          }, loadDataTab2)">Padam</button>
         `;
     body.appendChild(row);
   });
