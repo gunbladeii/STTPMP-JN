@@ -585,7 +585,7 @@
   
     function simpanKemaskiniTab2() {
       document.getElementById("SyorInfo").value = quillSyorInfo.root.innerHTML;
-      document.getElementById("CatatanInput").value = quillCatatanInput.root.innerHTML;
+      document.getElementById("catatanInput").value = quillCatatanInput.root.innerHTML;
 
       const btn = document.querySelector('#kemaskiniModal2 .btn-primary');
       btn.disabled = true;
@@ -1380,7 +1380,7 @@
     });
 
     document.getElementById("formTambahSyor").addEventListener("submit", function (e) {
-      document.getElementById("syorBaru").value = quillCatatanBaru.root.innerHTML;
+      document.getElementById("catatanBaru").value = quillCatatanBaru.root.innerHTML;
     });
   
     document.getElementById("formTambahSyor2").addEventListener("submit", function (e) {
