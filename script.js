@@ -352,11 +352,7 @@ function showUserDetails() {
 
 function deleteSyor(rowNum, successCallback) {
   // Minta pengesahan dari pengguna sebelum memadam
-  if (
-    confirm(
-      "Anda pasti ingin memadam syor ini? Mohon Pengesahan anda."
-    )
-  ) {
+  if (confirm("Anda pasti ingin memadam syor ini? Mohon Pengesahan anda.")) {
     google.script.run
       .withSuccessHandler(function () {
         alert("Syor telah berjaya dipadam.");
@@ -370,6 +366,39 @@ function deleteSyor(rowNum, successCallback) {
       })
       .deleteSyorById(rowNum); // Panggil fungsi backend yang sama
   }
+}
+
+/**
+ * Memaparkan senarai syor dalam sebuah modal.
+ * @param {Array} items - Array objek data syor yang telah ditapis.
+ * @param {string} title - Tajuk untuk modal.
+ */
+function showDrillDownModal(items, title) {
+  const modalElement = document.getElementById("drillDownModal");
+  const modalTitle = document.getElementById("drillDownModalLabel");
+  const modalBody = document.getElementById("drillDownModalBody");
+
+  modalTitle.textContent = title;
+  modalBody.innerHTML = ""; // Kosongkan kandungan lama
+
+  if (items && items.length > 0) {
+    items.forEach((item, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${item.Laporan || "-"}</td>
+        <td>${item.Syor || "-"}</td>
+      `;
+      modalBody.appendChild(row);
+    });
+  } else {
+    modalBody.innerHTML =
+      '<tr><td colspan="3" class="text-center">Tiada data untuk dipaparkan.</td></tr>';
+  }
+
+  // Tunjukkan modal
+  const bsModal = new bootstrap.Modal(modalElement);
+  bsModal.show();
 }
 
 function loadDataTab1() {
@@ -1019,6 +1048,35 @@ function renderBahagianBarStackedChart(data) {
       scales: {
         x: { stacked: true },
         y: { stacked: true, beginAtZero: true },
+      },
+      onClick: (event, elements) => {
+        if (elements.length === 0) return; // Keluar jika tiada apa yang diklik
+
+        const chart = event.chart;
+        const element = elements[0];
+
+        const datasetIndex = element.datasetIndex;
+        const dataIndex = element.index;
+
+        const bahagianName = chart.data.labels[dataIndex];
+        const statusLabel = chart.data.datasets[datasetIndex].label; // "Selesai", "Dalam Tindakan", atau "Belum Selesai"
+
+        // Terjemah label kepada status sebenar dalam data
+        let statusFilter;
+        if (statusLabel === "Selesai") statusFilter = "hijau";
+        else if (statusLabel === "Dalam Tindakan") statusFilter = "kuning";
+        else statusFilter = "merah";
+
+        // Tapis data asal berdasarkan bahagian dan status yang diklik
+        const filteredData = data.filter(
+          (item) =>
+            (item.BahagianJpn || "Lain-lain") === bahagianName &&
+            (item.Indicator || "").toLowerCase() === statusFilter
+        );
+
+        // Panggil fungsi untuk paparkan modal
+        const modalTitle = `Senarai Syor [${statusLabel}] untuk: ${bahagianName}`;
+        showDrillDownModal(filteredData, modalTitle);
       },
     },
   });
