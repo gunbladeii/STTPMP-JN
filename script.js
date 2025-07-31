@@ -674,7 +674,7 @@
       google.script.run.withSuccessHandler(function (data) {
               const body = document.getElementById("top5SyorBody"); 
               if (!body) {
-                console.error("Elemen 'syorTableBody' tidak ditemui.");
+                console.error("Elemen 'top5SyorBody' tidak ditemui."); // Nama elemen dibetulkan
                 return;
               }
               body.innerHTML = "";
@@ -686,7 +686,8 @@
                   row.innerHTML = `
                     <td>${idx + 1}</td>
                     <td>${item.Laporan}</td>
-                    <td>${item.ResponsibleUnits}</td> <td><span class="fw-bold">${item.SkorWajaran}</span> <span class="badge ${badgeClass}">${item.DominantStatus}</span></td>
+                    <td>${item.Institusi}</td> 
+                    <td><span class="fw-bold">${item.SkorWajaran}</span> <span class="badge ${badgeClass}">${item.DominantStatus}</span></td>
                   `;
                   body.appendChild(row);
                 });
