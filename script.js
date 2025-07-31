@@ -450,10 +450,10 @@ function renderTableTab3(data) {
           <td>${item.Catatan || ""}</td>
           <td><button class="btn btn-primary btn-sm" onclick='bukaModalTab3(${JSON.stringify(
             item
-          )})'>Kemaskini</button></td>
-          <button class="btn btn-danger btn-sm" onclick="deleteSyor(${
-            item.RowNum
-          }, loadDataTab3)">Padam</button>
+          )})'>Kemaskini</button><button class="btn btn-danger btn-sm" onclick="deleteSyor(${
+      item.RowNum
+    }, loadDataTab3)">Padam</button></td>
+          
         `;
     body.appendChild(row);
   });
@@ -609,10 +609,10 @@ function renderTableTab2(data) {
           <td>${item.Catatan || ""}</td>
           <td><button class="btn btn-primary btn-sm" onclick='bukaModalTab2(${JSON.stringify(
             item
-          )})'>Kemaskini</button></td>
-          <button class="btn btn-danger btn-sm" onclick="deleteSyor(${
-            item.RowNum
-          }, loadDataTab2)">Padam</button>
+          )})'>Kemaskini</button><button class="btn btn-danger btn-sm" onclick="deleteSyor(${
+      item.RowNum
+    }, loadDataTab2)">Padam</button></td>
+          
         `;
     body.appendChild(row);
   });
