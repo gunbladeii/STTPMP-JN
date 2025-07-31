@@ -364,58 +364,67 @@ function getSkorWajaranByUser() {
   const headers = data[0];
 
   const laporanIdx = headers.indexOf("Laporan");
-  const syorIdx = headers.indexOf("Syor");
-  const bahagianIdx = headers.indexOf("BahagianJpn");
+  const bahagianJpnIdx = headers.indexOf("Bahagian/JPN");
   const sektorIdx = headers.indexOf("Sektor");
   const negeriIdx = headers.indexOf("Negeri");
-  const indicatorIdx = headers.indexOf("Indicator");
+  const statusTindakanIdx = headers.indexOf("Status Tindakan");
 
   const skorMap = { "Hijau": 1, "Kuning": 0.5, "Merah": 0 };
-  const laporanMap = {};
+  const groupedData = {};
 
   for (let i = 1; i < data.length; i++) {
-    const laporan = data[i][laporanIdx];
-    const syor = data[i][syorIdx];
-    const bahagian = data[i][bahagianIdx]?.toLowerCase() || "";
-    const sektor = data[i][sektorIdx]?.toLowerCase() || "";
-    const negeri = data[i][negeriIdx]?.toLowerCase() || "";
-    const status = data[i][indicatorIdx];
-
+    const rowData = data[i];
+    const laporan = rowData[laporanIdx];
+    const dbBahagianJpnRaw = (rowData[bahagianJpnIdx] || "").toLowerCase();
+    const dbSektorRaw = (rowData[sektorIdx] || "").toLowerCase();
+    const dbNegeriRaw = (rowData[negeriIdx] || "").toLowerCase();
+    const status = rowData[statusTindakanIdx];
     const skor = skorMap[status] ?? 0;
 
-    if (
+    const isUserRelevant =
       user.peranan === "Admin" ||
-      (user.peranan === "Bahagian" && bahagian.includes(user.bahagian.toLowerCase())) ||
-      (user.peranan === "Peneraju" && sektor.includes(user.sektor.toLowerCase())) ||
-      (user.peranan === "JPN" && negeri.includes(user.negeri.toLowerCase()))
-    ) {
-      if (!laporanMap[laporan]) laporanMap[laporan] = [];
+      (user.peranan === "Bahagian" && dbBahagianJpnRaw.split(',').some(b => user.bahagian.toLowerCase().includes(b.trim()))) ||
+      (user.peranan === "Peneraju" && dbSektorRaw.split(',').some(s => user.sektor.toLowerCase().includes(s.trim()))) ||
+      (user.peranan === "JPN" && dbNegeriRaw.split(',').some(n => user.negeri.toLowerCase().includes(n.trim())));
 
-      laporanMap[laporan].push({
-        Laporan: laporan,
-        Syor: syor,
-        BahagianJpn: data[i][bahagianIdx],
-        Skor: skor
-      });
+    if (isUserRelevant) {
+      if (!groupedData[laporan]) {
+        groupedData[laporan] = {
+          Laporan: laporan,
+          SkorItems: [],
+          AssociatedBahagianJpns: new Set(),
+          AssociatedNegeris: new Set()
+        };
+      }
+
+      groupedData[laporan].SkorItems.push(skor);
+      
+      dbBahagianJpnRaw.split(',').map(s => s.trim()).filter(Boolean).forEach(val => groupedData[laporan].AssociatedBahagianJpns.add(val.toUpperCase()));
+      dbNegeriRaw.split(',').map(s => s.trim()).filter(Boolean).forEach(val => groupedData[laporan].AssociatedNegeris.add(val.toUpperCase()));
     }
   }
 
   const result = [];
-  for (const laporan in laporanMap) {
-    const items = laporanMap[laporan];
-    const total = items.reduce((sum, item) => sum + item.Skor, 0);
-    const avg = items.length ? total / items.length : 0;
+  for (const laporan in groupedData) {
+    const group = groupedData[laporan];
+    const totalSkor = group.SkorItems.reduce((sum, s) => sum + s, 0);
+    const avgSkor = group.SkorItems.length ? totalSkor / group.SkorItems.length : 0;
 
-    let status = "Merah";
-    if (avg === 1) status = "Hijau";
-    else if (avg > 0 && avg < 1) status = "Kuning";
+    let dominantStatus = "Merah";
+    if (avgSkor === 1) dominantStatus = "Hijau"; // <-- Diperbetulkan
+    else if (avgSkor > 0 && avgSkor < 1) dominantStatus = "Kuning"; // <-- Diperbetulkan
+
+    const allResponsibleUnits = [
+        ...group.AssociatedBahagianJpns,
+        ...group.AssociatedNegeris
+    ];
+    const combinedUnits = allResponsibleUnits.join(', ') || "-";
 
     result.push({
-      Laporan: laporan,
-      Syor: items[0].Syor || "-",
-      BahagianJpn: items[0].BahagianJpn || "-",
-      SkorWajaran: avg.toFixed(2),
-      DominantStatus: status
+      Laporan: group.Laporan,
+      ResponsibleUnits: combinedUnits,
+      SkorWajaran: avgSkor.toFixed(2),
+      DominantStatus: dominantStatus
     });
   }
 
@@ -540,7 +549,7 @@ function sendNotificationEmail(bahagian, negeri, laporan, syor, catatan) {
   const subject = `📬 Notifikasi STTPMP: Syor Menteri bagi ${laporan}`;
   const htmlBody = `
       <div style="font-family:Arial,sans-serif;border:1px solid #0d6efd;border-radius:8px;padding:16px;background:#f8f9fa;">
-        <h3 style="color:#0d6efd;margin-top:0;">📢 Notifikasi STTMP</h3>
+        <h3 style="color:#0d6efd;margin-top:0;">📢 Notifikasi STTPMP</h3>
         <p>Assalamualaikum dan salam sejahtera,</p>
         <p>Satu kemaskini telah dibuat oleh <strong>Admin</strong> bagi syor berikut:</p>
 
@@ -551,8 +560,8 @@ function sendNotificationEmail(bahagian, negeri, laporan, syor, catatan) {
           <p><strong>📌 Maklum balas Jemaah Nazir (Urus setia):</strong> ${catatan}</p>
         </div>
 
-        <p>Sila semak sistem STTMP untuk tindakan selanjutnya.</p>
-        <p style="font-size:12px;color:#888;">--<br>STTMP Notification</p>
+        <p>Sila semak sistem STTPMP untuk tindakan selanjutnya.</p>
+        <p style="font-size:12px;color:#888;">--<br>STTPMP Notification</p>
       </div>
     `;
 
