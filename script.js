@@ -373,14 +373,30 @@ function deleteSyor(rowNum, successCallback) {
  * @param {Array} items - Array objek data syor yang telah ditapis.
  * @param {string} title - Tajuk untuk modal.
  */
+/**
+ * Memaparkan senarai syor dalam sebuah modal yang interaktif (dengan DataTables).
+ * @param {Array} items - Array objek data syor yang telah ditapis.
+ * @param {string} title - Tajuk untuk modal.
+ */
 function showDrillDownModal(items, title) {
   const modalElement = document.getElementById("drillDownModal");
   const modalTitle = document.getElementById("drillDownModalLabel");
   const modalBody = document.getElementById("drillDownModalBody");
+  const tableId = "drillDownTable";
 
+  // 1. Hancurkan (destroy) instance DataTable lama jika wujud
+  //    Ini penting untuk mengelakkan ralat "Cannot reinitialise DataTable".
+  if ($.fn.DataTable.isDataTable("#" + tableId)) {
+    $("#" + tableId)
+      .DataTable()
+      .destroy();
+  }
+
+  // 2. Kosongkan kandungan lama dan tetapkan tajuk baharu
   modalTitle.textContent = title;
-  modalBody.innerHTML = ""; // Kosongkan kandungan lama
+  modalBody.innerHTML = "";
 
+  // 3. Isi jadual dengan data baharu
   if (items && items.length > 0) {
     items.forEach((item, index) => {
       const row = document.createElement("tr");
@@ -396,7 +412,25 @@ function showDrillDownModal(items, title) {
       '<tr><td colspan="3" class="text-center">Tiada data untuk dipaparkan.</td></tr>';
   }
 
-  // Tunjukkan modal
+  // 4. Aktifkan DataTable pada jadual yang telah diisi
+  $("#" + tableId).DataTable({
+    responsive: true,
+    pageLength: 5, // Papar 5 baris setiap muka surat, sesuai untuk modal
+    lengthMenu: [5, 10, 25, 50], // Opsyen bilangan baris
+    language: {
+      search: "Carian:",
+      lengthMenu: "Papar _MENU_ rekod",
+      info: "Menunjukkan _START_ hingga _END_ dari _TOTAL_ rekod",
+      paginate: {
+        first: "Pertama",
+        last: "Terakhir",
+        next: ">",
+        previous: "<",
+      },
+    },
+  });
+
+  // 5. Tunjukkan modal
   const bsModal = new bootstrap.Modal(modalElement);
   bsModal.show();
 }
